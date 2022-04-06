@@ -3,4 +3,5 @@ Shared team for getting weather data from different data sources and present tha
 
 
 # Potensial dotnet template 
+https://fullstackhero.net/
 https://github.com/fullstackhero/dotnet-webapi-boilerplate
