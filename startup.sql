@@ -6,7 +6,7 @@ CREATE TABLE city (
     Country char,
     Longitude int,
     Altitude int,
-    Latitude, 
+    Latitude int, 
     Primary KEY (CityID)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE forecastData (
     WindspeedOfGust int,
     Pressure int,
     Humidity int,
-    Probability of rain int,
+    ProbabilityOfRain int,
     RainAmount int,
     CloudAreaFraction int,
     FogAreaFraction int,
@@ -50,11 +50,11 @@ create table forecast_data_website (
 create table weatherType (
     WeatherId int,
     ForecastID int,
-    Cloudy bool,
-    Sunny bool,
-    Rainy bool,
-    Snowy bool,
-    Stormy bool,
+    Cloudy boolean,
+    Sunny boolean,
+    Rainy boolean,
+    Snowy boolean,
+    Stormy boolean,
     Primary KEY (WeatherId),
     FOREIGN KEY (ForecastID) REFERENCES forecastData(ForecastID)
 );
