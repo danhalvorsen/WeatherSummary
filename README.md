@@ -11,11 +11,21 @@ https://github.com/fullstackhero/dotnet-webapi-boilerplate
 [MS SQL docker image](https://hub.docker.com/_/microsoft-mssql-server)
 
 
+### Download SQL Mng Studio
+[SQL Mng Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15
+)
+
+### Run SQL Server
+```docker
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=123456a@" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+```
+
 ## Download image 
 ```
 docker pull mcr.microsoft.com/mssql/server
 ```
 
+#Hey! HTML also available 
 ```htm
 <HTML>
     <HEADER>
