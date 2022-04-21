@@ -1,17 +1,24 @@
 CREATE TABLE City (
     CityID INT,
-    City VARCHAR,
-    Country VARCHAR,
+    City VARCHAR(255),
+    Country VARCHAR(255),
     Longitude FLOAT,
     Altitude FLOAT,
     Latitude FLOAT,
     PRIMARY KEY (CityID)
 );
 
+CREATE TABLE ForecastWebsite (
+    WebsiteID INT,
+    WebsiteName VARCHAR(255),
+    WebURL VARCHAR(255),
+    Auth VARCHAR(255),
+    PRIMARY KEY (WebsiteID)
+);
+
 CREATE TABLE ForecastData (
     ForecastID INT,
-    CityID INT not NULL,
-    WebsiteID INT not NULL,
+	PRIMARY KEY (ForecastID),
     ForecastDate TIMESTAMP,
     Temperature FLOAT,
     Windspeed FLOAT,
@@ -24,45 +31,44 @@ CREATE TABLE ForecastData (
     CloudAreaFraction FLOAT,
     FogAreaFraction FLOAT,
     ProbOfThunder FLOAT,
-    PRIMARY KEY (ForecastID),
-    FOREIGN KEY (CityID) REFERENCES City(CityID),
-    FOREIGN KEY (WebsiteID) REFERENCES Forecast_data_website(WebsiteID)
-);
-
-CREATE TABLE ForecastWebsite (
-    WebsiteID INT,
-    WebsiteName VARCHAR,
-    WebURL VARCHAR,
-    Auth VARCHAR,
-    PRIMARY KEY (WebsiteID)
+   
+	FK_CityID INT NOT NULL,
+	FK_WebsiteID INT NOT NULL,
+    FOREIGN KEY (FK_CityID) REFERENCES City(CityID),
+    --FOREIGN KEY (FK_WebsiteID) REFERENCES Forecast_data_website(Id)
 );
 
 CREATE TABLE Forecast_data_website (
-    Id SERIAL,
-    ForecastID INT NOT NULL,
-    WebsiteID INT NOT NULL,
+    Id INT,
     PRIMARY KEY (Id),
-    FOREIGN KEY (ForecastID) REFERENCES ForecastData(ForecastID),
-    FOREIGN KEY (WebsiteID) REFERENCES ForecastWebsite(WebsiteID)
+	ConnectionDate TIMESTAMP,
+	FK_ForecastID INT,
+	FK_WebsiteID INT,
+    FOREIGN KEY (FK_ForecastID) REFERENCES ForecastData(ForecastID),
+    FOREIGN KEY (FK_WebsiteID) REFERENCES ForecastWebsite(WebsiteID)
 );
 
 CREATE TABLE Admin (
     AdminID INT,
-    FullName VARCHAR,
-    Username VARCHAR,
-    UserPassword VARCHAR,
-    Email VARCHAR,
+    FullName VARCHAR(255),
+    Username VARCHAR(255),
+    UserPassword VARCHAR(255),
+    Email VARCHAR(255),
     PRIMARY KEY (AdminID)
 );
 
 CREATE TABLE WeatherType (
     WeatherID INT,
-    ForecastID INT NOT NULL,
-    Cloudy Boolean,
-    Sunny Boolean,
-    Rainy Boolean,
-    Snowy Boolean,
-    Stormy Boolean,
+    Cloudy BIT ,
+    Sunny BIT ,
+    Rainy BIT ,
+    Snowy BIT ,
+    Stormy BIT ,
     PRIMARY KEY (WeatherID),
-    FOREIGN KEY (ForecastID) REFERENCES ForecastData(ForecastID)
+	FK_ForecastID INT NOT NULL,
+    FOREIGN KEY (FK_ForecastID) REFERENCES ForecastData(ForecastID)
 );
+
+ALTER TABLE ForecastData 
+	ADD CONSTRAINT FK_WebsiteID 
+	FOREIGN KEY (FK_WebsiteID) REFERENCES Forecast_data_website(Id)
