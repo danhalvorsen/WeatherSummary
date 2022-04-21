@@ -43,23 +43,23 @@ VALUES
 	(4, 'Dan Edvard Halvorsen', 'danhal', 'bouvet4', 'deh@bouvet.no');
 
 INSERT INTO Forecast_data_website 
-	(Id, FK_ForecastID, FK_WebsiteID)
+	(Id, FK_ForecastID, FK_WebsiteID, ConnectionDate)
 VALUES
-	(1, 1, 1),
-	(2, 2, 2),
-	(3, 3, 3),
-	(4, 4, 1),
-	(5, 5, 2),
-	(6, 6, 3),
-	(7, 7, 1),
-	(8, 8, 2),
-	(9, 9, 3),
-	(10, 10, 1),
-	(11, 11, 2),
-	(12, 12, 3),
-	(13, 13, 1),
-	(14, 14, 2),
-	(15, 15, 3);
+	(1, 1, 1, CURRENT_TIMESTAMP),
+	(2, 2, 2, CURRENT_TIMESTAMP),
+	(3, 3, 3, CURRENT_TIMESTAMP),
+	(4, 4, 1, CURRENT_TIMESTAMP),
+	(5, 5, 2, CURRENT_TIMESTAMP),
+	(6, 6, 3, CURRENT_TIMESTAMP),
+	(7, 7, 1, CURRENT_TIMESTAMP),
+	(8, 8, 2, CURRENT_TIMESTAMP),
+	(9, 9, 3, CURRENT_TIMESTAMP),
+	(10, 10, 1, CURRENT_TIMESTAMP),
+	(11, 11, 2, CURRENT_TIMESTAMP),
+	(12, 12, 3, CURRENT_TIMESTAMP),
+	(13, 13, 1, CURRENT_TIMESTAMP),
+	(14, 14, 2, CURRENT_TIMESTAMP),
+	(15, 15, 3, CURRENT_TIMESTAMP);
 
 INSERT INTO WeatherType 
 	(WeatherID, FK_ForecastID, Cloudy, Sunny, Rainy, Snowy, Stormy)
