@@ -15,10 +15,15 @@ https://github.com/fullstackhero/dotnet-webapi-boilerplate
 [SQL Mng Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15
 )
 
-### Run SQL Server
+### Run SQL Server container images with Docker
 ```docker
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=123456a@" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
 ```
+### Use data volume for our  SQL Server Container
+```docker
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=123456a@" -p 1433:1433 -v Sql-server-storage:/var/opt/mssql  -d mcr.microsoft.com/mssql/server:2019-latest
+```
+
 
 ## Download image 
 ```
