@@ -7,9 +7,9 @@ CREATE TABLE WebSource (
 	Id INT, 
 	PRIMARY KEY (Id),
 	
-	WebName VARCHAR(255),
-	URI VARCHAR(255),
-	Auth VARCHAR(255)
+	[Name] VARCHAR(255),
+	[URL] VARCHAR(255),
+	[Authentication] VARCHAR(255)
 );
 GO
 
@@ -29,7 +29,7 @@ CREATE TABLE WeatherData (
 	Id INT,
 	PRIMARY KEY (Id),
 	
-	wDate DATETIME,
+	[Date] DATETIME,
     Temperature FLOAT,
     Windspeed FLOAT,
     WindDirection INT,
@@ -79,15 +79,15 @@ CREATE TABLE Admin (
     Id INT,
     PRIMARY KEY (Id),
 
-	FullName VARCHAR(255),
+	[Name] VARCHAR(255),
     Username VARCHAR(255),
-    UserPassword VARCHAR(255),
+    [Password] VARCHAR(255),
     Email VARCHAR(255),
 );
 GO
 
 INSERT INTO WebSource 
-	(Id, WebName, URI, Auth)
+	(Id, [Name], [URL], [Authentication])
 VALUES
 	(1, 'YR', 'www.yr.no', 'admin'),
 	(2, 'STORM', 'www.storm.no', 'admin'),
@@ -105,7 +105,7 @@ VALUES
 GO
 
 INSERT INTO WeatherData 
-	(Id, FK_CityID, wDate, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder)
+	(Id, FK_CityID, [Date], Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder)
 VALUES
 	(1, 1, GETDATE(),  14.3, 2.5, 293.8, 5.6, 1023.7, 42.4, 0, 0, 13.5, 0, 0),
 	(2, 1, GETDATE(),  14.6, 2.2, 290.2, 5.5, 1023.7, 43.2, 0.01, 0.02, 13.6, 0, 0),
@@ -165,7 +165,7 @@ VALUES
 GO
 
 INSERT INTO Admin 
-	(Id, FullName, Username, UserPassword, Email)
+	(Id, [Name], Username, [Password], Email)
 VALUES
 	(1, 'Torbjørn Jacobsen', 'tobjac', 'bouvet1', 'tj@bouvet.no'),
 	(2, 'Mohammad Ghasempour', 'mohgha', 'bouvet2', 'mg@bouvet.no'),
