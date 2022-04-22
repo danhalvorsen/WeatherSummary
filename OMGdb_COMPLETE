@@ -3,7 +3,7 @@ GO
 
 BEGIN TRAN
 
-CREATE TABLE WebSource (
+CREATE TABLE [Source] (
 	Id INT, 
 	PRIMARY KEY (Id),
 	
@@ -47,20 +47,20 @@ CREATE TABLE WeatherData (
 );
 GO
 
-CREATE TABLE WebSourceWeatherData (
+CREATE TABLE SourceWeatherData (
 	Id INT, 
 	PRIMARY KEY (Id),
 
 	ConnectionDate DATETIME,
 
-	FK_WebSourceId INT,
+	FK_SourceId INT,
 	FK_WeatherDataId INT, 
-	FOREIGN KEY (FK_WebSourceId) REFERENCES WebSource(Id),
+	FOREIGN KEY (FK_SourceId) REFERENCES [Source](Id),
 	FOREIGN KEY (FK_WeatherDataId) REFERENCES WeatherData(Id)
 );
 GO
 
-CREATE TABLE WeatherSymbol (
+CREATE TABLE WeatherType (
 	Id INT, 
 	PRIMARY KEY (Id),
 
@@ -75,7 +75,7 @@ CREATE TABLE WeatherSymbol (
 );
 GO
 
-CREATE TABLE Admin (
+CREATE TABLE [Admin] (
     Id INT,
     PRIMARY KEY (Id),
 
@@ -86,7 +86,7 @@ CREATE TABLE Admin (
 );
 GO
 
-INSERT INTO WebSource 
+INSERT INTO [Source] 
 	(Id, [Name], [URL], [Authentication])
 VALUES
 	(1, 'YR', 'www.yr.no', 'admin'),
@@ -124,8 +124,8 @@ VALUES
 	(15, 5, GETDATE(),  16.8, 4.4, 85.8, 9.5, 1023.5, 43.9, 0, 0, 0, 0, 0);
 GO
 
-INSERT INTO  WebSourceWeatherData
-	(Id, FK_WeatherDataId, FK_WebSourceId, ConnectionDate)
+INSERT INTO  SourceWeatherData
+	(Id, FK_WeatherDataId, FK_SourceId, ConnectionDate)
 VALUES
 	(1, 1, 1, GETDATE()),
 	(2, 2, 2, GETDATE()),
@@ -144,7 +144,7 @@ VALUES
 	(15, 15, 3, GETDATE());
 GO
 
-INSERT INTO WeatherSymbol
+INSERT INTO WeatherType
 	(Id, FK_WeatherId, Cloudy, Sunny, Rainy, Snowy, Stormy)
 VALUES
 	(1, 1, 0, 1, 0, 0, 0),
@@ -164,7 +164,7 @@ VALUES
 	(15, 15, 0, 1, 0, 0, 0);
 GO
 
-INSERT INTO Admin 
+INSERT INTO [Admin] 
 	(Id, [Name], Username, [Password], Email)
 VALUES
 	(1, 'Torbjørn Jacobsen', 'tobjac', 'bouvet1', 'tj@bouvet.no'),
@@ -174,11 +174,11 @@ VALUES
 GO
 
 
-SELECT * FROM WebSource;
+SELECT * FROM [Source];
 SELECT * FROM City;
 SELECT * FROM WeatherData;
-SELECT * FROM WebSourceWeatherData;
-SELECT * FROM WeatherSymbol;
+SELECT * FROM SourceWeatherData;
+SELECT * FROM WeatherType;
 SELECT * FROM Admin;
 
 ROLLBACK TRAN
