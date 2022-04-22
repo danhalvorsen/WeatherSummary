@@ -7,9 +7,9 @@ CREATE TABLE City (
     CityID INT,
     City VARCHAR(255),
     Country VARCHAR(255),
-    Longitude FLOAT,
     Altitude FLOAT,
     Latitude FLOAT,
+    Longitude FLOAT,
     PRIMARY KEY (CityID)
 );
 

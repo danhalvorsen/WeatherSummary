@@ -1,0 +1,185 @@
+USE m2m
+GO
+
+BEGIN TRAN
+
+CREATE TABLE WebSource (
+	Id INT, 
+	PRIMARY KEY (Id),
+	
+	WebName VARCHAR(255),
+	URI VARCHAR(255),
+	Auth VARCHAR(255)
+);
+GO
+
+CREATE TABLE City (
+	Id INT, 
+	PRIMARY KEY (Id),
+	
+	City VARCHAR(255),
+    Country VARCHAR(255),
+    Altitude FLOAT,
+	Longitude FLOAT,
+    Latitude FLOAT,
+);
+GO
+
+CREATE TABLE WeatherData (
+	Id INT,
+	PRIMARY KEY (Id),
+	
+	wDate DATETIME,
+    Temperature FLOAT,
+    Windspeed FLOAT,
+    WindDirection INT,
+    WindspeedGust FLOAT,
+    Pressure FLOAT,
+    Humidity FLOAT,
+    ProbOfRain FLOAT,
+    AmountRain FLOAT,
+    CloudAreaFraction FLOAT,
+    FogAreaFraction FLOAT,
+    ProbOfThunder FLOAT,
+	
+	FK_CityId INT NOT NULL,
+	FOREIGN KEY (FK_CityId) REFERENCES City(Id)
+);
+GO
+
+CREATE TABLE WebSourceWeatherData (
+	Id INT, 
+	PRIMARY KEY (Id),
+
+	ConnectionDate DATETIME,
+
+	FK_WebSourceId INT,
+	FK_WeatherDataId INT, 
+	FOREIGN KEY (FK_WebSourceId) REFERENCES WebSource(Id),
+	FOREIGN KEY (FK_WeatherDataId) REFERENCES WeatherData(Id)
+);
+GO
+
+CREATE TABLE WeatherSymbol (
+	Id INT, 
+	PRIMARY KEY (Id),
+
+    Cloudy BIT,
+    Sunny BIT,
+    Rainy BIT,
+    Snowy BIT,
+    Stormy BIT,
+	
+	FK_WeatherId INT NOT NULL,
+    FOREIGN KEY (FK_WeatherId) REFERENCES WeatherData(Id)
+);
+GO
+
+CREATE TABLE Admin (
+    Id INT,
+    PRIMARY KEY (Id),
+
+	FullName VARCHAR(255),
+    Username VARCHAR(255),
+    UserPassword VARCHAR(255),
+    Email VARCHAR(255),
+);
+GO
+
+INSERT INTO WebSource 
+	(Id, WebName, URI, Auth)
+VALUES
+	(1, 'YR', 'www.yr.no', 'admin'),
+	(2, 'STORM', 'www.storm.no', 'admin'),
+	(3, 'FreeWeather', 'www.freeweather.com', 'admin');
+GO
+
+INSERT INTO City 
+	(Id, City, Country, Altitude, Latitude, Longitude)
+VALUES
+	(1, 'Stavanger', 'Norway', 0, 58.97044361825643, 5.733197834639823),
+	(2, 'Bergen', 'Norway', 0, 60.394309639588755, 5.3212627601051405),
+	(3, 'Trondheim', 'Norway', 0, 63.43176491726623, 10.394850990213525),
+	(4, 'Oslo', 'Norway', 0, 59.91521319366343, 10.75256976589296),
+	(5, 'Kristiansand', 'Norway', 0, 58.16090705867245, 8.018480108853817);
+GO
+
+INSERT INTO WeatherData 
+	(Id, FK_CityID, wDate, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder)
+VALUES
+	(1, 1, GETDATE(),  14.3, 2.5, 293.8, 5.6, 1023.7, 42.4, 0, 0, 13.5, 0, 0),
+	(2, 1, GETDATE(),  14.6, 2.2, 290.2, 5.5, 1023.7, 43.2, 0.01, 0.02, 13.6, 0, 0),
+	(3, 1, GETDATE(),  14.4, 2.4, 292.8, 5.2, 1022.7, 42.6, 0, 0, 13.4, 0, 0),
+	(4, 2, GETDATE(),  15.4, 2.5, 309.8, 5.8, 1023.8, 45.8, 0, 0, 36.1, 0, 0),
+	(5, 2, GETDATE(),  15.0, 2.3, 310.1, 5.6, 1023.5, 45.4, 0, 0, 35.8, 0, 0),
+	(6, 2, GETDATE(),  15.2, 2.4, 309.5, 5.9, 1024.3, 44.9, 0, 0, 35.6, 0, 0),
+	(7, 3, GETDATE(),  12.5, 1.8, 8.7, 4.2, 1025.7, 53.7, 0, 0, 0, 0, 0),
+	(8, 3, GETDATE(),  12.6, 2.1, 8.4, 4.2, 1025.4, 53.2, 0, 0, 0.2, 0, 0),
+	(9, 3, GETDATE(),  12.3, 1.7, 8.5, 4.1, 1025.6, 53.9, 0, 0, 0.1, 0, 0),
+	(10, 4, GETDATE(),  17.9, 1.9, 247.3, 5.3, 1024.9, 57.1, 0, 0, 0.1, 0, 0),
+	(11, 4, GETDATE(),  18.1, 2.1, 247.1, 5.4, 1024.7, 57.2, 0, 0, 0, 0, 0),
+	(12, 4, GETDATE(),  17.7, 2.2, 247.5, 5.1, 1025.1, 56.9, 0, 0, 0.2, 0, 0),
+	(13, 5, GETDATE(),  17.0, 4.6, 85.7, 9.4, 1023.8, 44.6, 0, 0, 0, 0, 0),
+	(14, 5, GETDATE(),  16.9, 4.5, 86.1, 9.2, 1023.7, 44.4, 0, 0, 0.1, 0, 0),
+	(15, 5, GETDATE(),  16.8, 4.4, 85.8, 9.5, 1023.5, 43.9, 0, 0, 0, 0, 0);
+GO
+
+INSERT INTO  WebSourceWeatherData
+	(Id, FK_WeatherDataId, FK_WebSourceId, ConnectionDate)
+VALUES
+	(1, 1, 1, GETDATE()),
+	(2, 2, 2, GETDATE()),
+	(3, 3, 3, GETDATE()),
+	(4, 4, 1, GETDATE()),
+	(5, 5, 2, GETDATE()),
+	(6, 6, 3, GETDATE()),
+	(7, 7, 1, GETDATE()),
+	(8, 8, 2, GETDATE()),
+	(9, 9, 3, GETDATE()),
+	(10, 10, 1, GETDATE()),
+	(11, 11, 2, GETDATE()),
+	(12, 12, 3, GETDATE()),
+	(13, 13, 1, GETDATE()),
+	(14, 14, 2, GETDATE()),
+	(15, 15, 3, GETDATE());
+GO
+
+INSERT INTO WeatherSymbol
+	(Id, FK_WeatherId, Cloudy, Sunny, Rainy, Snowy, Stormy)
+VALUES
+	(1, 1, 0, 1, 0, 0, 0),
+	(2, 2, 0, 1, 0, 0, 0),
+	(3, 3, 0, 1, 0, 0, 0),
+	(4, 4, 0, 1, 0, 0, 0),
+	(5, 5, 0, 1, 0, 0, 0),
+	(6, 6, 0, 1, 0, 0, 0),
+	(7, 7, 0, 1, 0, 0, 0),
+	(8, 8, 0, 1, 0, 0, 0),
+	(9, 9, 0, 1, 0, 0, 0),
+	(10, 10, 0, 1, 0, 0, 0),
+	(11, 11, 0, 1, 0, 0, 0),
+	(12, 12, 0, 1, 0, 0, 0),
+	(13, 13, 0, 1, 0, 0, 0),
+	(14, 14, 0, 1, 0, 0, 0),
+	(15, 15, 0, 1, 0, 0, 0);
+GO
+
+INSERT INTO Admin 
+	(Id, FullName, Username, UserPassword, Email)
+VALUES
+	(1, 'Torbjørn Jacobsen', 'tobjac', 'bouvet1', 'tj@bouvet.no'),
+	(2, 'Mohammad Ghasempour', 'mohgha', 'bouvet2', 'mg@bouvet.no'),
+	(3, 'Rebecca Sjøen', 'rebsjo', 'bouvet3', 'rs@bouvet.no'),
+	(4, 'Dan Edvard Halvorsen', 'danhal', 'bouvet4', 'deh@bouvet.no');
+GO
+
+
+SELECT * FROM WebSource;
+SELECT * FROM City;
+SELECT * FROM WeatherData;
+SELECT * FROM WebSourceWeatherData;
+SELECT * FROM WeatherSymbol;
+SELECT * FROM Admin;
+
+ROLLBACK TRAN
+--COMMIT TRAN
