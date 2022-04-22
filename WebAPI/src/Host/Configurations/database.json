@@ -1,0 +1,7 @@
+{
+  "DatabaseSettings": {
+    "DBProvider": "mssql",
+    "ConnectionString": "Data Source=127.0.0.1;Initial Catalog=TempplateDatabase;Persist Security Info=True;User ID=sa;Password=123456a@"
+   
+  }
+}
