@@ -1,5 +1,5 @@
-USE YourDatabase
-GO
+use db1
+GO 
 
 BEGIN TRAN
 
@@ -7,9 +7,9 @@ CREATE TABLE City (
     CityID INT,
     City VARCHAR(255),
     Country VARCHAR(255),
+    Longitude FLOAT,
     Altitude FLOAT,
     Latitude FLOAT,
-    Longitude FLOAT,
     PRIMARY KEY (CityID)
 );
 
@@ -36,11 +36,9 @@ CREATE TABLE ForecastData (
     CloudAreaFraction FLOAT,
     FogAreaFraction FLOAT,
     ProbOfThunder FLOAT,
-   
-	FK_CityID INT NOT NULL,
 	FK_WebsiteID INT NOT NULL,
-    FOREIGN KEY (FK_CityID) REFERENCES City(CityID),
-    --FOREIGN KEY (FK_WebsiteID) REFERENCES Forecast_data_website(Id)
+	FK_CityID INT NOT NULL,
+    FOREIGN KEY (FK_CityID) REFERENCES City(CityID)
 );
 
 CREATE TABLE Forecast_data_website (
@@ -55,20 +53,20 @@ CREATE TABLE Forecast_data_website (
 
 CREATE TABLE Admin (
     AdminID INT,
+	PRIMARY KEY (AdminID),
     FullName VARCHAR(255),
     Username VARCHAR(255),
     UserPassword VARCHAR(255),
-    Email VARCHAR(255),
-    PRIMARY KEY (AdminID)
+    Email VARCHAR(255)
 );
 
 CREATE TABLE WeatherType (
     WeatherID INT,
-    Cloudy BIT,
-    Sunny BIT,
-    Rainy BIT,
-    Snowy BIT,
-    Stormy BIT,
+    Cloudy BIT ,
+    Sunny BIT ,
+    Rainy BIT ,
+    Snowy BIT ,
+    Stormy BIT ,
     PRIMARY KEY (WeatherID),
 	FK_ForecastID INT NOT NULL,
     FOREIGN KEY (FK_ForecastID) REFERENCES ForecastData(ForecastID)
@@ -78,6 +76,5 @@ ALTER TABLE ForecastData
 	ADD CONSTRAINT FK_WebsiteID 
 	FOREIGN KEY (FK_WebsiteID) REFERENCES Forecast_data_website(Id)
 
-
-ROLLBACK TRAN
---COMMIT TRAN
+--ROLLBACK TRAN
+COMMIT TRAN
