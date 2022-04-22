@@ -1,3 +1,8 @@
+USE YourDatabase
+GO
+
+BEGIN TRAN
+
 CREATE TABLE City (
     CityID INT,
     City VARCHAR(255),
@@ -19,7 +24,7 @@ CREATE TABLE ForecastWebsite (
 CREATE TABLE ForecastData (
     ForecastID INT,
 	PRIMARY KEY (ForecastID),
-    ForecastDate TIMESTAMP,
+    ForecastDate DATETIME,
     Temperature FLOAT,
     Windspeed FLOAT,
     WindDirection INT,
@@ -41,9 +46,9 @@ CREATE TABLE ForecastData (
 CREATE TABLE Forecast_data_website (
     Id INT,
     PRIMARY KEY (Id),
-	ConnectionDate TIMESTAMP,
-	FK_ForecastID INT,
-	FK_WebsiteID INT,
+	ConnectionDate DATETIME,
+	FK_ForecastID INT NOT NULL,
+	FK_WebsiteID INT NOT NULL,
     FOREIGN KEY (FK_ForecastID) REFERENCES ForecastData(ForecastID),
     FOREIGN KEY (FK_WebsiteID) REFERENCES ForecastWebsite(WebsiteID)
 );
@@ -59,11 +64,11 @@ CREATE TABLE Admin (
 
 CREATE TABLE WeatherType (
     WeatherID INT,
-    Cloudy BIT ,
-    Sunny BIT ,
-    Rainy BIT ,
-    Snowy BIT ,
-    Stormy BIT ,
+    Cloudy BIT,
+    Sunny BIT,
+    Rainy BIT,
+    Snowy BIT,
+    Stormy BIT,
     PRIMARY KEY (WeatherID),
 	FK_ForecastID INT NOT NULL,
     FOREIGN KEY (FK_ForecastID) REFERENCES ForecastData(ForecastID)
@@ -72,3 +77,7 @@ CREATE TABLE WeatherType (
 ALTER TABLE ForecastData 
 	ADD CONSTRAINT FK_WebsiteID 
 	FOREIGN KEY (FK_WebsiteID) REFERENCES Forecast_data_website(Id)
+
+
+ROLLBACK TRAN
+--COMMIT TRAN
