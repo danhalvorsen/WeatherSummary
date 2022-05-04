@@ -1,89 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using BasicWebAPI.DAL;
+using Microsoft.Extensions.Configuration;
+using BasicWebAPI.Query;
 
 public class WeatherforecastController : ControllerBase
 {
+    private readonly IConfiguration config;
 
-    [HttpGet("{date:DateTime}")]
-    public ActionResult<WeatherforecastDto> Day(DateTime date)
+    public WeatherforecastController(IConfiguration config)
     {
-        return new WeatherforecastDto
-        {
-            Id = 1,
-            City = "Stavanger",
-            Date = DateTime.Now.Date,
-            Temperature = 14.3F,
-            Windspeed = 2.5F,
-            WindDirection = 293.8F,
-            WindspeedGust = 5.6F,
-            Pressure = 1023.7F,
-            Humidity = 42.4F,
-            ProbOfRain = 0F,
-            AmountRain = 0F,
-            CloudAreaFraction = 13.5F,
-            FogAreaFraction = 0F,
-            ProbOfThunder = 0F
-        };
+        this.config = config;
     }
 
-    [HttpGet("{between}")]
-    public ActionResult<List<WeatherforecastDto>> Between(DateTime from, DateTime to)
+    [HttpGet("DateQueryAndCity")]
+    public ActionResult<List<WeatherForecastDto>> Day([FromQuery] DateQueryAndCity query)
     {
-        string getStartDate = from.ToString().Substring(0, 5);
-        string getEndDate = to.ToString().Substring(0, 5);
-        double numberOfDays = 0;
+        var command = new Commands(config);
+        return command.GetWeatherForecastByDate(query);
+    }
 
-        if (getStartDate.Substring(3, 2) == getEndDate.Substring(3, 2))
-        {
-            double x = Convert.ToDouble(getStartDate.Substring(0, 2));
-            double y = Convert.ToDouble(getEndDate.Substring(0, 2));
+    [HttpGet("BetweenDateQueryAndCity")]
+    public ActionResult<List<WeatherForecastDto>> Between([FromQuery] BetweenDateQueryAndCity query)
+    {
+        var command = new Commands(config);
+        return command.GetWeatherForecastBetweenDates(query);
+    }
 
-            numberOfDays = y - x;
+    [HttpGet("Week")]
+    public ActionResult<List<WeatherForecastDto>> Week(int week, CityQuery query) // irriterende med liten "w" i week på selve endpointen.
+    {
+        var command = new Commands(config);
+        return command.GetWeatherForecastByWeek(week, query);
+    }
 
-            var listDays = new List<WeatherforecastDto>();
-
-            for (int i = 0; i <= numberOfDays; i++)
-            {
-                listDays.Add(new WeatherforecastDto
-                {
-                    Id = i + 1,
-                    City = "Stavanger",
-                    Date = DateTime.Now.Date, //($"0{x + i}" + from.ToString().Substring(2)),
-                    Temperature = 14.3F,
-                    Windspeed = 2.5F,
-                    WindDirection = 293.8F,
-                    WindspeedGust = 5.6F,
-                    Pressure = 1023.7F,
-                    Humidity = 42.4F,
-                    ProbOfRain = 0F,
-                    AmountRain = 0F,
-                    CloudAreaFraction = 13.5F,
-                    FogAreaFraction = 0F,
-                    ProbOfThunder = 0F
-                });
-            }
-
-            return listDays;
-        }
-
-        return null;
-
- 
-
-        //else
-        //{
-            //if(getStartDate.Substring(2, 4) != getEndDate.Substring(2, 4))
-            //{
-            //    double xmonths = Convert.ToDouble(getStartDate.Substring(2, 4));
-            //    double ymonths = Convert.ToDouble(getEndDate.Substring(2, 4));
-
-            //    if(xmonths % 2 == 0 || ymonths % 2 == 0)
-            //    {
-                    
-            //    }
-            //}
-        //}
+    [HttpPost("InsertWeatherData")]
+    public ActionResult<WeatherForecastDto> Create(WeatherForecastDto addWeatherData)
+    {
+        var command = new Commands(config);
+        return command.AddWeatherDataToWeatherDataTable(addWeatherData);
     }
 
 }
