@@ -58,13 +58,11 @@ namespace BasicWebAPI.DAL
 
         public WeatherForecastDto AddWeatherDataToWeatherDataTable(WeatherForecastDto addWeatherData)
         {
-            addWeatherData = new WeatherForecastDto();
-
             string queryString = $"DECLARE @city_id INT " +
                                     $"SELECT @city_id = Id FROM City WHERE City.Name = '{addWeatherData.City}' " +
                                         $"INSERT INTO WeatherData([Date], Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, " +
-                                            $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId)" +
-                                                $"VALUES({addWeatherData.Date}, {addWeatherData.Temperature}, {addWeatherData.Windspeed}, {addWeatherData.WindDirection}, {addWeatherData.WindspeedGust}, " +
+                                            $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId) " +
+                                                $"VALUES('{addWeatherData.Date.ToUniversalTime()}', {addWeatherData.Temperature}, {addWeatherData.Windspeed}, {addWeatherData.WindDirection}, {addWeatherData.WindspeedGust}, " +
                                                     $"{addWeatherData.Pressure}, {addWeatherData.Humidity}, {addWeatherData.ProbOfRain}, {addWeatherData.AmountRain}, {addWeatherData.CloudAreaFraction}, " +
                                                         $"{addWeatherData.FogAreaFraction}, {addWeatherData.ProbOfThunder}, @city_id)";
 

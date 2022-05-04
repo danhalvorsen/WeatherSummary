@@ -1,4 +1,4 @@
-USE Foo
+USE DB
 GO
 
 BEGIN TRAN
@@ -214,12 +214,26 @@ VALUES
 GO
 
 
-SELECT * FROM [Source];
-SELECT * FROM City;
-SELECT * FROM WeatherData;
-SELECT * FROM SourceWeatherData;
-SELECT * FROM WeatherType;
-SELECT * FROM [Admin];
+--SELECT * FROM [Source];
+--SELECT * FROM City;
+--SELECT * FROM WeatherData;
+--SELECT * FROM SourceWeatherData;
+--SELECT * FROM WeatherType;
+--SELECT * FROM [Admin];
+
+--DECLARE @city_id INT   
+--SELECT @city_id = Id FROM City AS c WHERE c.Name = 'Bergen'
+
+--INSERT INTO WeatherData ([Date], Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId)
+--VALUES ('2022-05-03', 10.3, 4.9, 318.3, 9.9, 1020.5, 48.1, 0, 0, 55.7, 0, 0, @city_id)
+
+--INSERT INTO WeatherData ([Date], Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId)
+--VALUES ('2022-05-03', 10.3, 4.9, 318.3, 9.9, 1020.5, 48.1, 0, 0, 55.7, 0, 0, @city_id)
+
+--INSERT INTO WeatherData ([Date], Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId)
+--VALUES ('2022-05-03', 10.3, 4.9, 318.3, 9.9, 1020.5, 48.1, 0, 0, 55.7, 0, 0, @city_id)
+
+--SELECT * FROM WeatherData
 
 ROLLBACK TRAN
 --COMMIT TRAN
