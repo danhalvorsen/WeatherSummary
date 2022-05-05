@@ -181,21 +181,21 @@ SELECT @Dummy2WeatherId = Id FROM WeatherData
 INSERT INTO WeatherType
 	(FK_WeatherId, Cloudy, Sunny, Rainy, Snowy, Stormy)
 VALUES
+	(@Dummy2WeatherId, 1, 1, 1, 1, 1),
+	(@Dummy2WeatherId, 0, 1, 0, 1, 0),
+	(@Dummy2WeatherId, 1, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 0, 1, 1, 1, 0),
+	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 1, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 0, 1, 1, 1, 0),
 	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
 	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 0, 1, 0, 1, 0),
+	(@Dummy2WeatherId, 1, 1, 0, 0, 0),
+	(@Dummy2WeatherId, 0, 1, 0, 1, 0),
 	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0),
-	(@Dummy2WeatherId, 0, 1, 0, 0, 0);
+	(@Dummy2WeatherId, 0, 1, 0, 1, 0);
 
 UPDATE WeatherType
 SET FK_WeatherId = (

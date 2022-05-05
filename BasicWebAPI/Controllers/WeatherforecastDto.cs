@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BasicWebAPI.Controllers;
+using System;
+using System.Collections.Generic;
 
 public class WeatherForecastDto
 {
@@ -25,6 +27,7 @@ public class WeatherForecastDto
         FogAreaFraction = fogAreaFraction;
         ProbOfThunder = probOfThunder;
         City = city;
+        WeatherTypes = new List<WeatherTypeDto>();
     }
 
     //public int Id { get; set; }
@@ -42,5 +45,6 @@ public class WeatherForecastDto
     public float CloudAreaFraction { get; set; }
     public float FogAreaFraction { get; set; }
     public float ProbOfThunder { get; set; }
-     
+
+    public List<WeatherTypeDto> WeatherTypes { get; set; }     
 }

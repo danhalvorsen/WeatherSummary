@@ -5,11 +5,17 @@ using System.Data.SqlClient;
 using System.Globalization;
 using BasicWebAPI;
 using BasicWebAPI.Query;
+using BasicWebAPI.Controllers;
 
 namespace BasicWebAPI.DAL
 {
     public class Commands
     {
+        private const string Cloudy = "Cloudy";
+        private const string Sunny = "Sunny";
+        private const string Rainy = "Rainy";
+        private const string Snowy = "Snowy";
+        private const string Stormy = "Stormy";
         private readonly IConfiguration config;
 
         public Commands(IConfiguration config)
@@ -18,14 +24,14 @@ namespace BasicWebAPI.DAL
         }
         public List<WeatherForecastDto> GetWeatherForecastByDate(DateQueryAndCity query)
         {
-            var utcDate = query.DateQuery.Date.ToUniversalTime();
             string city = query.CityQuery.City;
             var listWeatherForecast = new List<WeatherForecastDto>();
 
 
             string queryString = $"SELECT * FROM WeatherData " +
                                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                        $"WHERE CAST([Date] as Date) = '{utcDate}' AND Name = '{city}'";
+                                        $"INNER JOIN WeatherType ON FK_WeatherId = WeatherData.Id " +
+                                            $"WHERE CAST([Date] as Date) = '{query.DateQuery.Date}' AND Name = '{city}'";
 
             return DatabaseQuery(listWeatherForecast, queryString);
         }
@@ -39,7 +45,8 @@ namespace BasicWebAPI.DAL
 
             string queryString = $"SELECT * FROM WeatherData " +
                                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                        $"WHERE CAST([Date] as Date) BETWEEN '{utcDateFrom}' AND '{utcDateTo}' AND Name = '{city}'";
+                                        $"INNER JOIN WeatherType ON FK_WeatherId = WeatherData.Id " +
+                                            $"WHERE CAST([Date] as Date) BETWEEN '{utcDateFrom}' AND '{utcDateTo}' AND Name = '{city}'";
 
             return DatabaseQuery(listWeatherForecastBetweenDates, queryString);
         }
@@ -78,16 +85,36 @@ namespace BasicWebAPI.DAL
 
         private List<WeatherForecastDto> DatabaseQuery(List<WeatherForecastDto> list, string queryString)
         {
-            using (SqlConnection connection = new SqlConnection(config.GetConnectionString("WeatherForecastDatabase")))
+            var connectionString = this.config.GetConnectionString("WeatherForecastDatabase");
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
+
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)
                     {
-                        Console.WriteLine(reader);
+                        var cloudy = (bool)reader[Cloudy];
+                        var sunny = (bool)reader[Sunny];
+                        var rainy = (bool)reader[Rainy];
+                        var snowy = (bool)reader[Snowy];
+                        var stormy = (bool)reader[Stormy];
+
+                        var weatherTypes = new List<WeatherTypeDto>();
+
+                        if (cloudy)
+                            InsertIntoTempWeatherTypeList(weatherTypes, Cloudy);
+                        if (sunny)
+                            InsertIntoTempWeatherTypeList(weatherTypes, Sunny);
+                        if (rainy)
+                            InsertIntoTempWeatherTypeList(weatherTypes, Rainy);
+                        if (snowy)
+                            InsertIntoTempWeatherTypeList(weatherTypes, Snowy);
+                        if (stormy)
+                            InsertIntoTempWeatherTypeList(weatherTypes, Stormy);
+
                         list.Add(new WeatherForecastDto
                         {
                             //Id = Convert.ToInt32(reader["Id"]),
@@ -105,11 +132,22 @@ namespace BasicWebAPI.DAL
                             CloudAreaFraction = (float)Convert.ToDouble(reader["CloudAreaFraction"]),
                             FogAreaFraction = (float)Convert.ToDouble(reader["FogAreaFraction"]),
                             ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
+                            WeatherTypes = weatherTypes
                         });
                     }
                 }
                 return list;
+
+
             }
+        }
+
+        private static void InsertIntoTempWeatherTypeList(List<WeatherTypeDto> weatherType, string type)
+        {
+            weatherType.Add(new WeatherTypeDto
+            {
+                Type = type
+            });
         }
     }
 }
