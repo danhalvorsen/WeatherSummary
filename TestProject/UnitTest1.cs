@@ -72,13 +72,23 @@ namespace TestProject
             var application = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
-                // ... Configure test services
+                builder.ConfigureServices(
+                    services => { 
+                    
+                    
+                    }
+
+                    
+                    ).UseSetting("WeatherForecastDatabase", "Data Source=host.docker.internal,1433;Initial Catalog=DB;User ID=sa; Password=123456a@;Connect Timeout=20;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+
             });
 
             var client = application.CreateClient();
 
-            client.GetAsync("/DateQueryAndCity/");
-            //...
+            var result = await client.GetAsync("/DateQueryAndCity?DateQuery.Date=2022-05-04&CityQuery.City=Stavanger");
+
+            result.Should().NotBeNull();
+
         }
 
     }

@@ -30,6 +30,7 @@ namespace BasicWebAPI
             //services.AddDbContext<WeatherforecastDto>(options => options.UseSqlServer(Configuration.GetConnectionString("WeatherForecastDatabase"))); EntityFramework
             //cxnString = Configuration.GetConnectionString("WeatherForecastDatabase");
             services.AddControllers();
+            services.AddHostedService<MyBackgroundService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasicWebAPI", Version = "v1" });

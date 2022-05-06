@@ -58,7 +58,10 @@ namespace BasicWebAPI.DAL
             string queryString = $"SET DATEFIRST 1 " +
                                     $"SELECT * FROM WeatherData " +
                                         $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                            $"WHERE DATEPART(week, [Date]) = {week} AND Name = '{query.City}'";
+                                            $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                                                $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                                                    $"INNER JOIN WeatherType ON FK_WeatherId = WeatherData.Id " +
+                                                        $"WHERE DATEPART(week, [Date]) = {week} AND City.[Name] = '{query.City}'";
 
             return DatabaseQuery(listWeatherForecastByWeek, queryString);
         }
@@ -96,6 +99,10 @@ namespace BasicWebAPI.DAL
                 {
                     foreach (object o in reader)
                     {
+                        var weatherSource = new WeatherSourceDto();
+                            weatherSource.DataProvider = reader["Name"].ToString();
+                        
+
                         var cloudy = (bool)reader[Cloudy];
                         var sunny = (bool)reader[Sunny];
                         var rainy = (bool)reader[Rainy];
@@ -103,7 +110,7 @@ namespace BasicWebAPI.DAL
                         var stormy = (bool)reader[Stormy];
 
                         var weatherTypes = new List<WeatherTypeDto>();
-
+                        
                         if (cloudy)
                             InsertIntoTempWeatherTypeList(weatherTypes, Cloudy);
                         if (sunny)
@@ -119,6 +126,7 @@ namespace BasicWebAPI.DAL
                         {
                             //Id = Convert.ToInt32(reader["Id"]),
                             //FK_CityId = Convert.ToInt32(reader["FK_CityId"]),
+                            Source = weatherSource,
                             City = reader["Name"].ToString(),
                             Date = Convert.ToDateTime(reader["Date"]),
                             Temperature = (float)Convert.ToDouble(reader["Temperature"]),

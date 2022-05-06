@@ -28,12 +28,13 @@ public class WeatherForecastDto
         ProbOfThunder = probOfThunder;
         City = city;
         WeatherTypes = new List<WeatherTypeDto>();
+        Source = new WeatherSourceDto();
     }
 
     //public int Id { get; set; }
     //public int FK_CityId { get; set; }
     public string City { get; set; }
-    public DateTime Date{ get; set; }
+    public DateTime Date { get; set; }
     public float Temperature { get; set; }
     public float Windspeed { get; set; }
     public float WindDirection { get; set; }
@@ -45,6 +46,8 @@ public class WeatherForecastDto
     public float CloudAreaFraction { get; set; }
     public float FogAreaFraction { get; set; }
     public float ProbOfThunder { get; set; }
+    public WeatherSourceDto Source { get; set; }
+    public List<WeatherTypeDto> WeatherTypes { get; set; }
 
-    public List<WeatherTypeDto> WeatherTypes { get; set; }     
+
 }
