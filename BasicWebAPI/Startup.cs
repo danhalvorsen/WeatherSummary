@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BasicWebAPI
@@ -30,6 +31,7 @@ namespace BasicWebAPI
             //services.AddDbContext<WeatherforecastDto>(options => options.UseSqlServer(Configuration.GetConnectionString("WeatherForecastDatabase"))); EntityFramework
             //cxnString = Configuration.GetConnectionString("WeatherForecastDatabase");
             services.AddControllers();
+            services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
             services.AddHostedService<MyBackgroundService>();
             services.AddSwaggerGen(c =>
             {
