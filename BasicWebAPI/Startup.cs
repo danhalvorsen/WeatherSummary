@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BasicWebAPI
@@ -22,12 +23,16 @@ namespace BasicWebAPI
         }
 
         public IConfiguration Configuration { get; }
+        //public static string cxnString { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //services.AddDbContext<WeatherforecastDto>(options => options.UseSqlServer(Configuration.GetConnectionString("WeatherForecastDatabase"))); EntityFramework
+            //cxnString = Configuration.GetConnectionString("WeatherForecastDatabase");
             services.AddControllers();
+            services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
+            services.AddHostedService<MyBackgroundService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BasicWebAPI", Version = "v1" });
