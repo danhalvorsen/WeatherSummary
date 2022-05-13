@@ -27,7 +27,6 @@ namespace BasicWebAPI.DAL
             string city = query.CityQuery.City;
             var listWeatherForecast = new List<WeatherForecastDto>();
 
-
             string queryString = $"SELECT * FROM WeatherData " +
                                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                         $"INNER JOIN WeatherType ON FK_WeatherId = WeatherData.Id " +
@@ -103,24 +102,24 @@ namespace BasicWebAPI.DAL
                             weatherSource.DataProvider = reader["Name"].ToString();
                         
 
-                        var cloudy = (bool)reader[Cloudy];
-                        var sunny = (bool)reader[Sunny];
-                        var rainy = (bool)reader[Rainy];
-                        var snowy = (bool)reader[Snowy];
-                        var stormy = (bool)reader[Stormy];
+                        //var cloudy = (bool)reader[Cloudy];
+                        //var sunny = (bool)reader[Sunny];
+                        //var rainy = (bool)reader[Rainy];
+                        //var snowy = (bool)reader[Snowy];
+                        //var stormy = (bool)reader[Stormy];
 
-                        var weatherTypes = new List<WeatherTypeDto>();
+                        //var weatherTypes = new List<WeatherTypeDto>();
                         
-                        if (cloudy)
-                            InsertIntoTempWeatherTypeList(weatherTypes, Cloudy);
-                        if (sunny)
-                            InsertIntoTempWeatherTypeList(weatherTypes, Sunny);
-                        if (rainy)
-                            InsertIntoTempWeatherTypeList(weatherTypes, Rainy);
-                        if (snowy)
-                            InsertIntoTempWeatherTypeList(weatherTypes, Snowy);
-                        if (stormy)
-                            InsertIntoTempWeatherTypeList(weatherTypes, Stormy);
+                        //if (cloudy)
+                        //    InsertIntoTempWeatherTypeList(weatherTypes, Cloudy);
+                        //if (sunny)
+                        //    InsertIntoTempWeatherTypeList(weatherTypes, Sunny);
+                        //if (rainy)
+                        //    InsertIntoTempWeatherTypeList(weatherTypes, Rainy);
+                        //if (snowy)
+                        //    InsertIntoTempWeatherTypeList(weatherTypes, Snowy);
+                        //if (stormy)
+                        //    InsertIntoTempWeatherTypeList(weatherTypes, Stormy);
 
                         list.Add(new WeatherForecastDto
                         {
@@ -140,7 +139,8 @@ namespace BasicWebAPI.DAL
                             CloudAreaFraction = (float)Convert.ToDouble(reader["CloudAreaFraction"]),
                             FogAreaFraction = (float)Convert.ToDouble(reader["FogAreaFraction"]),
                             ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
-                            WeatherTypes = weatherTypes
+                            //WeatherTypes = weatherTypes
+                            WeatherType = reader["WeatherType"].ToString(),
                         });
                     }
                 }
