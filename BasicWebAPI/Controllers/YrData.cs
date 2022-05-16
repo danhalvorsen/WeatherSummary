@@ -153,6 +153,5 @@ namespace BasicWebAPI.YR
         public Geometry geometry { get; set; }
         public Properties properties { get; set; }
 
-
     }
 }

@@ -9,7 +9,7 @@ public class WeatherForecastDto
 {
     public WeatherForecastDto()
     {
-
+        Source = new WeatherSourceDto();
     }
 
     public WeatherForecastDto(DateTime date, float temperature, float windspeed, float windDirection,
@@ -39,6 +39,7 @@ public class WeatherForecastDto
     //public int FK_CityId { get; set; }
     public string City { get; set; }
     public DateTime Date { get; set; }
+    public string WeatherType { get; set; }
     //[JsonPropertyName("air_temperature")]
     public float Temperature { get; set; }
     public float Windspeed { get; set; }
@@ -51,7 +52,6 @@ public class WeatherForecastDto
     public float CloudAreaFraction { get; set; }
     public float FogAreaFraction { get; set; }
     public float ProbOfThunder { get; set; }
-    public string WeatherType { get; set; }
     public WeatherSourceDto Source { get; set; }
     //public List<WeatherTypeDto> WeatherTypes { get; set; }
 

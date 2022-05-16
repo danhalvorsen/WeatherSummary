@@ -16,10 +16,10 @@ namespace BasicWebAPI.Factory
     public interface IStrategy
     {
         string DataSource { get; }
-        Uri BaseUrl { get; }
         string Uri { get; }
+        Uri BaseUrl { get; }
 
-
+        Uri HomePage { get; set; }
     }
 
     public class YrStrategy : IStrategy
@@ -29,10 +29,29 @@ namespace BasicWebAPI.Factory
             DataSource = this.GetType().Name;
             Uri = $"complete?lat=58.970443618256432&lon=5.7331978346398227";
             BaseUrl = new Uri("https://api.met.no/weatherapi/locationforecast/2.0/");
+            HomePage = new Uri("https://www.yr.no/");
         }
         public string DataSource { get; }
         public string Uri { get; }
         public Uri BaseUrl { get; }
+        public Uri HomePage { get; set; }
+    }
+
+    public class OpenWeatherStrategy : IStrategy
+    {
+        public OpenWeatherStrategy()
+        {
+            DataSource = this.GetType().Name;
+            Uri = $"onecall?lat=58.970443618256432&lon=5.7331978346398227&units=metric&appid=7397652ad9c5f55e36782bb22811ca43";
+            BaseUrl = new Uri("http://api.openweathermap.org/data/2.5/");
+            HomePage = new Uri("https://openweathermap.org/");
+        }
+        public string DataSource { get; }
+
+        public string Uri { get; }
+
+        public Uri BaseUrl { get; }
+        public Uri HomePage { get; set; }
     }
 
     public class GetWeatherDataFactory
@@ -41,11 +60,16 @@ namespace BasicWebAPI.Factory
         private MapperConfiguration _config;
         private static HttpClient httpClient;
 
-        private MapperConfiguration CreateConfig(DateTime queryDate)
+        private MapperConfiguration CreateConfig(DateTime queryDate, IStrategy strategy)
         {
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<Application, WeatherForecastDto>()
              .ForPath(dest => dest.Date, opt => opt.MapFrom(src => src.properties.meta.updated_at)) // date
+             .ForPath(dest => dest.WeatherType, opt => opt // weathertype
+                .MapFrom(src => src.properties.timeseries
+                    .ToList()
+                    .Single(i => i.time.Equals(queryDate))
+                        .data.next_1_hours.summary.symbol_code))
              .ForPath(dest => dest.Temperature, opt => opt  // temperature
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
@@ -101,6 +125,7 @@ namespace BasicWebAPI.Factory
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.next_1_hours.details.probability_of_thunder))
+             .AfterMap((s, d) => d.Source.DataProvider = strategy.DataSource.ToString().Replace("Strategy", ""))
              );
 
             return config;
@@ -116,7 +141,6 @@ namespace BasicWebAPI.Factory
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
             var response = await httpClient.GetAsync(strategy.Uri);
 
-
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -128,7 +152,7 @@ namespace BasicWebAPI.Factory
                 TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
 
-                _config = CreateConfig(queryDate);
+                _config = CreateConfig(queryDate, strategy);
                 _mapper = new Mapper(_config);
 
                 var resultWeatherData = _mapper.Map<WeatherForecastDto>(weatherData);
