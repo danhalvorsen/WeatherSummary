@@ -30,7 +30,6 @@ public class WeatherForecastDto
         FogAreaFraction = fogAreaFraction;
         ProbOfThunder = probOfThunder;
         City = city;
-        //WeatherTypes = new List<WeatherTypeDto>();
         WeatherType = weatherType;
         Source = new WeatherSourceDto();
     }
@@ -40,7 +39,6 @@ public class WeatherForecastDto
     public string City { get; set; }
     public DateTime Date { get; set; }
     public string WeatherType { get; set; }
-    //[JsonPropertyName("air_temperature")]
     public float Temperature { get; set; }
     public float Windspeed { get; set; }
     public float WindDirection { get; set; }
@@ -53,6 +51,5 @@ public class WeatherForecastDto
     public float FogAreaFraction { get; set; }
     public float ProbOfThunder { get; set; }
     public WeatherSourceDto Source { get; set; }
-    //public List<WeatherTypeDto> WeatherTypes { get; set; }
 
 }

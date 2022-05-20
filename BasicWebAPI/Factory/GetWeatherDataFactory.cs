@@ -21,32 +21,62 @@ namespace BasicWebAPI.Factory
         string Uri { get; set; }
         string GeoUri { get; set; }
         Uri BaseUrl { get; }
-        Uri BaseGeoUri { get; }
-
+        Uri BaseGeoUrl { get; }
         Uri HomePage { get; set; }
-
-        void MakeUriWeatherCall();
+        string MakeGeoUriCityCall(string city);
+        string MakeUriWeatherCall(double lat, double lon);
+        HttpClient MakeHttpClientConnection();
+        HttpClient MakeGeoHttpClientConnection();
     }
     public class YrStrategy : IStrategy
     {
         public YrStrategy()
         {
             DataSource = this.GetType().Name;
-            Uri = $"complete?lat=58.970443618256432&lon=5.7331978346398227";
+            Uri = "";
             BaseUrl = new Uri("https://api.met.no/weatherapi/locationforecast/2.0/");
             HomePage = new Uri("https://www.yr.no/");
+            BaseGeoUrl = null;
+            GeoUri = "";
         }
 
         public string DataSource { get; }
         public string Uri { get; set; }
         public string GeoUri { get; set; }
         public Uri BaseUrl { get; }
-        public Uri BaseGeoUri { get; }
+        public Uri BaseGeoUrl { get; }
         public Uri HomePage { get; set; }
 
-        public void MakeUriWeatherCall()
+        public string MakeGeoUriCityCall(string city)
         {
-            throw new NotImplementedException();
+            return GeoUri = "";
+        }
+
+        public string MakeUriWeatherCall(double lat, double lon)
+        {
+            return Uri = $"complete?lat={lat}&lon={lon}";
+        }
+
+        public HttpClient MakeHttpClientConnection()
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = BaseUrl;
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+
+            return httpClient;
+        }
+
+        public HttpClient MakeGeoHttpClientConnection()
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = BaseGeoUrl;
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+
+            return httpClient;
         }
     }
 
@@ -55,29 +85,56 @@ namespace BasicWebAPI.Factory
         public OpenWeatherStrategy()
         {
             DataSource = this.GetType().Name;
-            Uri = $"onecall?lat=58.970443618256432&lon=5.7331978346398227&units=metric&appid=7397652ad9c5f55e36782bb22811ca43";
+            Uri = "";
             BaseUrl = new Uri("http://api.openweathermap.org/data/2.5/");
             HomePage = new Uri("https://openweathermap.org/");
-            BaseGeoUri = new Uri("http://api.openweathermap.org/geo/1.0/");
-            GeoUri = $"direct?q={"Stavanger"}&appid=7397652ad9c5f55e36782bb22811ca43";
+            BaseGeoUrl = new Uri("http://api.openweathermap.org/geo/1.0/");
+            GeoUri = "";
         }
 
         public string DataSource { get; }
         public string Uri { get; set; }
         public string GeoUri { get; set; }
         public Uri BaseUrl { get; }
-        public Uri BaseGeoUri { get; }
+        public Uri BaseGeoUrl { get; }
         public Uri HomePage { get; set; }
 
-        public void MakeUriWeatherCall()
+        public string MakeGeoUriCityCall(string city)
         {
-            throw new NotImplementedException();
+            return GeoUri = $"direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43";
+        }
+
+        public string MakeUriWeatherCall(double lat, double lon)
+        {
+            return Uri = $"onecall?lat={lat}&lon={lon}&units=metric&appid=7397652ad9c5f55e36782bb22811ca43";
+        }
+
+        public HttpClient MakeHttpClientConnection()
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = BaseUrl;
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+
+            return httpClient;
+        }
+
+        public HttpClient MakeGeoHttpClientConnection()
+        {
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = BaseGeoUrl;
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+
+            return httpClient;
         }
     }
 
     public class GetWeatherDataFactory
     {
-        private /*readonly*/ IMapper _mapper;
+        private IMapper _mapper;
         private MapperConfiguration _config;
         private static HttpClient httpClient;
 
@@ -171,18 +228,15 @@ namespace BasicWebAPI.Factory
                  .ForPath(dest => dest.Windspeed, opt => opt // windspeed
                      .MapFrom(src => src.current.wind_speed))
                  .ForPath(dest => dest.WindDirection, opt => opt // wind direction
-                    .MapFrom(src => src.current.wind_deg))
+                     .MapFrom(src => src.current.wind_deg))
                  .ForPath(dest => dest.WindspeedGust, opt => opt // windspeed gust
-                    .MapFrom(src => src.hourly
-                        .ToList()
-                        .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))) // "You get a unix timestamp in C# by using DateTime.UtcNow and subtracting the epoch time of 1970-01-01." <- stackoverflow
-                            .wind_gust))
+                     .MapFrom(src => src.current.wind_gust))
                  .ForPath(dest => dest.Pressure, opt => opt // pressure
-                    .MapFrom(src => src.current.pressure))
+                     .MapFrom(src => src.current.pressure))
                  .ForPath(dest => dest.Humidity, opt => opt // humidity
-                    .MapFrom(src => src.current.humidity))
+                     .MapFrom(src => src.current.humidity))
                  .ForPath(dest => dest.ProbOfRain, opt => opt // probability of percipitation (probability of rain)
-                    .MapFrom(src => src.hourly
+                     .MapFrom(src => src.hourly
                         .ToList()
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
                             .pop * 100))
@@ -224,23 +278,19 @@ namespace BasicWebAPI.Factory
                 .MapFrom(src => src.city.country))
             );
             return config;
-        }
+        } // Not in use due to StreamAsync
 
 
-        public async Task<WeatherForecastDto> GetWeatherDataFrom(IStrategy strategy)
+        public async Task<WeatherForecastDto> GetWeatherDataFrom(double lat, double lon, IStrategy strategy)
         {
             //-- HtppClient getting data from chosen strategy
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = strategy.BaseUrl;
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-            var response = await httpClient.GetAsync(strategy.Uri);
+            httpClient = strategy.MakeHttpClientConnection();
+            var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
 
             if (response.IsSuccessStatusCode && strategy.GetType() == typeof(YrStrategy))
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                
+
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 //-- Mapper
@@ -277,35 +327,40 @@ namespace BasicWebAPI.Factory
                 return null;
         }
 
-        public async Task<List<CityDto>> GetCityDataFrom(IStrategy strategy) // Have to use list when using streamasync
+        public async Task<List<CityDto>> GetCityDataFrom(string city, IStrategy strategy) // Have to use list when using streamasync
         {
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = strategy.BaseGeoUri;
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-            var response = await httpClient.GetAsync(strategy.GeoUri);
+            //try
+            //{
+            httpClient = strategy.MakeGeoHttpClientConnection();
+
+            // By default BaseAddress = BaseUrl, so we have to change that here.
+            var response = await httpClient.GetAsync(strategy.MakeGeoUriCityCall(city));
+            await Task.CompletedTask;
 
             if (response.IsSuccessStatusCode)
             {
                 var streamTask = httpClient.GetStreamAsync(strategy.GeoUri);
-                var cityCoordinates = await JsonSerializer.DeserializeAsync<List<CityDto>>(await streamTask);
+                var cityInfo = await JsonSerializer.DeserializeAsync<List<CityDto>>(await streamTask);
 
-                if (cityCoordinates.Count > 0)
-                    return cityCoordinates;
-                else 
-                    return null;
+                return cityInfo;
             }
-            else 
-                return null;
-
-
+            else
+            {
+                Console.WriteLine("ikkje nesten repsonse success");
+            }
+            return null;
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine($"Excepton message: {e.Message}");
+            //}
+            //return null;
             //if (response.IsSuccessStatusCode)
             //{
             //    var responseBody = response.Content.ReadAsStringAsync();
 
             //    var cityData = JsonSerializer.Deserialize<List<ApplicationOpenWeather>>(await responseBody);
-                
+
             //    //-- Mapper
             //    _config = CreateConfigForFetchingCityCoordinates();
             //    _mapper = new Mapper(_config);
@@ -318,6 +373,7 @@ namespace BasicWebAPI.Factory
             //    return null;
         }
 
+        // Need to convert from Unix to DateTime when fetching data from OpenWeather datasource and vice versa
         private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch

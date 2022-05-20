@@ -58,7 +58,7 @@ public class WeatherforecastController : ControllerBase
     public ActionResult<WeatherForecastDto> Create(WeatherForecastDto addWeatherData)
     {
         var command = new Commands(config);
-        return command.AddWeatherDataToWeatherDataAndSourceWeatherDataTable(addWeatherData);
+        return command.AddWeatherDataToDatabase(addWeatherData);
     }
 
 }

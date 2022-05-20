@@ -41,6 +41,7 @@ namespace BasicWebAPI.OpenWeather
         public double visibility { get; set; }
         public double wind_speed { get; set; }
         public double wind_deg { get; set; }
+        public double wind_gust { get; set; }
         public IList<Weather> weather { get; set; }
 
     }
