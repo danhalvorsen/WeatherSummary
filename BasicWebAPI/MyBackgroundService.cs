@@ -25,23 +25,33 @@ namespace BasicWebAPI
             factory = new GetWeatherDataFactory();
             strategy = new YrStrategy();
             var command = new Commands(config);
+            var cityCommands = new CityCommands(config);
+            var commands = new Commands(config);
 
             while (!stoppingToken.IsCancellationRequested) {
                 Console.WriteLine("Henter data fra Yr.no");
 
-                //-- Getting the data from Yr (Only from Stavanger at this point in time)
-                var result = await factory.GetWeatherDataFrom(strategy);
+                ////-- Getting the data from Yr (Only from Stavanger at this point in time)
+                //var result = await factory.GetWeatherDataFrom(strategy);
                 
-                //-- Adding data from Yr to the database
+                ////-- Adding data from Yr to the database
                 //command.AddWeatherDataToWeatherDataAndSourceWeatherDataTable(result);
-                Console.WriteLine(result.ToString());
+
+
+               
+                //var cities = cityCommands.GetCities();
+
+                //foreach (var city in cities)
+                //{
+                //    commands.GetWeatherForecastForCity(result, city);
+                //}
+
+                
 
 
                 await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
             }
             await Task.CompletedTask;
-
-            
         }
     }
 }
