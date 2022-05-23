@@ -20,7 +20,6 @@ namespace BasicWebAPI.DAL
 
         public async Task<List<CityDto>> GetAllCities()
         {
-
             var connectionString = config.GetConnectionString("WeatherForecastDatabase");
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -43,7 +42,6 @@ namespace BasicWebAPI.DAL
                         });
                     }
                 }
-
                 return list;
             }
         }

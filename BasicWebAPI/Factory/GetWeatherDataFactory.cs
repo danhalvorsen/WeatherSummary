@@ -248,13 +248,14 @@ namespace BasicWebAPI.Factory
                  .ForPath(dest => dest.CloudAreaFraction, opt => opt // cloud area fraction
                     .MapFrom(src => src.current.clouds))
                  .ForPath(dest => dest.FogAreaFraction, opt => opt // fog area fraction
-                    .MapFrom(src => src.current.visibility / 100))
+                    .MapFrom(src => src.current.visibility))
                   //.ForPath(dest => dest.ProbOfThunder, opt => opt // probabiliy of thunder
                   //   .MapFrom(src => src.properties.timeseries
                   //       .ToList()
                   //       .Single(i => i.time.Equals(queryDate))
                   //           .data.next_1_hours.details.probability_of_thunder))
                   .AfterMap((s, d) => d.Source.DataProvider = strategy.DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
+                  .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
                  );
                 return config;
             }
@@ -294,7 +295,7 @@ namespace BasicWebAPI.Factory
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 //-- Mapper
-                DateTime queryDate = DateTime.Now;
+                DateTime queryDate = DateTime.UtcNow;
                 TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
 
@@ -389,6 +390,11 @@ namespace BasicWebAPI.Factory
             dateTime = dateTime.ToUniversalTime();
             int unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             return unixTimestamp;
+        }
+
+        private double VisibilityConvertedToFogAreaFraction(double value)
+        {
+            return Math.Abs((value / 100) - 100);
         }
     }
 }

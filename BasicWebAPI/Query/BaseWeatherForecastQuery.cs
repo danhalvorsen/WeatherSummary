@@ -18,7 +18,7 @@ namespace BasicWebAPI.DAL
 
         public BaseWeatherForecastQuery(IConfiguration config)
         {
-
+            _config = config;
         }
 
         public List<WeatherForecastDto> DatabaseQuery(string queryString)
@@ -42,8 +42,6 @@ namespace BasicWebAPI.DAL
 
                             WeatherForecastDtos.Add(new WeatherForecastDto
                             {
-                                //Id = Convert.ToInt32(reader["Id"]),
-                                //FK_CityId = Convert.ToInt32(reader["FK_CityId"]),
                                 City = reader["CityName"].ToString(),
                                 Date = Convert.ToDateTime(reader["Date"]),
                                 WeatherType = reader["WeatherType"].ToString(),
@@ -61,7 +59,6 @@ namespace BasicWebAPI.DAL
                                 Source = weatherSource,
                             });
                         }
-                        //reader.Close();
                     }
                     return WeatherForecastDtos;
                 }

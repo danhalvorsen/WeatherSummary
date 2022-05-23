@@ -8,21 +8,19 @@ using System.Threading.Tasks;
 
 namespace BasicWebAPI.DAL
 {
-    public class AddWeatherDataForFirstTimeSearchedCityCommand : BaseWeatherForecastQuery
+    public class AddWeatherDataForCityCommand : BaseWeatherForecastQuery
     {
         private readonly GetWeatherDataFactory _factory;
-        public AddWeatherDataForFirstTimeSearchedCityCommand(IConfiguration config) : base(config)
+        public AddWeatherDataForCityCommand(IConfiguration config) : base(config)
         {
             this._factory = new GetWeatherDataFactory();
         }
 
 
-
-        public async Task GetWeatherDataForFirstTimeSearchedCity(CityDto city, IStrategy strategy)
+        public async Task GetWeatherDataForCity(CityDto city, IStrategy strategy)
         {
             Debug.Assert(city != null, "city is null");
-            Debug.Assert(strategy != null, "strategyYR is null");
-
+            Debug.Assert(strategy != null, "strategy is null");
 
             try
             {
@@ -55,7 +53,5 @@ namespace BasicWebAPI.DAL
 
             return InsertIntoDatabase(addWeatherData, queryString);
         }
-
-
     }
 }
