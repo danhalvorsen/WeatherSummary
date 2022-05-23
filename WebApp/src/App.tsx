@@ -35,17 +35,17 @@ function App() {
   return (
    
     <div className="App">
-      <Navbar/>
+      {/* <Navbar/>
       <Showcase/>
-      <Axiostest/>
+      <Axiostest/> */}
       <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/>
 
-      <div id='1000'></div>
+      {/* <div id='1000'></div>
       <h4>Test application to compare Weather forecast</h4>
       <br/>
 
       <SearchBar onSubmit = 'test' fn = {callback} />
-      <ShowData />
+      <ShowData /> */}
  
     </div>
   );
