@@ -9,6 +9,7 @@ using BasicWebAPI.Controllers;
 using BasicWebAPI.Factory;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BasicWebAPI.DAL
 {
@@ -20,137 +21,27 @@ namespace BasicWebAPI.DAL
         //private const string Snowy = "Snowy";
         //private const string Stormy = "Stormy";
 
-        private readonly IConfiguration config;
-        private readonly IStrategy yrStrategy = new YrStrategy();
-        private readonly IStrategy OpenWeatherStrategy = new OpenWeatherStrategy();
-        private GetWeatherDataFactory factory;
+        private readonly IConfiguration _config;
+        private GetWeatherDataFactory _factory;
 
         public Commands(IConfiguration config)
         {
-            this.config = config;
+            this._config = config;
+            this._factory = new GetWeatherDataFactory();
         }
-        public List<WeatherForecastDto> GetWeatherForecastByDate(DateQueryAndCity query)
-        {
-            string cityName = query.CityQuery.City;
-            var listWeatherForecast = new List<WeatherForecastDto>();
-            CityDto city;
+     
 
-            try
-            {
-                if (!CityExist(cityName))
-                {
-                    city = new CityDto();
-                    InsertCityIntoDatabase(cityName, OpenWeatherStrategy, factory);
-                    city = GetCityRequestInfo(cityName);
-                    GetWeatherDataForFirstTimeSearchedCity(city.Latitude, city.Longitude, yrStrategy, OpenWeatherStrategy);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Exception Message: {e.Message}");
-            }
+        //public List<WeatherForecastDto> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity query)
+        //{
+        //    var utcDateFrom = query.BetweenDateQuery.From.Date.ToUniversalTime();
+        //    var utcDateTo = query.BetweenDateQuery.To.Date.ToUniversalTime();
+        //    string city = query.CityQuery.City;
+        //    var listWeatherForecastBetweenDates = new List<WeatherForecastDto>();
 
+            
 
-            string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
-                                        $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
-                                            $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                    $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE CAST([Date] as Date) = '{query.DateQuery.Date}' AND City.Name = '{cityName}'";
-
-            return DatabaseQuery(listWeatherForecast, queryString);
-        }
-        private async Task GetWeatherDataForFirstTimeSearchedCity(double lat, double lon, IStrategy strategy1, IStrategy strategy2)
-        {
-            try
-            {
-                var yrData = await factory.GetWeatherDataFrom(lat, lon, strategy1);
-                AddWeatherDataToDatabase(yrData);
-                await Task.CompletedTask;
-
-                var OpenWeatherData = await factory.GetWeatherDataFrom(lat, lon, strategy2);
-                AddWeatherDataToDatabase(OpenWeatherData);
-                await Task.CompletedTask;
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine($"Exception Message: {e.Message}");
-            } 
-        }
-
-        private async Task InsertCityIntoDatabase(string city, IStrategy strategy, GetWeatherDataFactory factory)
-        {
-            try
-            {
-                factory = new GetWeatherDataFactory();
-                var result = await factory.GetCityDataFrom(city, strategy);
-
-                // Getting the full country name
-                var twoLetterCountryAbbreviation = new CultureInfo(result[0].Country);
-                var countryName = new RegionInfo(twoLetterCountryAbbreviation.Name);
-
-                string queryString = $"INSERT INTO City ([Name], Country, Altitude, Longitude, Latitude) " +
-                                        $"VALUES('{result[0].Name}', {countryName.EnglishName}, {result[0].Altitude}, {result[0].Longitude}, {result[0].Latitude})";
-
-                using (SqlConnection connection = new SqlConnection(config.GetConnectionString("WeatherForecastDatabase")))
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-
-                    command.ExecuteNonQuery();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Exception Message: {e.Message}");
-            }
-        }
-
-        private CityDto GetCityRequestInfo(string city)
-        {
-            var citycommands = new CityCommands(config);
-            var cities = citycommands.GetCities();
-
-            foreach (var c in cities)
-            {
-                if (c.Name == city)
-                {
-                    return c;
-                }    
-            }
-            return null;
-        }
-
-        private bool CityExist(string city)
-        {
-            var citycommands = new CityCommands(config);
-            var cities = citycommands.GetCities();
-
-            foreach (var c in cities)
-            {
-                if (c.Name == city)
-                    return true;
-            }
-            return false;
-        }
-
-        public List<WeatherForecastDto> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity query)
-        {
-            var utcDateFrom = query.BetweenDateQuery.From.Date.ToUniversalTime();
-            var utcDateTo = query.BetweenDateQuery.To.Date.ToUniversalTime();
-            string city = query.CityQuery.City;
-            var listWeatherForecastBetweenDates = new List<WeatherForecastDto>();
-
-            string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
-                                        $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
-                                            $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                    $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE CAST([Date] as Date) BETWEEN '{utcDateFrom}' AND '{utcDateTo}' AND City.Name = '{city}'";
-
-            return DatabaseQuery(listWeatherForecastBetweenDates, queryString);
-        }
+        //    return DatabaseQuery(listWeatherForecastBetweenDates, queryString);
+        //}
 
         public List<WeatherForecastDto> GetWeatherForecastByWeek(int week, CityQuery query)
         {
@@ -167,65 +58,36 @@ namespace BasicWebAPI.DAL
             return DatabaseQuery(listWeatherForecastByWeek, queryString);
         }
 
-        public WeatherForecastDto AddWeatherDataToDatabase(WeatherForecastDto addWeatherData)
-        {
-            string queryString = $"DECLARE @city_id INT " +
-                                    $"DECLARE @source_id INT " +
-                                        $"DECLARE @fk_weatherdata_id INT " +
-                                            $"SELECT @fk_weatherdata_id = Id From WeatherData " +
-                                                $"SELECT @city_id = Id FROM City WHERE City.Name = '{addWeatherData.City}' " +
-                                                    $"SELECT @source_id = id FROM [Source] WHERE [Source].[Name] = '{addWeatherData.Source.DataProvider}' " +
-                                                        $"INSERT INTO WeatherData([Date], WeatherType, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, " +
-                                                            $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId) " +
-                                                                $"VALUES('{addWeatherData.Date}', '{addWeatherData.WeatherType}', {addWeatherData.Temperature}, {addWeatherData.Windspeed}, " +
-                                                                    $"{addWeatherData.WindDirection}, {addWeatherData.WindspeedGust}, {addWeatherData.Pressure}, {addWeatherData.Humidity}, {addWeatherData.ProbOfRain}, " +
-                                                                        $"{addWeatherData.AmountRain}, {addWeatherData.CloudAreaFraction}, {addWeatherData.FogAreaFraction}, {addWeatherData.ProbOfThunder}, @city_id)" +
+        //public WeatherForecastDto AddWeatherDataToDatabase(WeatherForecastDto addWeatherData)
+        //{
+        //    string queryString = $"DECLARE @city_id INT " +
+        //                            $"DECLARE @source_id INT " +
+        //                                $"DECLARE @fk_weatherdata_id INT " +
+        //                                    $"SELECT @fk_weatherdata_id = Id From WeatherData " +
+        //                                        $"SELECT @city_id = Id FROM City WHERE City.Name = '{addWeatherData.City}' " +
+        //                                            $"SELECT @source_id = id FROM [Source] WHERE [Source].[Name] = '{addWeatherData.Source.DataProvider}' " +
+        //                                                $"INSERT INTO WeatherData([Date], WeatherType, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, " +
+        //                                                    $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId) " +
+        //                                                        $"VALUES('{addWeatherData.Date}', '{addWeatherData.WeatherType}', {addWeatherData.Temperature}, {addWeatherData.Windspeed}, " +
+        //                                                            $"{addWeatherData.WindDirection}, {addWeatherData.WindspeedGust}, {addWeatherData.Pressure}, {addWeatherData.Humidity}, {addWeatherData.ProbOfRain}, " +
+        //                                                                $"{addWeatherData.AmountRain}, {addWeatherData.CloudAreaFraction}, {addWeatherData.FogAreaFraction}, {addWeatherData.ProbOfThunder}, @city_id)" +
 
-                                                    $"SELECT @fk_weatherdata_id = Id From WeatherData " +
-                                                        $"INSERT INTO SourceWeatherData(ConnectionDate, FK_SourceId, FK_WeatherDataId) " +
-                                                            $"VALUES('{addWeatherData.Date}', @source_id, @fk_weatherdata_id)";
+        //                                            $"SELECT @fk_weatherdata_id = Id From WeatherData " +
+        //                                                $"INSERT INTO SourceWeatherData(ConnectionDate, FK_SourceId, FK_WeatherDataId) " +
+        //                                                    $"VALUES('{addWeatherData.Date}', @source_id, @fk_weatherdata_id)";
 
-            return InsertIntoDatabase(addWeatherData, queryString);
-        }
+        //    return InsertIntoDatabase(addWeatherData, queryString);
+        //}
 
-        public WeatherForecastDto AutoUpdateWeatherDataToDatabaseForAllCities(WeatherForecastDto addWeatherData, CityDto cityData)
-        {
-            string queryString = $"DECLARE @city_id INT " +
-                    $"DECLARE @source_id INT " +
-                        $"DECLARE @fk_weatherdata_id INT " +
-                            $"SELECT @fk_weatherdata_id = Id From WeatherData " +
-                                $"SELECT @city_id = Id FROM City WHERE City.Name = '{cityData.Name}' " +
-                                    $"SELECT @source_id = id FROM [Source] WHERE [Source].[Name] = '{addWeatherData.Source.DataProvider}' " +
-                                        $"INSERT INTO WeatherData([Date], WeatherType, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, " +
-                                            $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId) " +
-                                                $"VALUES('{addWeatherData.Date}', '{addWeatherData.WeatherType}', {addWeatherData.Temperature}, {addWeatherData.Windspeed}, " +
-                                                    $"{addWeatherData.WindDirection}, {addWeatherData.WindspeedGust}, {addWeatherData.Pressure}, {addWeatherData.Humidity}, {addWeatherData.ProbOfRain}, " +
-                                                        $"{addWeatherData.AmountRain}, {addWeatherData.CloudAreaFraction}, {addWeatherData.FogAreaFraction}, {addWeatherData.ProbOfThunder}, @city_id)" +
+     
 
-                                    $"SELECT @fk_weatherdata_id = Id From WeatherData " +
-                                        $"INSERT INTO SourceWeatherData(ConnectionDate, FK_SourceId, FK_WeatherDataId) " +
-                                            $"VALUES('{addWeatherData.Date}', @source_id, @fk_weatherdata_id)";
-
-            return InsertIntoDatabase(addWeatherData, queryString);
-        }
-
-        private WeatherForecastDto InsertIntoDatabase(WeatherForecastDto addWeatherData, string queryString)
-        {
-            using (SqlConnection connection = new SqlConnection(config.GetConnectionString("WeatherForecastDatabase")))
-            {
-                SqlCommand command = new SqlCommand(queryString, connection);
-                connection.Open();
-
-                command.ExecuteNonQuery();
-            }
-            return addWeatherData;
-        }
+      
 
         private List<WeatherForecastDto> DatabaseQuery(List<WeatherForecastDto> list, string queryString)
         {
             try
             {
-                var connectionString = this.config.GetConnectionString("WeatherForecastDatabase");
+                var connectionString = this._config.GetConnectionString("WeatherForecastDatabase");
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
@@ -260,6 +122,7 @@ namespace BasicWebAPI.DAL
                                 Source = weatherSource,
                             });
                         }
+                        //reader.Close();
                     }
                     return list;
                 }

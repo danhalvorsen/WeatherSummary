@@ -346,7 +346,7 @@ namespace BasicWebAPI.Factory
             }
             else
             {
-                Console.WriteLine("ikkje nesten repsonse success");
+                Console.WriteLine("ikkje nesten response success");
             }
             return null;
             //}
@@ -355,6 +355,8 @@ namespace BasicWebAPI.Factory
             //    Console.WriteLine($"Excepton message: {e.Message}");
             //}
             //return null;
+            
+            
             //if (response.IsSuccessStatusCode)
             //{
             //    var responseBody = response.Content.ReadAsStringAsync();

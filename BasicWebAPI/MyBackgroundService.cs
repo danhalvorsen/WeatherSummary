@@ -25,7 +25,7 @@ namespace BasicWebAPI
             factory = new GetWeatherDataFactory();
             strategy = new YrStrategy();
             var command = new Commands(config);
-            var cityCommands = new CityCommands(config);
+            var cityCommands = new GetCitiesQuery(config);
             var commands = new Commands(config);
 
             while (!stoppingToken.IsCancellationRequested) {
@@ -49,7 +49,7 @@ namespace BasicWebAPI
                 
 
 
-                await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
+               await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
             }
             await Task.CompletedTask;
         }
