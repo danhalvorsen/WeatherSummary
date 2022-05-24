@@ -2,59 +2,43 @@ import { render } from "@testing-library/react";
 import React from "react";
 import { useState, useEffect } from "react";
 import ShowHtml from "./ShowHtml";
+import { IresultJson } from "../../Interfaces";
 
 type Props = {
   city: string;
   date: string;
-  fn: () => Array<number> | Promise<number[]>;
+  fn: () => Promise<IresultJson>;
 };
 
 const WeatherData = ({ city, date, fn }: Props) => {
-
-  const [result, setResult] = useState<Array<number>>([]);
+  const [result, setResult] = useState<Array<IresultJson>>();
+  const [mynumber, setMynumber] = useState<number>();
   const [htmlElement, sethtmlElement] = useState<JSX.Element[]>();
 
-  //let htmlElement: JSX.Element[] | undefined ;
 
+  async function setComponentState(): Promise<void | Array<IresultJson>> {
+    const getData = await fn()
+    setMynumber(19);
+    setResult(getData);
 
-  async function setComponentState(): Promise<void | number[]> {
-    const getResault = await fn();
-    setResult(getResault);
+   
+    //console.log(data.city);
 
-    const listitem = result.map((item)=>
-     <li key={item.toString()}>{item} </li>
-      );
+    //const city = result[0].city;
+   // const weatherStatus = result[0].weatherType;
 
-    sethtmlElement(listitem)
+    // const listItem = result.map((item:IresultJson)=>
+    // <li key={item.toString()}>{item} </li>
+    //   );
+    // sethtmlElement(listItem)
 
       }
 
-   
 
-
-      
-//     const numbers = [1, 2, 3, 4, 5];
-//  const listItems = numbers.map((number) =>
-//    <li>{number}</li>
-//  );
-
-          
-      
-
-  // useEffect(()=>{
-
-  //   result.map((item)=>{
-  //     const list_items = <li>{item} key={item.toString()}</li>
-  //     setResultHtml(list_items)
-  //   })
-
-  //   return ()=>{     
-  //     }
-      
-  //   }
-  // )
-
-
+      // if(result !== undefined)
+      //   if(result.city !== undefined)
+      //       console.log('hello city: ' + result[0].data );
+      // console.log(result?.city);
 
   
   return (
@@ -66,6 +50,8 @@ const WeatherData = ({ city, date, fn }: Props) => {
       <div id="1000">Hello!</div>
       <button onClick={setComponentState}>CLICK ON ME</button>
       <ul>{htmlElement}</ul>
+      <p>the city you've searched: <strong>{}</strong> and today's weather status is: <strong>{}</strong></p>
+      
     </div>
   );
 };

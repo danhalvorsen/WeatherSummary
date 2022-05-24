@@ -21,8 +21,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "json-server": " json-server --config ./src/tests/data.json",
+    "json-server": "json-server --config ./src/tests/YrData.json",
     "docker": "docker build -t weather-yr:dev . && docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000  -e CHOKIDAR_USEPOLLING=true sample:dev"
+
   },
   "eslintConfig": {
     "extends": [

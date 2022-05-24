@@ -16,7 +16,6 @@ import { MakeHttpRequest } from './components/jsx-components/httpRequests';
 
 
 function App() {
-
   
   let onSearchSubmit = (e : ChangeEvent)=> {
  // console.log('OnSearchSubmit');
