@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using BasicWebAPI.DAL;
 using Microsoft.Extensions.Configuration;
 using BasicWebAPI.Query;
+using System.Threading.Tasks;
+using BasicWebAPI.Factory;
 
 public class ResponseHeaderAttribute : ActionFilterAttribute
 {
@@ -34,17 +36,18 @@ public class WeatherforecastController : ControllerBase
     }
 
     [HttpGet("DateQueryAndCity")]
-    public ActionResult<List<WeatherForecastDto>> Day([FromQuery] DateQueryAndCity query)
+    public async Task<ActionResult<List<WeatherForecastDto>>> Day([FromQuery] DateQueryAndCity query)
     {
-        var command = new Commands(config);
-        return command.GetWeatherForecastByDate(query);
+        var command = new GetWeatherForecastByDateCommand(config);
+        return await command.GetWeatherForecastByDate(query, new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
     }
 
     [HttpGet("BetweenDateQueryAndCity")]
     public ActionResult<List<WeatherForecastDto>> Between([FromQuery] BetweenDateQueryAndCity query)
     {
-        var command = new Commands(config);
-        return command.GetWeatherForecastBetweenDates(query);
+        var queryObject =  new GetWeatherForecastBetweenDatesQuery(config);
+        return queryObject.Query(query);
+
     }
 
     [HttpGet("Week")]
@@ -54,11 +57,11 @@ public class WeatherforecastController : ControllerBase
         return command.GetWeatherForecastByWeek(week, query);
     }
 
-    [HttpPost("InsertWeatherData")]
-    public ActionResult<WeatherForecastDto> Create(WeatherForecastDto addWeatherData)
-    {
-        var command = new Commands(config);
-        return command.AddWeatherDataToWeatherDataTable(addWeatherData);
-    }
+    //[HttpPost("InsertWeatherData")]
+    //public ActionResult<WeatherForecastDto> Create(WeatherForecastDto addWeatherData)
+    //{
+    //    var command = new Commands(config);
+    //    return command.AddWeatherDataToDatabase(addWeatherData);
+    //}
 
 }

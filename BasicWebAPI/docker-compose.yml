@@ -32,4 +32,3 @@ volumes:
   Sql-server-storage:
     external: true
     
-    
