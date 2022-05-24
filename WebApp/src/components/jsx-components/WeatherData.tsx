@@ -25,7 +25,7 @@ const WeatherData = ({ city, date, fn }: Props) => {
 
 
   const weatherData = result.map((item) =>
-  <div>{item.city}</div>);
+  <div>{item.city}-{item.date}</div>);
 
   return (
     <div>
