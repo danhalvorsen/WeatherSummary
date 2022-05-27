@@ -22,7 +22,7 @@ export const MyComp = () => {
 
     
 
-    console.log(data);
+    //console.log(data);
 
 
     return(<><div></div></>)

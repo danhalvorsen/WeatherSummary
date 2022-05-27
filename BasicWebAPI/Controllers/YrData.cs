@@ -147,12 +147,11 @@ namespace BasicWebAPI.YR
         public IList<Timeseries> timeseries { get; set; }
 
     }
-    public class Application
+    public class ApplicationYr
     {
         public string type { get; set; }
         public Geometry geometry { get; set; }
         public Properties properties { get; set; }
-
 
     }
 }

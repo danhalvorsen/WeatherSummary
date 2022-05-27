@@ -1,0 +1,21 @@
+{"data" : 
+   [ {
+      "city": "Stavanger",
+      "date": "2022-05-13T10:38:11.823",
+      "weatherType": "sunny",
+      "temperature": 14.3,
+      "windspeed": 2.5,
+      "windDirection": 293,
+      "windspeedGust": 5.6,
+      "pressure": 1023.7,
+      "humidity": 42.4,
+      "probOfRain": 0,
+      "amountRain": 0,
+      "cloudAreaFraction": 13.5,
+      "fogAreaFraction": 0,
+      "probOfThunder": 0,
+      "source": {
+        "dataProvider": "Yr"
+      }
+    }
+ ] }

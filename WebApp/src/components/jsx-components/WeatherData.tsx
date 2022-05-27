@@ -1,32 +1,44 @@
 import { render } from "@testing-library/react";
-import React from "react";
-import { useState } from "react";
-
- 
+import React, { useCallback } from "react";
+import { useState, useEffect } from "react";
+import ShowHtml from "./ShowHtml";
+import { IresultJson as IResultJson } from "../../Interfaces";
 
 type Props = {
   city: string;
   date: string;
-  fn: () => Array<number>;
+  fn: () => Promise<Array<IResultJson>>;
 };
 
 const WeatherData = ({ city, date, fn }: Props) => {
-  const [result, setResult] = useState({});
+  const [result, setResult] = useState<Array<IResultJson>>([]);
 
-  function setComponentState(): void {
-    setResult(fn());
-    console.log(result);
-  }
+  const [htmlElement, sethtmlElement] = useState<JSX.Element[]>();
 
-  // const list_items = (result !== undefined) ? result.map((x) => <li>{x}</li>) : {};
+  const setComponentState = useCallback(async () => {
+    const data = await fn();
+    if (data !== undefined && data !== null && data.length > 0) {
+      setResult(data);
+    }
+
+  }, [setResult, fn]);
+
+
+  const weatherData = result.map((item) =>
+  <div>{item.city}-{item.date}</div>);
 
   return (
     <div>
-      {/* <div>
-        <ul>{list_items}</ul>
-      </div> */}
+      <div>
+        {/* <ShowHtml data={list_items}/> */}
+
+      </div>
       <div id="1000">Hello!</div>
-      <button onClick={setComponentState}>CLICK ON ME</button>
+      <button onClick={() => setComponentState()}>CLICK ON ME</button>
+      {/* <ul>{htmlElement}</ul> */}
+      <p>the city you've searched: <strong>{ }</strong> and today's weather status is: <strong>{ }</strong></p>
+      <div>{weatherData}</div>
+      
     </div>
   );
 };
