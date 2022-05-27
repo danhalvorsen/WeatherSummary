@@ -8,6 +8,9 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net.Http;
+using System.Net;
+
 namespace BasicWebAPI.DAL
 {
     public class GetWeatherForecastByDateCommand : BaseWeatherForecastQuery
@@ -23,6 +26,7 @@ namespace BasicWebAPI.DAL
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IStrategy> getWeatherDataStrategies)
         {
             string cityName = query.CityQuery.City;
+            DateTime date = query.DateQuery.Date;
 
             try
             {
@@ -31,7 +35,7 @@ namespace BasicWebAPI.DAL
 
                 if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
                 {
-                    await (new CreateCityCommand(_config).InsertCityIntoDatabase(cityName, new OpenWeatherStrategy(), _factory)); //ToDo: Own command for createCity???
+                    await (new CreateCityCommand(_config).InsertCityIntoDatabase(cityName, new OpenWeatherStrategy(), _factory));
 
                     var getCitiesQueryUpdate = new GetCitiesQuery(_config);
                     var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
@@ -54,7 +58,8 @@ namespace BasicWebAPI.DAL
                                             $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                                 $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE CAST([Date] as Date) = '{query.DateQuery.Date./*ToUniversalTime*/}' AND City.Name = '{cityName}'";
+                                                        $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}'";
+            
 
             return DatabaseQuery(queryString);
         }

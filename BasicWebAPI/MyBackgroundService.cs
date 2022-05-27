@@ -3,6 +3,7 @@ using BasicWebAPI.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,8 +11,6 @@ namespace BasicWebAPI
 {
     public class MyBackgroundService : BackgroundService
     {
-        private GetWeatherDataFactory factory;
-        private IStrategy strategy;
 
         private readonly IConfiguration config;
 
@@ -20,36 +19,18 @@ namespace BasicWebAPI
             this.config = config;
         }
 
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            factory = new GetWeatherDataFactory();
-            strategy = new YrStrategy();
-            var command = new Commands(config);
-            var cityCommands = new GetCitiesQuery(config);
-            var commands = new Commands(config);
 
-            while (!stoppingToken.IsCancellationRequested) {
-                Console.WriteLine("Henter data fra Yr.no");
+            while (!stoppingToken.IsCancellationRequested) 
+            {
+                Console.WriteLine("BackgroundService doing work");
 
-                ////-- Getting the data from Yr (Only from Stavanger at this point in time)
-                //var result = await factory.GetWeatherDataFrom(strategy);
-                
-                ////-- Adding data from Yr to the database
-                //command.AddWeatherDataToWeatherDataAndSourceWeatherDataTable(result);
+                var command = new GetWeatherForecastForBackgroundServiceCommand(config);
+                await command.GetWeatherForecastForAllCities(new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
 
-
-               
-                //var cities = cityCommands.GetCities();
-
-                //foreach (var city in cities)
-                //{
-                //    commands.GetWeatherForecastForCity(result, city);
-                //}
-
-                
-
-
-               await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
+                await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
             }
             await Task.CompletedTask;
         }

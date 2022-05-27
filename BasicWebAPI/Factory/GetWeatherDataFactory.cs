@@ -21,7 +21,7 @@ namespace BasicWebAPI.Factory
         string Uri { get; set; }
         string GeoUri { get; set; }
         Uri BaseUrl { get; }
-        Uri BaseGeoUrl { get; }
+        Uri? BaseGeoUrl { get; }
         Uri HomePage { get; set; }
         string MakeGeoUriCityCall(string city);
         string MakeUriWeatherCall(double lat, double lon);
@@ -44,7 +44,7 @@ namespace BasicWebAPI.Factory
         public string Uri { get; set; }
         public string GeoUri { get; set; }
         public Uri BaseUrl { get; }
-        public Uri BaseGeoUrl { get; }
+        public Uri? BaseGeoUrl { get; }
         public Uri HomePage { get; set; }
 
         public string MakeGeoUriCityCall(string city)
@@ -96,7 +96,7 @@ namespace BasicWebAPI.Factory
         public string Uri { get; set; }
         public string GeoUri { get; set; }
         public Uri BaseUrl { get; }
-        public Uri BaseGeoUrl { get; }
+        public Uri? BaseGeoUrl { get; }
         public Uri HomePage { get; set; }
 
         public string MakeGeoUriCityCall(string city)
@@ -134,11 +134,11 @@ namespace BasicWebAPI.Factory
 
     public class GetWeatherDataFactory
     {
-        private IMapper _mapper;
-        private MapperConfiguration _config;
-        private static HttpClient httpClient;
+        private IMapper? _mapper;
+        private MapperConfiguration? _config;
+        private static HttpClient? httpClient;
 
-        private MapperConfiguration CreateConfigForFetchingWeatherData(DateTime queryDate, IStrategy strategy)
+        private MapperConfiguration? CreateConfigForFetchingWeatherData(DateTime queryDate, IStrategy strategy)
         {
             MapperConfiguration config;
 
@@ -295,7 +295,7 @@ namespace BasicWebAPI.Factory
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 //-- Mapper
-                DateTime queryDate = DateTime.UtcNow;
+                DateTime queryDate = DateTime.Now;
                 TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
 
@@ -330,50 +330,27 @@ namespace BasicWebAPI.Factory
 
         public async Task<List<CityDto>> GetCityDataFrom(string city, IStrategy strategy) // Have to use list when using streamasync
         {
-            //try
-            //{
-            httpClient = strategy.MakeGeoHttpClientConnection();
-
-            // By default BaseAddress = BaseUrl, so we have to change that here.
-            var response = await httpClient.GetAsync(strategy.MakeGeoUriCityCall(city));
-            await Task.CompletedTask;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var streamTask = httpClient.GetStreamAsync(strategy.GeoUri);
-                var cityInfo = await JsonSerializer.DeserializeAsync<List<CityDto>>(await streamTask);
+                httpClient = strategy.MakeGeoHttpClientConnection();
 
-                return cityInfo;
+                // By default BaseAddress = BaseUrl, so we have to change that here.
+                var response = await httpClient.GetAsync(strategy.MakeGeoUriCityCall(city));
+                await Task.CompletedTask;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var streamTask = httpClient.GetStreamAsync(strategy.GeoUri);
+                    var cityInfo = await JsonSerializer.DeserializeAsync<List<CityDto>>(await streamTask);
+
+                    return cityInfo;
+                }
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine("ikkje nesten response success");
+                Console.WriteLine($"Excepton message: {e.Message}");
             }
             return null;
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine($"Excepton message: {e.Message}");
-            //}
-            //return null;
-            
-            
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var responseBody = response.Content.ReadAsStringAsync();
-
-            //    var cityData = JsonSerializer.Deserialize<List<ApplicationOpenWeather>>(await responseBody);
-
-            //    //-- Mapper
-            //    _config = CreateConfigForFetchingCityCoordinates();
-            //    _mapper = new Mapper(_config);
-
-            //    var resultCityData = _mapper.Map<CityDto>(cityData[0]);
-
-            //    return resultCityData;
-            //}
-            //else
-            //    return null;
         }
 
         // Need to convert from Unix to DateTime when fetching data from OpenWeather datasource and vice versa
@@ -387,7 +364,7 @@ namespace BasicWebAPI.Factory
 
         private static int DateTimeToUnixTime(DateTime dateTime)
         {
-            dateTime = dateTime.ToUniversalTime();
+            dateTime = dateTime.ToUniversalTime(); // If this is not done, the time would be 2 hours ahead of what we'd actually want.
             int unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             return unixTimestamp;
         }
