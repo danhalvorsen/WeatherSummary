@@ -37,12 +37,13 @@ function App() {
       <Navbar/>
       <Showcase/>
       {/* <Axiostest/> */}
-      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/>
 
       {/* <h4>Test application to compare Weather forecast</h4> */}
       <br/>
 
       <SearchBar onSubmit = 'test' fn = {callback} />
+      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/>
+
       
       {/* <ShowData /> */}
  

@@ -1,23 +1,33 @@
-import React from 'react';
-import { IresultJson as IResultJson } from "../../Interfaces";
+import { IresultJson } from "../../Interfaces";
 
+type props = {
+  data: IresultJson[];
+};
 
-type props= {
-    data: IResultJson[]
-}
+export const ShowTable = ({ data }: props) => {
+  const contactOfData = data.map((row, index) => {
+    return (
+      <tr key={index}>
+        {" "}
+        <td>{row.source.dataProvider}</td>
+        <td scope="col">{row.date}</td>
+        <td scope="col">{row.weatherType}</td>
+        <td scope="col">{row.temperature}</td>
+        <td scope="col">{row.windspeed}</td>
+        <td scope="col">{row.windDirection}</td>
+        <td scope="col">{row.windspeedGust}</td>
+        <td scope="col">{row.pressure}</td>
+        <td scope="col">{row.humidity}</td>
+        <td scope="col">{row.probOfRain}</td>
+        <td scope="col">{row.amountRain}</td>
+        <td scope="col">{row.cloudAreaFraction}</td>
+        <td scope="col">{row.fogAreaFraction}</td>
+        <td scope="col">{row.probOfThunder}</td>
+      </tr>
+    );
+  });
 
-export const ShowTable = ({data}: props)=>{
-
-    console.log(data[0]);
-
-
-
-return (
-    <>
-    <br/>
-    <div>City Name: <strong>{data[0].city}</strong> </div><br/><br/><br/>
-<table className="table table-striped">
-  <thead>
+  const headOfData = (
     <tr>
       <th scope="col">Forecast Provider</th>
       <th scope="col">Date and Time</th>
@@ -34,28 +44,43 @@ return (
       <th scope="col">Fog area fraction</th>
       <th scope="col">Prob of thunder</th>
     </tr>
-  </thead>
-  <tbody>
-    <tr>
-     
-      <th scope="col">{data[0].source.dataProvider}</th>
-      <th scope="col">{data[0].date}</th>
-      <th scope="col">{data[0].weatherType}</th>
-      <th scope="col">{data[0].temperature}</th>
-      <th scope="col">{data[0].windspeed}</th>
-      <th scope="col">{data[0].windDirection}</th>
-      <th scope="col">{data[0].windspeedGust}</th>
-      <th scope="col">{data[0].pressure}</th>
-      <th scope="col">{data[0].humidity}</th>
-      <th scope="col">{data[0].probOfRain}</th>
-      <th scope="col">{data[0].amountRain}</th>
-      <th scope="col">{data[0].cloudAreaFraction}</th>
-      <th scope="col">{data[0].fogAreaFraction}</th>
-      <th scope="col">{data[0].probOfThunder}</th>
-    </tr>
-   
-  </tbody>
-    </table>
+  );
+
+  return (
+
+    <div className=" p-5 text-center text-sm-start">
+    <div >
+        <div className="d-sm-flex align-items-center justify-content-between">
+            <div className="row align-items-center d-flex">
+                
+            <>
+      <br />
+      <div className="fs-4 col text-center">
+        <p>City Name:</p>
+        <strong>{data[0].city}</strong>
+      </div>
+       <br />
+      <br />
+      <br />
+
+      <table className="table table-striped">
+        <thead className="table-dark">{headOfData}</thead>
+        <tbody>{contactOfData}</tbody>
+      </table>
     </>
-)
-}
+
+
+
+
+
+            </div>
+           </div>
+    </div>
+</div>
+
+
+
+
+   
+  );
+};

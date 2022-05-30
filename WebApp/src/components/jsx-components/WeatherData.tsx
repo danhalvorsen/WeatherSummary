@@ -35,7 +35,6 @@ const WeatherData = ({ city, date, fn }: Props) => {
     
   <div>{item.city}-{item.date}</div>);
   
-  console.log(flag);
   let showTable : JSX.Element | undefined;
   if (flag == true) {
    showTable = <ShowTable data={result}/>
@@ -47,7 +46,7 @@ const WeatherData = ({ city, date, fn }: Props) => {
         {/* <ShowHtml data={list_items}/> */}
       </div>
       {/* <div id="1000">Hello!</div> */}
-      <button onClick={() => setComponentState()}>CLICK ON ME</button>
+      <button type="button" className="btn btn-success" onClick={() => setComponentState()}>Search City</button>
       {/* <ul>{htmlElement}</ul> */}
       {/* <p>the city you've searched: <strong>{ }</strong> and today's weather status is: <strong>{ }</strong></p> */}
       {/* <div>{weatherData}</div> */}
