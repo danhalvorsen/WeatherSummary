@@ -29,7 +29,23 @@ namespace BasicWebAPI.DAL
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception Message: {e.Message}");
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task GetWeatherDataForCity(DateTime DateQuery, CityDto city, IStrategy strategy) // For BetweenDates
+        {
+            Debug.Assert(city != null, "city is null");
+            Debug.Assert(strategy != null, "strategy is null");
+
+            try
+            {
+                var weatherForecastData = await _factory.GetWeatherDataFrom(DateQuery, city.Latitude, city.Longitude, strategy);
+                AddWeatherDataToDatabaseForCity(weatherForecastData, city);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
 

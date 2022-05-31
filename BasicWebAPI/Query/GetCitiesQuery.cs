@@ -45,7 +45,5 @@ namespace BasicWebAPI.DAL
                 return list;
             }
         }
-
-
     }
 }

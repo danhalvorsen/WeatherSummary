@@ -58,6 +58,8 @@ namespace BasicWebAPI
             {
                 endpoints.MapControllers();
             });
+
+            app.UseStatusCodePages(); // Dno if I need this
         }
     }
 }

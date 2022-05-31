@@ -219,10 +219,11 @@ namespace BasicWebAPI.Factory
                     cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
                  .ForPath(dest => dest.Date, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
                  .ForPath(dest => dest.WeatherType, opt => opt // weathertype
-                     .MapFrom(src => src.current.weather
-                         .ToList()
-                         .Single()
-                            .description))
+                     .MapFrom(src => src.current.weather[0].description)) // <-- Got a mapper exception once, because the city of stockholm had 2 descriptions. Just made this one
+                                                                          // enter the first one each time. Should work.
+                         //.ToList()
+                         //.Single()
+                         //   .description))
                  .ForPath(dest => dest.Temperature, opt => opt  // temperature
                      .MapFrom(src => src.current.temp))
                  .ForPath(dest => dest.Windspeed, opt => opt // windspeed
@@ -281,6 +282,49 @@ namespace BasicWebAPI.Factory
             return config;
         } // Not in use due to StreamAsync
 
+        public async Task<WeatherForecastDto> GetWeatherDataFrom(DateTime queryDate, double lat, double lon, IStrategy strategy) // For BetweenDates
+        {
+            //-- HtppClient getting data from chosen strategy
+            httpClient = strategy.MakeHttpClientConnection();
+            var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
+
+            if (response.IsSuccessStatusCode && strategy.GetType() == typeof(YrStrategy))
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
+
+                //-- Mapper
+                TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                queryDate = queryDate.Date + ts;
+
+                _config = CreateConfigForFetchingWeatherData(queryDate, strategy);
+                _mapper = new Mapper(_config);
+
+                var resultWeatherData = _mapper.Map<WeatherForecastDto>(weatherData);
+
+                return resultWeatherData;
+            }
+            if (response.IsSuccessStatusCode && strategy.GetType() == typeof(OpenWeatherStrategy))
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                var weatherData = JsonSerializer.Deserialize<ApplicationOpenWeather>(responseBody);
+
+                //-- Mapper
+                TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                queryDate = queryDate.Date + ts;
+
+                _config = CreateConfigForFetchingWeatherData(queryDate, strategy);
+                _mapper = new Mapper(_config);
+
+                var resultWeatherData = _mapper.Map<WeatherForecastDto>(weatherData);
+
+                return resultWeatherData;
+            }
+            else
+                return null;
+        }
 
         public async Task<WeatherForecastDto> GetWeatherDataFrom(double lat, double lon, IStrategy strategy)
         {
@@ -348,7 +392,7 @@ namespace BasicWebAPI.Factory
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Excepton message: {e.Message}");
+                throw new Exception(e.Message);
             }
             return null;
         }

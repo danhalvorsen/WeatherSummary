@@ -43,7 +43,7 @@ namespace BasicWebAPI.DAL
                             WeatherForecastDtos.Add(new WeatherForecastDto
                             {
                                 City = reader["CityName"].ToString(),
-                                Date = Convert.ToDateTime(reader["Date"]),
+                                Date = Convert.ToDateTime(reader["Date"]), //.ToString("dd-mm-yyyy hh:mm:"),
                                 WeatherType = reader["WeatherType"].ToString(),
                                 Temperature = (float)Convert.ToDouble(reader["Temperature"]),
                                 Windspeed = (float)Convert.ToDouble(reader["Windspeed"]),
@@ -65,9 +65,8 @@ namespace BasicWebAPI.DAL
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception Message: {e.Message}");
+                throw new Exception(e.Message);
             }
-            return new List<WeatherForecastDto>();
         }
 
         protected WeatherForecastDto InsertIntoDatabase(WeatherForecastDto addWeatherData, string queryString)
@@ -81,6 +80,5 @@ namespace BasicWebAPI.DAL
             }
             return addWeatherData;
         }
-
     }
 }

@@ -22,17 +22,24 @@ namespace BasicWebAPI
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
-            while (!stoppingToken.IsCancellationRequested) 
+            try
             {
-                Console.WriteLine("BackgroundService doing work");
+                //while (!stoppingToken.IsCancellationRequested)
+                //{
+                //    Console.WriteLine("BackgroundService doing work");
 
-                var command = new GetWeatherForecastForBackgroundServiceCommand(config);
-                await command.GetWeatherForecastForAllCities(new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
+                //    var command = new GetWeatherForecastForBackgroundServiceCommand(config);
+                //    await command.GetWeatherForecastForAllCities(new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
 
-                await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
+                //    await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
+                //}
+                //await Task.CompletedTask;
             }
-            await Task.CompletedTask;
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
         }
     }
 }

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Net.Http;
 using System.Net;
+using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace BasicWebAPI.DAL
 {
@@ -30,8 +33,17 @@ namespace BasicWebAPI.DAL
 
             try
             {
+                // Itterating through all the cities in the database
                 var getCitiesQuery = new GetCitiesQuery(_config);
                 var cities = await getCitiesQuery.GetAllCities();
+
+                // Itterating through all the dates in the database
+                var getDatesQuery = new GetDatesQuery(_config);
+                var dates = await getDatesQuery.GetAllDates();
+
+                // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
+                TextInfo textInfo = new CultureInfo("no", true).TextInfo;
+                cityName = textInfo.ToTitleCase(cityName);
 
                 if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
                 {
@@ -47,10 +59,26 @@ namespace BasicWebAPI.DAL
                         await (new AddWeatherDataForCityCommand(_config).GetWeatherDataForCity(city, strategy));
                     }
                 }
+
+                if (!dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                {
+
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                    //var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                    //{
+                    //    Content = new StringContent($"Date: {date} is invalid"),
+                    //    ReasonPhrase = "Invalid Date"
+                    //};
+                    //throw new HttpResponseException(resp);
+                }
+            }
+            catch (HttpResponseException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception Message: {e.Message}");
+                throw new Exception(e.Message);
             }
 
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
@@ -63,31 +91,5 @@ namespace BasicWebAPI.DAL
 
             return DatabaseQuery(queryString);
         }
-
-        //private CityDto GetCityRequestInfo(string city)
-        //{
-        //    var getCitiesQuery = new GetCitiesQuery(_config);
-        //    var cities = getCitiesQuery.GetAllCities();
-
-        //    foreach (var c in cities)
-        //    {
-        //        if (c.Name == city)
-        //            return c;
-        //    }
-        //    return null;
-        //}
-
-        //private bool CityExist(string city)
-        //{
-        //    var citycommands = new CityCommands(_config);
-        //    var cities = citycommands.GetCities();
-
-        //    foreach (var c in cities)
-        //    {
-        //        if (c.Name == city)
-        //            return true;
-        //    }
-        //    return false;
-        //}
     }
 }
