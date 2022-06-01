@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
-using NUnit.Framework;
+using BasicWebAPI.Controllers;
+using BasicWebAPI.OpenWeather;
+using BasicWebAPI.YR;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
-using BasicWebAPI.YR;
-using System.Linq;
-using BasicWebAPI.OpenWeather;
-using BasicWebAPI.Controllers;
 
 namespace BasicWebAPI.Factory
 {

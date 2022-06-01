@@ -3,16 +3,13 @@ using BasicWebAPI.Factory;
 using BasicWebAPI.Query;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Net.Http;
+
 using System.Net;
-using System.Web.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace BasicWebAPI.DAL
 {
@@ -33,11 +30,10 @@ namespace BasicWebAPI.DAL
 
             try
             {
-                // Itterating through all the cities in the database
+                // Itterating through all the cities and dates in the database
                 var getCitiesQuery = new GetCitiesQuery(_config);
                 var cities = await getCitiesQuery.GetAllCities();
 
-                // Itterating through all the dates in the database
                 var getDatesQuery = new GetDatesQuery(_config);
                 var dates = await getDatesQuery.GetAllDates();
 
@@ -45,40 +41,46 @@ namespace BasicWebAPI.DAL
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
                 cityName = textInfo.ToTitleCase(cityName);
 
+                // Checking if the city is in our database, if not it's getting added.
                 if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
                 {
                     await (new CreateCityCommand(_config).InsertCityIntoDatabase(cityName, new OpenWeatherStrategy(), _factory));
+                }
 
-                    var getCitiesQueryUpdate = new GetCitiesQuery(_config);
-                    var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
+                // Updateing cityquery
+                var getCitiesQueryUpdate = new GetCitiesQuery(_config);
+                var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
 
+                foreach (var strategy in getWeatherDataStrategies)
+                {
+                    var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
+
+                    await (new AddWeatherDataForCityCommand(_config).GetWeatherDataForCity(city, strategy));
+                }
+
+                if (!dates.ToList().Any(d => d.Date.Date.Equals(date.Date) && DateTime.Now < d.Date))
+                {
                     foreach (var strategy in getWeatherDataStrategies)
                     {
                         var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
 
-                        await (new AddWeatherDataForCityCommand(_config).GetWeatherDataForCity(city, strategy));
+                        await (new AddWeatherDataForCityCommand(_config).GetWeatherDataForCity(date, city, strategy));
                     }
                 }
 
-                if (!dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date) && DateTime.Now < d.Date))
                 {
+                    foreach (var strategy in getWeatherDataStrategies)
+                    {
+                        var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
 
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
-                    //var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
-                    //{
-                    //    Content = new StringContent($"Date: {date} is invalid"),
-                    //    ReasonPhrase = "Invalid Date"
-                    //};
-                    //throw new HttpResponseException(resp);
+                        await (new AddWeatherDataForCityCommand(_config).UpdateWeatherDataForCity(date, city, strategy));
+                    }
                 }
-            }
-            catch (HttpResponseException)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                Console.WriteLine(e.Message);
             }
 
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
@@ -87,7 +89,7 @@ namespace BasicWebAPI.DAL
                                                 $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                         $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}'";
-            
+
 
             return DatabaseQuery(queryString);
         }

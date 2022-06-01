@@ -34,7 +34,7 @@ namespace BasicWebAPI.DAL
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                Console.WriteLine(e.Message);
             }
         }
     }

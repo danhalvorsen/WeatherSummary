@@ -7,10 +7,7 @@ using Microsoft.Extensions.Configuration;
 using BasicWebAPI.Query;
 using System.Threading.Tasks;
 using BasicWebAPI.Factory;
-using System.Net;
-using System.Net.Http;
-using System.IO;
-using Newtonsoft.Json;
+
 
 public class ResponseHeaderAttribute : ActionFilterAttribute
 {
@@ -43,36 +40,38 @@ public class WeatherforecastController : ControllerBase
     
     public async Task<ActionResult<List<WeatherForecastDto>>> Day([FromQuery] DateQueryAndCity query)
     {
-        try
-        {
-            var command = new GetWeatherForecastByDateCommand(config);
-            return await command.GetWeatherForecastByDate(query, new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
-        }
-        catch (Exception e)
-        {
-            switch (HttpContext.Response.StatusCode)
-            {
-                case 404:
-                    Response.StatusCode = 404;
-                    return StatusCode(Response.StatusCode, e.Message);
-                case 500:
-                    Response.StatusCode = 500;
-                    return StatusCode(Response.StatusCode, e.Message);
+        //try
+        //{
 
-                default:
-                    return StatusCode(Response.StatusCode, Response.Body);
-            }
+        //}
+        //catch (Exception e)
+        //{
+        //    //switch (HttpContext.Response.StatusCode)
+        //    //{
+        //    //    case 404:
+        //    //        Response.StatusCode = 404;
+        //    //        return StatusCode(Response.StatusCode, e.Message);
+        //    //    case 500:
+        //    //        Response.StatusCode = 500;
+        //    //        return StatusCode(Response.StatusCode, e.Message);
 
-            //return StatusCode(Response.StatusCode, Response.Body);
-            //return StatusCode(404, e.Message); // Error not found 404
-        }
+        //    //    default:
+        //    //        return StatusCode(Response.StatusCode, Response.Body);
+        //    //}
+        //    //return StatusCode(Response.StatusCode, Response.Body);
+        //    //return StatusCode(404, e.Message); // Error not found 404
+
+        //    Console.WriteLine(e.Message);
+        //}
+        var command = new GetWeatherForecastByDateCommand(config);
+        return await command.GetWeatherForecastByDate(query, new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() });
     }
 
     [HttpGet("BetweenDateQueryAndCity")]
-    public ActionResult<List<WeatherForecastDto>> Between([FromQuery] BetweenDateQueryAndCity query)
+    public async Task<ActionResult<List<WeatherForecastDto>>> Between([FromQuery] BetweenDateQueryAndCity query)
     {
         var command = new GetWeatherForecastBetweenDatesCommand(config);
-        return command.GetWeatherForecastBetweenDatesAsync(query);
+        return await command.GetWeatherForecastBetweenDates(query, new List<IStrategy> { new YrStrategy(), new OpenWeatherStrategy() }); 
 
     }
 

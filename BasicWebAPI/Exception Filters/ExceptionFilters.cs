@@ -1,6 +1,4 @@
-﻿using System.Web.Http.Filters;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System;
 
 namespace BasicWebAPI.ExceptionFilters
