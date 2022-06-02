@@ -1,0 +1,2 @@
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

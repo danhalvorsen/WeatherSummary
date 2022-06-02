@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  weatherwebapi:
+    image: ${DOCKER_REGISTRY-}weatherwebapi
+    build:
+      context: .
+      dockerfile: WeatherWebAPI/Dockerfile
+    networks: 
+            - default   
+  db:
+    container_name: SqlServer
+    image: mcr.microsoft.com/mssql/server 
+    ports:
+      - 1433:1433
+    volumes:
+      - Sql-server-storage:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=123456a@
+    networks: 
+            - default
+networks:
+  default:
+    external:
+      name: weather
+
+volumes:
+  Sql-server-storage:
+    external: true
