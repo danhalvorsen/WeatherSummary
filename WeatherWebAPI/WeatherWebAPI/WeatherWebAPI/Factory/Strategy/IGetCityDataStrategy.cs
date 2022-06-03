@@ -4,6 +4,6 @@ namespace WeatherWebAPI.Factory
 {
     public interface IGetCityDataStrategy<T> : IStrategy<T>
     {
-        List<T> GetData(CityDto cityDto);
+        List<T> GetCityData(CityDto cityDto);
     }
 }

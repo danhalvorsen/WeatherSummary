@@ -52,9 +52,30 @@ namespace WeatherWebAPI.Factory
         //    return new Uri();
         //}
 
-        public List<WeatherForecastDto> GetWeatherDataAsync(CityDto cityDto)
+        public List<WeatherForecastDto> GetWeatherDataAsync(CityDto city)
         {
-            throw new NotImplementedException();
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(yrConfig.BaseUrl + $"complete?lat={city.Latitude}&lon={city.Longitude}");
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+
+            //var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
+            var response = await httpClient.SendAsync(new HttpRequestMessage
+            {
+                Method = HttpMethod.Get
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
+
+                return this.automapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+
+            }
+
+            return new WeatherForecastDto();
         }
 
         public List<WeatherForecastDto> GetHistoricData(CityDto cityDto, DateTime from, DateTime to)
@@ -82,28 +103,7 @@ namespace WeatherWebAPI.Factory
 
         public async Task<WeatherForecastDto> GetWeatherData(CityDto city)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(yrConfig.BaseUrl + $"complete?lat={city.Latitude}&lon={city.Longitude}");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
-            //var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
-            var response = await httpClient.SendAsync(new HttpRequestMessage
-            {
-                Method = HttpMethod.Get
-            });
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
-
-                return this.automapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
-
-            }
-
-            return new WeatherForecastDto();
         }
 
         public List<T> GetData()
@@ -115,11 +115,6 @@ namespace WeatherWebAPI.Factory
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
             return httpClient;
-        }
-
-        public List<T> GetHistoryData(CityDto cityDto, DateTime from, DateTime to)
-        {
-            throw new NotImplementedException();
         }
 
         WeatherForecastDto IWeatherDataStrategy<WeatherForecastDto>.GetWeatherDataAsync(CityDto cityDto)
