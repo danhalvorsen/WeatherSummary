@@ -8,7 +8,6 @@ export const ShowTable = ({ data }: props) => {
   const contactOfData = data.map((row, index) => {
     return (
       <tr key={index}>
-        {" "}
         <td>{row.source.dataProvider}</td>
         <td scope="col">{row.date}</td>
         <td scope="col">{row.weatherType}</td>
@@ -47,40 +46,28 @@ export const ShowTable = ({ data }: props) => {
   );
 
   return (
-
     <div className=" p-5 text-center text-sm-start">
-    <div >
+      <div className="container">
         <div className="d-sm-flex align-items-center justify-content-between">
-            <div className="row align-items-center d-flex">
-                
+          <div className="row align-items-center d-flex">
             <>
-      <br />
-      <div className="fs-4 col text-center">
-        <p>City Name:</p>
-        <strong>{data[0].city}</strong>
+              <br />
+              <div className="fs-4 col text-center">
+                <p>City Name:</p>
+                <strong>{data[0].city}</strong>
+              </div>
+              <br />
+              <br />
+              <br />
+
+              <table className="table table-striped">
+                <thead className="table-dark">{headOfData}</thead>
+                <tbody>{contactOfData}</tbody>
+              </table>
+            </>
+          </div>
+        </div>
       </div>
-       <br />
-      <br />
-      <br />
-
-      <table className="table table-striped">
-        <thead className="table-dark">{headOfData}</thead>
-        <tbody>{contactOfData}</tbody>
-      </table>
-    </>
-
-
-
-
-
-            </div>
-           </div>
     </div>
-</div>
-
-
-
-
-   
   );
 };
