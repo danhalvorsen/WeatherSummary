@@ -49,7 +49,7 @@ class SearchBar extends React.Component<ISearchbarProps> {
               <input
                 className="form-control"
                 id="exampleFormControlTextarea1"
-                placeholder="Search a Date"
+                placeholder="Enter a location name"
                 onChange={e=> this.setState({term: e.target.value})}
               ></input>
 
