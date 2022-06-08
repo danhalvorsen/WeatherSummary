@@ -48,7 +48,7 @@ const doubledate = 'https://localhost:63286/BetweenDateQueryAndCity?BetweenDateQ
       </div>
 
       {chooseDate}
-
+    
 
     </>
   );
