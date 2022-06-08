@@ -1,17 +1,12 @@
-﻿
-using AutoMapper;
-using BasicWebAPI.Controllers;
-using BasicWebAPI.Factory;
-using BasicWebAPI.OpenWeather;
+﻿using AutoMapper;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.OpenWeather;
 
-namespace TestProject
+namespace Tests
 {
     public class OpenWeatherCityDataMapperTest // Not getting used because of GetSteamAsync.
     {
@@ -34,7 +29,7 @@ namespace TestProject
         [SetUp]
         public void Setup()
         {
-            IWeatherDataStrategy strategy = new OpenWeatherStrategy();
+            IGetCityDataStrategy<CityDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
             _config = CreateConfigForFetchingCityCoordinates();
         }
 
@@ -52,7 +47,7 @@ namespace TestProject
                 }
             };
             IMapper mapper = new Mapper(_config);
-            
+
             // Act
             var result = mapper.Map<CityDto>(application);
 

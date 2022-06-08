@@ -18,16 +18,16 @@ namespace WeatherWebAPI.Controllers
             Latitude = latitude;
         }
 
-        public int? Id { get; set; }
+        public int Id { get; set; }
         [JsonPropertyName("name")]
         public string? Name { get; set; }
         [JsonPropertyName("country")]
         public string? Country { get; set; }
-        public double? Altitude { get; set; }
+        public double Altitude { get; set; }
         [JsonPropertyName("lon")]
-        public double? Longitude { get; set; }
+        public double Longitude { get; set; }
         [JsonPropertyName("lat")]
-        public double? Latitude { get; set; }
+        public double Latitude { get; set; }
 
         //public override string ToString()
         //{

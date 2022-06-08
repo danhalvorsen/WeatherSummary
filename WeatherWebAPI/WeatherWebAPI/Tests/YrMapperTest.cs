@@ -1,21 +1,18 @@
 ﻿using AutoMapper;
-using BasicWebAPI.Factory;
-using BasicWebAPI.YR;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WeatherWebAPI.YR;
 
-namespace TestProject
+namespace Tests
 {
     public class YrMapperTest
     {
         private DateTime dateTime;
-        private MapperConfiguration config;
-        private MapperConfiguration CreateConfig(DateTime queryDate, IWeatherDataStrategy strategy)
+        private MapperConfiguration? config;
+        private static MapperConfiguration CreateConfig(DateTime queryDate)
         {
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
@@ -80,7 +77,7 @@ namespace TestProject
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.next_1_hours.details.probability_of_thunder))
-              .AfterMap((s, d) => d.Source.DataProvider = strategy.DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
+              .AfterMap((s, d) => d.Source.DataProvider = "Yr") // DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
              );
 
             return config;
@@ -90,8 +87,7 @@ namespace TestProject
         public void Setup()
         {
             dateTime = new DateTime(1999, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            IWeatherDataStrategy strategy = new YrStrategy();
-            config = CreateConfig(dateTime, strategy);
+            config = CreateConfig(dateTime);
         }
 
         [Test]
@@ -113,6 +109,7 @@ namespace TestProject
 
             var result = mapper.Map<WeatherForecastDto>(application);
 
+            Console.WriteLine(result.Date);
 
             result.Date.Should().Be(dateTime);
         }
@@ -130,8 +127,8 @@ namespace TestProject
                     timeseries = new List<Timeseries> { new Timeseries {
                         time = dateTime,
                         data = new Data {
-                            next_1_hours = new Next__hours1 {
-                                summary = new SummaryNext1h {
+                            next_6_hours = new Next__hours6 {
+                                summary = new SummaryNext6h {
                                     symbol_code = weatherType
                                 }
                             }
@@ -352,8 +349,8 @@ namespace TestProject
                     timeseries = new List<Timeseries> { new Timeseries {
                         time = dateTime,
                         data = new Data {
-                            next_1_hours = new Next__hours1 {
-                                details = new DetailsNext1h {
+                            next_6_hours = new Next__hours6 {
+                                details = new DetailsNext6h {
                                     probability_of_precipitation = probOfRain
                                 }
                             }
@@ -383,8 +380,8 @@ namespace TestProject
                     timeseries = new List<Timeseries> { new Timeseries {
                         time = dateTime,
                         data = new Data {
-                            next_1_hours = new Next__hours1 {
-                                details = new DetailsNext1h {
+                            next_6_hours = new Next__hours6 {
+                                details = new DetailsNext6h {
                                     precipitation_amount = amountOfRain
                                 }
                             }

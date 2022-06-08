@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
 public class ResponseHeaderAttribute : ActionFilterAttribute
@@ -25,15 +27,21 @@ public class ResponseHeaderAttribute : ActionFilterAttribute
 public class WeatherforecastController : ControllerBase
 {
     private readonly IConfiguration config;
+    private readonly IFactory factory;
+    private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new List<IGetWeatherDataStrategy<WeatherForecastDto>>();
 
-    public WeatherforecastController(IConfiguration config)
+
+    public WeatherforecastController(IConfiguration config, IFactory factory)
     {
         this.config = config;
+        this.factory = factory;
+        strategies.Add(this.factory.Build<IYrStrategy>());
+        strategies.Add(this.factory.Build<IOpenWeatherStrategy>());
     }
 
-    [HttpGet("DateQueryAndCity")]
+    [HttpGet("Date")]
 
-    public async Task<ActionResult<List<WeatherForecastDto>>> Day([FromQuery] DateQueryAndCity query)
+    public async Task<ActionResult<List<WeatherForecastDto>>> Day(DateQueryAndCity query)
     {
 
         //try
@@ -60,22 +68,24 @@ public class WeatherforecastController : ControllerBase
         //    Console.WriteLine(e.Message);
         //}
 
-        var command = new GetWeatherForecastByDateCommand(config);
-        return await command.GetWeatherForecastByDate(query, new List<IWeatherDataStrategy<WeatherForecastDto>> { new YrStrategy<WeatherForecastDto>(), new OpenWeatherStrategy() });
+        var command = new GetWeatherForecastByDateCommand(config, factory);
+        
+        return await command.GetWeatherForecastByDate(query, strategies);
     }
 
-    [HttpGet("BetweenDateQueryAndCity")]
-    public async Task<ActionResult<List<WeatherForecastDto>>> Between([FromQuery] BetweenDateQueryAndCity query)
+    [HttpGet("Between")]
+    public async Task<ActionResult<List<WeatherForecastDto>>> Between(BetweenDateQueryAndCity query)
     {
-        var command = new GetWeatherForecastBetweenDatesCommand(config);
-        return await command.GetWeatherForecastBetweenDates(query, new List<IWeatherDataStrategy<WeatherForecastDto>> { new YrStrategy(), new OpenWeatherStrategy() });
+        var command = new GetWeatherForecastBetweenDatesCommand(config, factory);
 
+        return await command.GetWeatherForecastBetweenDates(query, strategies);
     }
 
     [HttpGet("Week")]
     public ActionResult<List<WeatherForecastDto>> Week(int week, CityQuery query) // irriterende med liten "w" i week på selve endpointen.
     {
         var command = new GetWeatherForecastByWeekCommand(config);
+        
         return command.GetWeatherForecastByWeek(week, query);
     }
 

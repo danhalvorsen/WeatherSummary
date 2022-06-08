@@ -1,63 +1,66 @@
 ﻿using AutoMapper;
-using BasicWebAPI.Factory;
-using BasicWebAPI.OpenWeather;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.OpenWeather;
 
-namespace TestProject
+namespace Tests
 {
     public class OpenWeatherMapperTest
     {
         private int _unix;
         private DateTime dateTime;
-        private MapperConfiguration config;
-        private MapperConfiguration CreateConfig(DateTime queryDate, IWeatherDataStrategy strategy)
+        private MapperConfiguration? config;
+        private MapperConfiguration CreateConfig(DateTime queryDate)
         {
             var config = new MapperConfiguration(
-             cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
-             .ForPath(dest => dest.Date, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt.Value))) // date <- this is an UNIX int type
-             .ForPath(dest => dest.WeatherType, opt => opt // weathertype
-                .MapFrom(src => src.current.weather[0].description))
-             .ForPath(dest => dest.Temperature, opt => opt  // temperature
-                .MapFrom(src => src.current.temp))
-             .ForPath(dest => dest.Windspeed, opt => opt // windspeed
-                .MapFrom(src => src.current.wind_speed))
-             .ForPath(dest => dest.WindDirection, opt => opt // wind direction
-                .MapFrom(src => src.current.wind_deg))
-             .ForPath(dest => dest.WindspeedGust, opt => opt // windspeed gust
-                .MapFrom(src => src.current.wind_gust))
-             .ForPath(dest => dest.Pressure, opt => opt // pressure
-                .MapFrom(src => src.current.pressure))
-             .ForPath(dest => dest.Humidity, opt => opt // humidity
-                .MapFrom(src => src.current.humidity))
-             .ForPath(dest => dest.ProbOfRain, opt => opt // probability of percipitation (probability of rain)
-             .MapFrom(src => src.hourly
-                    .ToList()
-                    .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
-                        .pop * 100))
-             .ForPath(dest => dest.AmountRain, opt => opt // percipitation amount (amount of rain)
-                .MapFrom(src => src.minutely
-                    .ToList()
-                    .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
-                        .precipitation))
-             .ForPath(dest => dest.CloudAreaFraction, opt => opt // cloud area fraction
-                .MapFrom(src => src.current.clouds))
-             .ForPath(dest => dest.FogAreaFraction, opt => opt // fog area fraction
-                .MapFrom(src => src.current.visibility))
-             //.ForPath(dest => dest.ProbOfThunder, opt => opt // probabiliy of thunder
-             //   .MapFrom(src => src.properties.timeseries
-             //       .ToList()
-             //       .Single(i => i.time.Equals(queryDate))
-             //           .data.next_1_hours.details.probability_of_thunder))
-              .AfterMap((s, d) => d.Source.DataProvider = strategy.DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
-              .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
-             );
 
+                    cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
+                 .ForPath(dest => dest.Date, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
+                 .ForPath(dest => dest.WeatherType, opt => opt // weathertype
+                     .MapFrom(src => src.current.weather[0].description)) // <-- Got a mapper exception once, because the city of stockholm had 2 descriptions. Just made this one
+                                                                          // enter the first one each time. Should work.
+                                                                          //.ToList()
+                                                                          //.Single()
+                                                                          //   .description))
+                 .ForPath(dest => dest.Temperature, opt => opt  // temperature
+                     .MapFrom(src => src.current.temp))
+                 .ForPath(dest => dest.Windspeed, opt => opt // windspeed
+                     .MapFrom(src => src.current.wind_speed))
+                 .ForPath(dest => dest.WindDirection, opt => opt // wind direction
+                     .MapFrom(src => src.current.wind_deg))
+                 .ForPath(dest => dest.WindspeedGust, opt => opt // windspeed gust
+                     .MapFrom(src => src.current.wind_gust))
+                 .ForPath(dest => dest.Pressure, opt => opt // pressure
+                     .MapFrom(src => src.current.pressure))
+                 .ForPath(dest => dest.Humidity, opt => opt // humidity
+                     .MapFrom(src => src.current.humidity))
+                 .ForPath(dest => dest.ProbOfRain, opt => opt // probability of percipitation (probability of rain)
+                     .MapFrom(src => src.hourly
+                        .ToList()
+                        .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
+                            .pop * 100))
+                 .ForPath(dest => dest.AmountRain, opt => opt // percipitation amount (amount of rain)
+                    .MapFrom(src => src.minutely
+                        .ToList()
+                        .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
+                            .precipitation))
+                 .ForPath(dest => dest.CloudAreaFraction, opt => opt // cloud area fraction
+                    .MapFrom(src => src.current.clouds))
+                 .ForPath(dest => dest.FogAreaFraction, opt => opt // fog area fraction
+                    .MapFrom(src => src.current.visibility))
+                  //.ForPath(dest => dest.ProbOfThunder, opt => opt // probabiliy of thunder
+                  //   .MapFrom(src => src.properties.timeseries
+                  //       .ToList()
+                  //       .Single(i => i.time.Equals(queryDate))
+                  //           .data.next_1_hours.details.probability_of_thunder))
+                  .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
+                  .AfterMap((s, d) => d.FogAreaFraction = VisibilityConvertedToFogAreaFraction((float)d.FogAreaFraction))
+                 );
             return config;
         }
 
@@ -76,7 +79,7 @@ namespace TestProject
             return unixTimestamp;
         }
 
-        private double VisibilityConvertedToFogAreaFraction(double value)
+        private float VisibilityConvertedToFogAreaFraction(float value)
         {
             return Math.Abs((value / 100) - 100);
         }
@@ -85,10 +88,10 @@ namespace TestProject
         [SetUp]
         public void Setup()
         {
+            IGetWeatherDataStrategy<WeatherForecastDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
             _unix = 1652853600; // Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
-            dateTime = new DateTime(2022, 05, 18, 6, 0, 0, DateTimeKind.Utc); // May 18, 2022 8:00:00
-            IWeatherDataStrategy strategy = new OpenWeatherStrategy();
-            config = CreateConfig(dateTime, strategy);
+            dateTime = new DateTime(2022, 05, 18, 8, 0, 0); // May 18, 2022 8:00:00
+            config = CreateConfig(dateTime);
         }
 
         [Test]
@@ -123,7 +126,7 @@ namespace TestProject
                 current = new Current
                 {
                     weather = new List<Weather> { new Weather {
-                        description = weatherType
+                            description = weatherType
                         }
                     }
                 }
@@ -134,6 +137,7 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(result.WeatherType);
             result.WeatherType.Should().Be(weatherType);
         }
 
@@ -157,6 +161,7 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             //Assert
+            Console.WriteLine(result.Temperature);
             result.Temperature.Should().Be(temp);
 
 
@@ -181,6 +186,7 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(result.Windspeed);
             result.Windspeed.Should().Be(windspeed);
 
         }
@@ -204,6 +210,7 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(result.WindDirection);
             result.WindDirection.Should().Be(windDirection);
         }
 
@@ -226,6 +233,8 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(result.WindspeedGust);
+
             result.WindspeedGust.Should().Be(windspeedGust);
         }
 
@@ -248,6 +257,8 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(pressure);
+
             result.Pressure.Should().Be(pressure);
         }
 
@@ -270,6 +281,8 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(humidity);
+
             result.Humidity.Should().Be(humidity);
         }
 
@@ -292,6 +305,8 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(probOfRain);
+
             result.ProbOfRain.Should().Be(probOfRain*100);
         }
 
@@ -314,6 +329,10 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(result.AmountRain);
+            Console.WriteLine(DateTimeToUnixTime(dateTime));
+            Console.WriteLine(dateTime);
+
             result.AmountRain.Should().Be(amountOfRain);
         }
 
@@ -336,6 +355,8 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
+            Console.WriteLine(cloudAreaFraction);
+
             result.CloudAreaFraction.Should().Be(cloudAreaFraction);
         }
 
@@ -359,6 +380,7 @@ namespace TestProject
 
             // Assert
             result.FogAreaFraction.Should().Be((float)VisibilityConvertedToFogAreaFraction(fogAreaFraction));
+            
             Console.WriteLine(VisibilityConvertedToFogAreaFraction(fogAreaFraction));
         }
 
@@ -392,7 +414,9 @@ namespace TestProject
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
-            result.Source.DataProvider.Should().Be("OpenWeather");
+            Console.WriteLine(result?.Source?.DataProvider);
+
+            result?.Source?.DataProvider.Should().Be("OpenWeather");
         }
     }
 }

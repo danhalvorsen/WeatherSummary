@@ -7,23 +7,21 @@ namespace WeatherWebAPI.DAL
 {
     public class AddWeatherDataForCityCommand : BaseWeatherForecastQuery
     {
-        private readonly IWeatherDataStrategy<WeatherForecastDto> strategy;
-        public AddWeatherDataForCityCommand(IConfiguration config, IWeatherDataStrategy<WeatherForecastDto> strategy) : base(config)
+        private readonly IFactory factory;
+
+        public AddWeatherDataForCityCommand(IConfiguration config, IFactory factory) : base(config)
         {
-            this.strategy = strategy;
+            this.factory = factory;
         }
 
 
-        public async Task GetWeatherDataForCity(CityDto city, IWeatherDataStrategy<WeatherForecastDto> strategy) // Adding without date -> backgroundworker uses this
+        public async Task GetWeatherDataForCity(CityDto city, IGetWeatherDataStrategy<WeatherForecastDto> strategy) // Adding without date -> backgroundworker uses this
         {
             Debug.Assert(city != null, "city is null");
-            Debug.Assert(strategy != null, "strategy is null");
 
             try
             {
-                this.strategy.GetWeatherDataAsync(city);
-
-                var weatherForecastData = await _factory.GetWeatherDataFrom(city.Latitude, city.Longitude, strategy);
+                var weatherForecastData = await strategy.GetWeatherDataFrom(city, DateTime.Now);
                 AddWeatherDataToDatabaseForCityQuery(weatherForecastData, city);
             }
             catch (Exception e)
@@ -32,14 +30,13 @@ namespace WeatherWebAPI.DAL
             }
         }
 
-        public async Task GetWeatherDataForCity(DateTime DateQuery, CityDto city, IWeatherDataStrategy<WeatherForecastDto> strategy) // Adding based on date
+        public async Task GetWeatherDataForCity(DateTime dateQuery, CityDto city, IGetWeatherDataStrategy<WeatherForecastDto> strategy) // Adding based on date
         {
             Debug.Assert(city != null, "city is null");
-            Debug.Assert(strategy != null, "strategy is null");
 
             try
             {
-                var weatherForecastData = await _factory.GetWeatherDataFrom(DateQuery, city.Latitude, city.Longitude, strategy);
+                var weatherForecastData = await strategy.GetWeatherDataFrom(city, dateQuery);
                 AddWeatherDataToDatabaseForCityQuery(weatherForecastData, city);
             }
             catch (Exception e)
@@ -48,15 +45,14 @@ namespace WeatherWebAPI.DAL
             }
         }
 
-        public async Task UpdateWeatherDataForCity(DateTime DateQuery, CityDto city, IWeatherDataStrategy<WeatherForecastDto> strategy)
+        public async Task UpdateWeatherDataForCity(DateTime dateQuery, CityDto city, IGetWeatherDataStrategy<WeatherForecastDto> strategy)
         {
             Debug.Assert(city != null, "city is null");
-            Debug.Assert(strategy != null, "strategy is null");
-
+            
             try
             {
-                var weatherForecastData = await _factory.GetWeatherDataFrom(DateQuery, city.Latitude, city.Longitude, strategy);
-                UpdateWeatherDataToDatabaseForCityQuery(weatherForecastData, city, DateQuery);
+                var weatherForecastData = await strategy.GetWeatherDataFrom(city, dateQuery);
+                UpdateWeatherDataToDatabaseForCityQuery(weatherForecastData, city, dateQuery);
             }
             catch (Exception e)
             {

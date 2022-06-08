@@ -23,7 +23,7 @@ namespace WeatherWebAPI.DAL
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                         $"WHERE DATEPART(week, [Date]) = {week} AND City.Name = '{query.City}'";
 
-            return DatabaseQuery(queryString);
+            return Query(queryString);
         }
     }
 }

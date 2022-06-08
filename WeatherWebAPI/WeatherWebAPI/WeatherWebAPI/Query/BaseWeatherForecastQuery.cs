@@ -3,26 +3,20 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Query
 {
-
-    public interface IBaseWeatherForecastQuery
+    public abstract class BaseWeatherForecastQuery : IDatabaseQuery
     {
-        List<WeatherForecastDto> DatabaseQuery(string queryString);
-    }
-
-    public abstract class BaseWeatherForecastQuery : IBaseWeatherForecastQuery
-    {
-        protected readonly IConfiguration _config;
+        protected readonly IConfiguration config;
 
         public BaseWeatherForecastQuery(IConfiguration config)
         {
-            _config = config;
+            this.config = config;
         }
 
-        public List<WeatherForecastDto> DatabaseQuery(string queryString)
+        public List<WeatherForecastDto> Query(string queryString)
         {
             try
             {
-                var connectionString = _config.GetConnectionString("WeatherForecastDatabase");
+                var connectionString = config.GetConnectionString("WeatherForecastDatabase");
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
@@ -40,7 +34,7 @@ namespace WeatherWebAPI.Query
                             WeatherForecastDtos.Add(new WeatherForecastDto
                             {
                                 City = reader["CityName"].ToString(),
-                                Date = Convert.ToDateTime(reader["Date"]), //.ToString("dd-mm-yyyy hh:mm:"),
+                                Date = Convert.ToDateTime(reader["Date"]),
                                 WeatherType = reader["WeatherType"].ToString(),
                                 Temperature = (float)Convert.ToDouble(reader["Temperature"]),
                                 Windspeed = (float)Convert.ToDouble(reader["Windspeed"]),
@@ -68,7 +62,7 @@ namespace WeatherWebAPI.Query
 
         protected WeatherForecastDto InsertIntoDatabase(WeatherForecastDto addWeatherData, string queryString)
         {
-            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("WeatherForecastDatabase")))
+            using (SqlConnection connection = new SqlConnection(config.GetConnectionString("WeatherForecastDatabase")))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
@@ -78,7 +72,7 @@ namespace WeatherWebAPI.Query
             return addWeatherData;
         }
 
-        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
         {
             for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
                 yield return day;

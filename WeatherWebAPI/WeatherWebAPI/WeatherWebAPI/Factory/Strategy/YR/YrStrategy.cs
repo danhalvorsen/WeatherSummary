@@ -1,130 +1,56 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.YR;
 
-namespace WeatherWebAPI.Factory
+namespace WeatherWebAPI.Factory.Strategy.YR
 {
-
-    public interface IStrategy<T> 
+    public class YrStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IYrStrategy
     {
-        List<T> GetDataAsync();
-    }
-
- 
-    public interface IHttpStrategy<T> : IStrategy<T>
-    {
-        //string DataSource { get; } // ?
-
-        
-        //string MakeGeoUriCityCall(string city);
-        //string MakeUriWeatherCall(double lat, double lon);
-        //HttpClient MakeHttpClientConnection();
-        //HttpClient MakeGeoHttpClientConnection();
-    }
-
-    public interface IWeatherDataStrategy<T> : IHttpStrategy<T>
-    {
-        public T GetWeatherDataAsync(CityDto city);
-        public List<T> GetHistoricData(CityDto city, DateTime from, DateTime to);
-    }
-
-    public class YrStrategy : IWeatherDataStrategy<WeatherForecastDto>
-    {
-        private readonly YrAutomapperConfig yrAutomapperConfig;
         private readonly YrConfig yrConfig;
 
-        public YrStrategy(YrAutomapperConfig yrAutomapperConfig, YrConfig yrConfig )
+        public YrStrategy(YrConfig config)
         {
-            this.yrAutomapperConfig = yrAutomapperConfig;
-            this.yrConfig = yrConfig;
-            
+
+            yrConfig = config;
+
         }
- 
-        //public string MakeGeoUriCityCall(string city)
-        //{
-        //    return GeoUri = "";
-        //}
 
-        //private Uri MakeUriWeatherCall(double lat, double lon)
-        //{
-        //    return new Uri();
-        //}
-
-        public List<WeatherForecastDto> GetWeatherDataAsync(CityDto city)
+        public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(yrConfig.BaseUrl + $"complete?lat={city.Latitude}&lon={city.Longitude}");
+            var httpClient = new HttpClient
+            {
+                BaseAddress = yrConfig.BaseUrl
+            };
+
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
+            var response = await httpClient.GetAsync($"complete?lat={city.Latitude}&lon={city.Longitude}");
+
             //var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
-            var response = await httpClient.SendAsync(new HttpRequestMessage
-            {
-                Method = HttpMethod.Get
-            });
+            //var response = await httpClient.SendAsync(new HttpRequestMessage
+            //{
+            //    Method = HttpMethod.Get
+            //});
 
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
-                return this.automapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                // Mapper
+                TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                queryDate = queryDate.Date + ts;
+                yrConfig.Get(queryDate);
 
+
+                var resultWeatherData = yrConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                return resultWeatherData;
             }
 
             return new WeatherForecastDto();
-        }
-
-        public List<WeatherForecastDto> GetHistoricData(CityDto cityDto, DateTime from, DateTime to)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<WeatherForecastDto>> GetDataAsync()
-        {
-            //HttpClient httpClient = new HttpClient();
-
-            //httpClient.BaseAddress = new Uri(yrConfig.BaseUrl + $"complete?lat={city.Latitude}&lon={city.Longitude}");
-            //httpClient.DefaultRequestHeaders.Accept.Clear();
-            //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-
-            //var res = await httpClient.SendAsync(new HttpRequestMessage
-            //{
-            //    Method = HttpMethod.Get
-            //});
-
-            //var result = await res.
-            throw new NotImplementedException();
-        }
-
-        public async Task<WeatherForecastDto> GetWeatherData(CityDto city)
-        {
-
-        }
-
-        public List<T> GetData()
-        {
-            HttpClient httpClient = new HttpClient();
-            httpClient.BaseAddress = BaseGeoUrl;
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/6.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-
-            return httpClient;
-        }
-
-        WeatherForecastDto IWeatherDataStrategy<WeatherForecastDto>.GetWeatherDataAsync(CityDto cityDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<WeatherForecastDto> IStrategy<WeatherForecastDto>.GetDataAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

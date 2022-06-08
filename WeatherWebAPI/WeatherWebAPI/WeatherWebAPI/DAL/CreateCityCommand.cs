@@ -1,23 +1,29 @@
 ﻿using System.Data.SqlClient;
 using System.Globalization;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace WeatherWebAPI.DAL
 {
     public class CreateCityCommand
     {
         private readonly IConfiguration _config;
+        private readonly IFactory factory;
 
-        public CreateCityCommand(IConfiguration config)
+        public CreateCityCommand(IConfiguration config, IFactory factory)
         {
             this._config = config;
+            this.factory = factory;
         }
 
-        public async Task InsertCityIntoDatabase(string city, IWeatherDataStrategy<> strategy, GetWeatherDataFactory factory)
+        public async Task/*<CityDto>*/ InsertCityIntoDatabase(string city)
         {
             try
             {
-                var result = await factory.GetCityDataFrom(city, strategy);
+                var strategy = this.factory.Build<IOpenWeatherStrategy>();
+
+                var result = await strategy.GetCityDataFor(city);
 
                 // Getting the full country name
                 var twoLetterCountryAbbreviation = new CultureInfo(result[0].Country);
@@ -34,11 +40,13 @@ namespace WeatherWebAPI.DAL
 
                     command.ExecuteNonQuery();
                 }
+                //return result;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
+            //return new CityDto();
         }
     }
 }

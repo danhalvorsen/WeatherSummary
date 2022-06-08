@@ -42,23 +42,23 @@
     }
     public class Details
     {
-        public double? air_pressure_at_sea_level { get; set; }
-        public double? air_temperature { get; set; }
-        public double? air_temperature_percentile_10 { get; set; }
-        public double? air_temperature_percentile_90 { get; set; }
-        public double? cloud_area_fraction { get; set; }
-        public double? cloud_area_fraction_high { get; set; }
-        public double? cloud_area_fraction_low { get; set; }
-        public double? cloud_area_fraction_medium { get; set; }
-        public double? dew_point_temperature { get; set; }
-        public double? fog_area_fraction { get; set; }
-        public double? relative_humidity { get; set; }
-        public double? ultraviolet_index_clear_sky { get; set; }
-        public double? wind_from_direction { get; set; }
-        public double? wind_speed { get; set; }
-        public double? wind_speed_of_gust { get; set; }
-        public double? wind_speed_percentile_10 { get; set; }
-        public double? wind_speed_percentile_90 { get; set; }
+        public double air_pressure_at_sea_level { get; set; }
+        public double air_temperature { get; set; }
+        public double air_temperature_percentile_10 { get; set; }
+        public double air_temperature_percentile_90 { get; set; }
+        public double cloud_area_fraction { get; set; }
+        public double cloud_area_fraction_high { get; set; }
+        public double cloud_area_fraction_low { get; set; }
+        public double cloud_area_fraction_medium { get; set; }
+        public double dew_point_temperature { get; set; }
+        public double fog_area_fraction { get; set; }
+        public double relative_humidity { get; set; }
+        public double ultraviolet_index_clear_sky { get; set; }
+        public double wind_from_direction { get; set; }
+        public double wind_speed { get; set; }
+        public double wind_speed_of_gust { get; set; }
+        public double wind_speed_percentile_10 { get; set; }
+        public double wind_speed_percentile_90 { get; set; }
 
     }
     public class Instant
@@ -74,7 +74,7 @@
     }
     public class DetailsNext12h
     {
-        public double? probability_of_precipitation { get; set; }
+        public double probability_of_precipitation { get; set; }
 
     }
     public class Next__hours12
@@ -90,11 +90,11 @@
     }
     public class DetailsNext1h
     {
-        public double? precipitation_amount { get; set; }
-        public double? precipitation_amount_max { get; set; }
-        public double? precipitation_amount_min { get; set; }
-        public double? probability_of_precipitation { get; set; }
-        public double? probability_of_thunder { get; set; }
+        public double precipitation_amount { get; set; }
+        public double precipitation_amount_max { get; set; }
+        public double precipitation_amount_min { get; set; }
+        public double probability_of_precipitation { get; set; }
+        public double probability_of_thunder { get; set; }
 
     }
     public class Next__hours1
@@ -110,12 +110,12 @@
     }
     public class DetailsNext6h
     {
-        public double? air_temperature_max { get; set; }
-        public double? air_temperature_min { get; set; }
-        public double? precipitation_amount { get; set; }
-        public double? precipitation_amount_max { get; set; }
-        public double? precipitation_amount_min { get; set; }
-        public double? probability_of_precipitation { get; set; }
+        public double air_temperature_max { get; set; }
+        public double air_temperature_min { get; set; }
+        public double precipitation_amount { get; set; }
+        public double precipitation_amount_max { get; set; }
+        public double precipitation_amount_min { get; set; }
+        public double probability_of_precipitation { get; set; }
 
     }
     public class Next__hours6

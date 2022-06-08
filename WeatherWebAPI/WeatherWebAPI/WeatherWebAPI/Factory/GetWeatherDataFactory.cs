@@ -1,24 +1,23 @@
-﻿using WeatherWebAPI.Factory.Strategy.YR;
+﻿using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Factory
 {
-
-    public class GetWeatherDataFactory<T> : IFactory
+    public class GetWeatherDataFactory : IFactory
     {
-        public IWeatherDataStrategy<WeatherForecastDto> BuildYrStrategy()
+        public dynamic Build<S>() //Build(GetType(YrStrategy)
         {
-            if (typeof(T).Name == "YrStrategy")
+            if (typeof(S).Name == typeof(IYrStrategy).Name)
             {
-                var configObject = new YrAutomapperConfig();
-                return new YrStrategy(configObject, new YrConfig());
+                var strategy = new YrStrategy(new YrConfig());
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IOpenWeatherStrategy).Name)
+            {
+                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+                return strategy;
             }
 
-            throw new Exception("Find a better Exception");
-        }
-
-        public IStrategy<WeatherForecastDto> CreateWeatherStragegy()
-        {
-           
             throw new Exception("Find a better Exception");
         }
 

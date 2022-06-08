@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
+﻿using System.Globalization;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
@@ -7,14 +6,17 @@ namespace WeatherWebAPI.DAL
 {
     public class GetWeatherForecastBetweenDatesCommand : BaseWeatherForecastQuery
     {
-        private readonly GetWeatherDataFactory _factory;
+        private readonly IFactory factory;
+       
 
-        public GetWeatherForecastBetweenDatesCommand(IConfiguration config) : base(config)
+        public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory) : base(config)
         {
-            this._factory = new GetWeatherDataFactory();
+            this.factory = factory;
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IWeatherDataStrategy> getWeatherDataStrategies)
+        
+
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> getWeatherDataStrategies)
         {
             string? cityName = betweenDateQueryAndCity?.CityQuery?.City;
             DateTime fromDate = betweenDateQueryAndCity.BetweenDateQuery.From;
@@ -24,11 +26,11 @@ namespace WeatherWebAPI.DAL
             try
             {
                 // Itterating through all the cities & dates in the database
-                var getCitiesQuery = new GetCitiesQuery(_config);
+                var getCitiesQuery = new GetCitiesQuery(config);
                 var cities = await getCitiesQuery.GetAllCities();
 
-                var getDatesQuery = new GetDatesQuery(_config);
-                var dates = await getDatesQuery.GetAllDates();
+                var getDatesQueryDatabase = new GetDatesQuery(config);
+                var datesDatabase = await getDatesQueryDatabase.GetAllDates();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
@@ -43,14 +45,14 @@ namespace WeatherWebAPI.DAL
                 // Checking if the city is in our database, if not it's getting added.
                 if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
                 {
-                    await (new CreateCityCommand(_config).InsertCityIntoDatabase(cityName, new OpenWeatherStrategy(), _factory));
+                    await (new CreateCityCommand(config, factory).InsertCityIntoDatabase(cityName));
                 }
 
                 // Updateing cityquery
-                var getCitiesQueryUpdate = new GetCitiesQuery(_config);
+                var getCitiesQueryUpdate = new GetCitiesQuery(config);
                 var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
 
-                if (!dates.ToList().Any(d => d.Date.Date.Equals(datesQuery)))
+                if (!datesDatabase.ToList().Any(d => d.Date.Date.Equals(datesQuery)))
                 {
                     foreach (DateTime date in datesQuery)
                     {
@@ -58,11 +60,11 @@ namespace WeatherWebAPI.DAL
                         {
                             var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
 
-                            await (new AddWeatherDataForCityCommand(_config).GetWeatherDataForCity(date, city, strategy));
+                            await new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(date, city, strategy);
                         }
                     }
                 }
-                if (dates.ToList().Any(d => d.Date.Date.Equals(datesQuery) && DateTime.Now < d.Date))
+                if (datesDatabase.ToList().Any(d => d.Date.Date.Equals(datesQuery) && DateTime.Now < d.Date))
                 {
 
                 }
@@ -72,6 +74,7 @@ namespace WeatherWebAPI.DAL
 
                 Console.WriteLine(e.Message);
             }
+
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
                     $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
                         $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
@@ -79,12 +82,12 @@ namespace WeatherWebAPI.DAL
                                 $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                     $"WHERE CAST([Date] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}'";
 
-            return DatabaseQuery(queryString);
+            return Query(queryString);
         }
 
-        internal Task<ActionResult<List<WeatherForecastDto>>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity query, List<IWeatherDataStrategy<WeatherForecastDto>> list)
-        {
-            throw new NotImplementedException();
-        }
+        //internal Task<ActionResult<List<WeatherForecastDto>>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> list)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

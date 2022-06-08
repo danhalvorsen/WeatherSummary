@@ -2,6 +2,6 @@
 {
     public interface IFactory
     {
-        IWeatherDataStrategy<WeatherForecastDto> BuildYrStrategy();
+        dynamic Build<IGetWeatherDataStrategy>();
     }
 }

@@ -1,27 +1,25 @@
-﻿ 
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using BasicWebAPI.Factory;
+using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
-namespace TestProject
+namespace Tests
 {
     public class OpenWeatherFetchCityDataStrategyTest
     {
-        private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
-        private IWeatherDataStrategy _strategy = new OpenWeatherStrategy();
+        //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
+        private IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
         private string _city = "Oslo";
 
 
         [Test]
         public async Task ShouldGetName()
         {
-            var result = await _factory.GetCityDataFrom(_city, _strategy);
+            var result = await _strategy.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Name);
 
@@ -35,7 +33,7 @@ namespace TestProject
         [Test]
         public async Task ShouldGetCountry()
         {
-            var result = await _factory.GetCityDataFrom(_city, _strategy);
+            var result = await _strategy.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Country);
 
@@ -58,7 +56,7 @@ namespace TestProject
         [Test]
         public async Task ShouldGetLatitude()
         {
-            var result = await _factory.GetCityDataFrom(_city, _strategy);
+            var result = await _strategy.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Latitude);
 
@@ -74,7 +72,7 @@ namespace TestProject
         [Test]
         public async Task ShouldGetLongitude()
         {
-            var result = await _factory.GetCityDataFrom(_city, _strategy);
+            var result = await _strategy.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Longitude);
 
@@ -90,7 +88,7 @@ namespace TestProject
         [Test]
         public async Task ShouldGetAltitude()
         {
-            var result = await _factory.GetCityDataFrom(_city, _strategy);
+            var result = await _strategy.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Altitude);
 
