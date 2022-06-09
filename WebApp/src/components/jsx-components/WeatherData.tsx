@@ -9,7 +9,7 @@ import { isTemplateExpression } from "typescript";
 type Props = {
   city: string;
   date: string;
-  fn: () => Promise<Array<IResultJson>>;
+  fn: (node: string) => Promise<Array<IResultJson>>;
 };
 
 const WeatherData = ({ city, date, fn }: Props) => {
@@ -21,7 +21,8 @@ const WeatherData = ({ city, date, fn }: Props) => {
 
 
   const setComponentState = useCallback(async () => {
-    const data = await fn();
+    const node = "http://localhost:3000/data";
+    const data = await fn(node);
     if (data !== undefined && data !== null && data.length > 0) {
       setResult(data);
       setFlag(true);
