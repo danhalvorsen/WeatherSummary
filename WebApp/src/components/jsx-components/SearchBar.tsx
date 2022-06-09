@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import React, { ChangeEvent } from "react";
 import axios from "axios";
-// import { foo } from "../../tests/foo.test";
+import { Checkbox } from "./Checkbox";
 
 
  export type ISearchbarProps=  {
@@ -12,6 +12,7 @@ import axios from "axios";
 }
 
 class SearchBar extends React.Component<ISearchbarProps> {
+  
   state = { term: "" };
 
  
@@ -43,14 +44,17 @@ class SearchBar extends React.Component<ISearchbarProps> {
                 htmlFor="exampleFormControlTextarea1"
                 className="form-label"
               >
-                Search for Date:
+                Search for a City:
               </label>
               <input
                 className="form-control"
                 id="exampleFormControlTextarea1"
-                placeholder="Search a Date"
+                placeholder="Enter a location name"
                 onChange={e=> this.setState({term: e.target.value})}
               ></input>
+
+              <Checkbox />
+                    
             </div>
           </div>
         </form>
