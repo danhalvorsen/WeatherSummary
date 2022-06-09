@@ -27,8 +27,6 @@ namespace BasicWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<WeatherforecastDto>(options => options.UseSqlServer(Configuration.GetConnectionString("WeatherForecastDatabase"))); EntityFramework
-            //cxnString = Configuration.GetConnectionString("WeatherForecastDatabase");
             services.AddControllers();
             services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
             services.AddHostedService<MyBackgroundService>();
@@ -58,6 +56,8 @@ namespace BasicWebAPI
             {
                 endpoints.MapControllers();
             });
+
+            app.UseStatusCodePages(); // Dno if I need this
         }
     }
 }
