@@ -5,11 +5,11 @@ namespace WeatherWebAPI.DAL
 {
     public class GetWeatherForecastByWeekCommand : BaseWeatherForecastQuery
     {
-        private readonly GetWeatherDataFactory _factory;
+        private readonly StrategyBuilderFactory _factory;
 
         public GetWeatherForecastByWeekCommand(IConfiguration config) : base(config)
         {
-            this._factory = new GetWeatherDataFactory();
+            this._factory = new StrategyBuilderFactory(config);
         }
 
         public List<WeatherForecastDto> GetWeatherForecastByWeek(int week, CityQuery query)

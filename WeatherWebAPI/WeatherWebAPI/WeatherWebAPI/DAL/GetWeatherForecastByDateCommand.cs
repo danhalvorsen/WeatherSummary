@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
@@ -13,7 +14,7 @@ namespace WeatherWebAPI.DAL
             this.factory = factory;
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             string? cityName = query?.CityQuery?.City;
             DateTime date = query.DateQuery.Date;
@@ -40,30 +41,27 @@ namespace WeatherWebAPI.DAL
                     var getCitiesQueryUpdate = new GetCitiesQuery(config);
                     var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
 
-                    foreach (var strategy in strategies)
+                    foreach (var weatherStrategy in weatherDataStrategies)
                     {
-                        var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
-                        await new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(city, strategy);
+                        await GetWeatherDataAndAddToDatabase(cityName, date, citiesUpdated, weatherStrategy);
                     }
                 }
 
                 if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
                 {
-                    foreach (var strategy in strategies)
+                    foreach (var weatherStrategy in weatherDataStrategies)
                     {
-                        var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
-
-                        await new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(date, city, strategy);
+                        await GetWeatherDataAndAddToDatabase(cityName, date, cities, weatherStrategy);
                     }
                 }
 
                 if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
                 {
-                    foreach (var strategy in strategies)
+                    foreach (var strategy in weatherDataStrategies)
                     {
                         var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
 
-                        await new AddWeatherDataForCityCommand(config, factory).UpdateWeatherDataForCity(date, city, strategy);
+                        await new AddWeatherDataForCityCommand(config).UpdateWeatherDataForCity(date, city, strategy);
                     }
                 }
             }
@@ -81,6 +79,15 @@ namespace WeatherWebAPI.DAL
 
 
             return Query(queryString);
+        }
+
+        private async Task GetWeatherDataAndAddToDatabase(string? cityName, DateTime date, List<Controllers.CityDto> cities, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy)
+        {
+            var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+
+            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
+            var addToDatabaseStrategy = factory.Build<IAddWeatherDataToDatabaseStrategy>();
+            addToDatabaseStrategy.Add(weatherData);
         }
     }
 }

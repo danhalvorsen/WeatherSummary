@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
@@ -52,15 +53,20 @@ namespace WeatherWebAPI.DAL
                 var getCitiesQueryUpdate = new GetCitiesQuery(config);
                 var citiesUpdated = await getCitiesQueryUpdate.GetAllCities();
 
-                if (!datesDatabase.ToList().Any(d => d.Date.Date.Equals(datesQuery)))
+                if (!datesDatabase.ToList().Any(d => d.Date.Date.Equals(datesQuery) && DateTime.Now < d.Date))
                 {
                     foreach (DateTime date in datesQuery)
                     {
                         foreach (var strategy in getWeatherDataStrategies)
                         {
-                            var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
+                            //var city = citiesUpdated.Where(c => c.Name.Equals(cityName)).First();
 
-                            await new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(date, city, strategy);
+                            //await new AddWeatherDataForCityCommand(config).GetWeatherDataForCity(date, city, strategy);
+
+
+                            //ToDo: asdfafsaf
+
+                            await GetWeatherDataAndAddToDatabase(cityName, date, cities, strategy);
                         }
                     }
                 }
@@ -89,5 +95,14 @@ namespace WeatherWebAPI.DAL
         //{
         //    throw new NotImplementedException();
         //}
+
+        private async Task GetWeatherDataAndAddToDatabase(string? cityName, DateTime date, List<Controllers.CityDto> cities, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy)
+        {
+            var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+
+            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
+            var addToDatabaseStrategy = factory.Build<IAddWeatherDataToDatabaseStrategy>();
+            addToDatabaseStrategy.Add(weatherData);
+        }
     }
 }

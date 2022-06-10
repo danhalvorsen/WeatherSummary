@@ -3,7 +3,7 @@ using WeatherWebAPI.OpenWeather;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherConfig : IConfig
+    public class OpenWeatherConfig : IHttpConfig
     {
         private MapperConfiguration mapperConfig;
         public string? DataSource { get; }

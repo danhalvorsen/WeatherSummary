@@ -16,8 +16,9 @@ namespace Tests
         {
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
-             .ForPath(dest => dest.Date, opt => opt.MapFrom(src => src.properties.meta.updated_at)) // date
-             .ForPath(dest => dest.WeatherType, opt => opt // weathertype
+             .ForPath(dest => dest.Date, opt => opt         // date
+                .MapFrom(src => src.properties.meta.updated_at)) // (OR SHOULD WE HAVE TIMESERIES WHERE ITS ADDED FROM?)
+             .ForPath(dest => dest.WeatherType, opt => opt  // weathertype
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
@@ -27,7 +28,7 @@ namespace Tests
                     .ToList()
                         .Single(i => i.time.Equals(queryDate))
                         .data.instant.details.air_temperature))
-             .ForPath(dest => dest.Windspeed, opt => opt // windspeed
+             .ForPath(dest => dest.Windspeed, opt => opt    // windspeed
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
@@ -42,22 +43,22 @@ namespace Tests
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.instant.details.wind_speed_of_gust))
-             .ForPath(dest => dest.Pressure, opt => opt // pressure
+             .ForPath(dest => dest.Pressure, opt => opt     // pressure
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.instant.details.air_pressure_at_sea_level))
-             .ForPath(dest => dest.Humidity, opt => opt // humidity
+             .ForPath(dest => dest.Humidity, opt => opt     // humidity
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.instant.details.relative_humidity))
-             .ForPath(dest => dest.ProbOfRain, opt => opt // probability of percipitation (probability of rain)
+             .ForPath(dest => dest.ProbOfRain, opt => opt   // probability of percipitation (probability of rain)
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.next_6_hours.details.probability_of_precipitation))
-             .ForPath(dest => dest.AmountRain, opt => opt // percipitation amount (amount of rain)
+             .ForPath(dest => dest.AmountRain, opt => opt   // percipitation amount (amount of rain)
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
@@ -97,6 +98,10 @@ namespace Tests
             {
                 properties = new Properties
                 {
+                    //timeseries = new List<Timeseries> { new Timeseries
+                    //{
+                    //    time = dateTime
+                    //}}
                     meta = new Meta
                     {
                         updated_at = dateTime

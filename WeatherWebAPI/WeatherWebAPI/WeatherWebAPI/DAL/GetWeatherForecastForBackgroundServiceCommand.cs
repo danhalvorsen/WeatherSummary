@@ -5,11 +5,8 @@ namespace WeatherWebAPI.DAL
 {
     public class GetWeatherForecastForBackgroundServiceCommand : BaseWeatherForecastQuery
     {
-        private readonly IFactory factory;
-
-        public GetWeatherForecastForBackgroundServiceCommand(IConfiguration config, IFactory factory) : base(config)
+        public GetWeatherForecastForBackgroundServiceCommand(IConfiguration config) : base(config)
         {
-            this.factory = factory;
         }
 
         public async Task GetWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies)
@@ -23,7 +20,7 @@ namespace WeatherWebAPI.DAL
                 {
                     foreach (var city in cities)
                     {
-                        await (new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(city, strategy));
+                        await strategy.GetWeatherDataFrom(city, DateTime.Now); // REMEMBER TO ADD WRITING TO DATABASE
                     }
                 }
             }

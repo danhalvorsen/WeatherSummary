@@ -3,7 +3,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetCitiesQuery : IQuery
+    public class GetCitiesQuery : ICityQuery
     {
         private readonly IConfiguration config;
         private const string queryString = $"SELECT * FROM City";

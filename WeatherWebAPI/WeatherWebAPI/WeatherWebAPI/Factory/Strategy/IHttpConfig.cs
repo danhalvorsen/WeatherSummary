@@ -1,6 +1,6 @@
 ﻿namespace WeatherWebAPI.Factory
 {
-    public interface IConfig
+    public interface IHttpConfig
     {
         public string? DataSource { get; }
         public Uri? BaseUrl { get; }

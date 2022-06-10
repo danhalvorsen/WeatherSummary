@@ -18,7 +18,7 @@ namespace Tests
         private List<CityDto>? cities;
         private List<WeatherForecastDto>? dates;
         List<IGetWeatherDataStrategy<WeatherForecastDto>>? strategies;
-        private IFactory factory;
+        private IFactory? factory;
 
         [SetUp]
         public void Setup()
@@ -35,7 +35,7 @@ namespace Tests
                 new WeatherForecastDto { Date = DateTime.Now.AddDays(1) }
             };
 
-            factory = new GetWeatherDataFactory();
+            factory = new StrategyBuilderFactory(null);
 
             strategies = new();
             strategies.Add(factory.Build<IYrStrategy>());
@@ -64,7 +64,7 @@ namespace Tests
                 Console.WriteLine("Adding new City to database");
 
                 // Updateing cityquery
-                Console.WriteLine("Updateing cityquery");
+                Console.WriteLine("Updating cityquery");
 
                 foreach (var strategy in strategies)
                 {
@@ -100,7 +100,7 @@ namespace Tests
 
 
                 }
-                result = $"Entering the logic for updating city.";
+                result = $"Entering the logic for updating weather.";
             }
 
             Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
@@ -166,7 +166,7 @@ namespace Tests
 
 
                 }
-                result = $"Entering the logic for updating city.";
+                result = $"Entering the logic for updating weather.";
             }
 
             Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
@@ -232,12 +232,12 @@ namespace Tests
 
 
                 }
-                result = $"Entering the logic for updating city.";
+                result = $"Entering the logic for updating weather.";
             }
 
             Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
 
-            result.Should().Be("Entering the logic for updating city.");
+            result.Should().Be("Entering the logic for updating weather.");
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace Tests
 
 
                 }
-                result = $"Entering the logic for updating city.";
+                result = $"Entering the logic for updating weather.";
             }
 
             Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
@@ -364,7 +364,7 @@ namespace Tests
 
 
                 }
-                result = $"Entering the logic for updating city.";
+                result = $"Entering the logic for updating weather.";
             }
 
             Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");

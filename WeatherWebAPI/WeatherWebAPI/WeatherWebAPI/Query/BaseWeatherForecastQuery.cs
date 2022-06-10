@@ -3,7 +3,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Query
 {
-    public abstract class BaseWeatherForecastQuery : IDatabaseQuery
+    public abstract class BaseWeatherForecastQuery : IWeatherForecastQuery
     {
         protected readonly IConfiguration config;
 

@@ -9,7 +9,7 @@ namespace WeatherWebAPI
     {
         private readonly IFactory factory;
         private readonly IConfiguration config;
-        private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new List<IGetWeatherDataStrategy<WeatherForecastDto>>();
+        private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new();
 
         public MyBackgroundService(IConfiguration config, IFactory factory)
         {
@@ -26,13 +26,13 @@ namespace WeatherWebAPI
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    Console.WriteLine("BackgroundService doing work");
+                    //Console.WriteLine("BackgroundService doing work");
 
-                    var command = new GetWeatherForecastForBackgroundServiceCommand(config, factory);
-                    await command.GetWeatherForecastForAllCities(strategies);
+                    //var command = new GetWeatherForecastForBackgroundServiceCommand(config);
+                    //await command.GetWeatherForecastForAllCities(strategies);
 
-                    await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
-                    //await Task.Delay(1000);
+                    //await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
+                    await Task.Delay(1000);
                 }
                 await Task.CompletedTask;
             }

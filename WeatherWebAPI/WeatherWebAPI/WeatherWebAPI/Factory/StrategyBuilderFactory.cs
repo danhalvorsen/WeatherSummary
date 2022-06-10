@@ -1,10 +1,18 @@
-﻿using WeatherWebAPI.Factory.Strategy.OpenWeather;
+﻿using WeatherWebAPI.Factory.Strategy.Database;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Factory
 {
-    public class GetWeatherDataFactory : IFactory
+    public class StrategyBuilderFactory : IFactory
     {
+        private readonly IConfiguration config;
+
+        public StrategyBuilderFactory(IConfiguration config)
+        {
+            this.config = config;
+        }
+
         public dynamic Build<S>() //Build(GetType(YrStrategy)
         {
             if (typeof(S).Name == typeof(IYrStrategy).Name)
@@ -15,6 +23,14 @@ namespace WeatherWebAPI.Factory
             if (typeof(S).Name == typeof(IOpenWeatherStrategy).Name)
             {
                 var strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IAddWeatherDataToDatabaseStrategy).Name)
+            {
+                var strategy = new AddWeatherDataToDatabaseStrategy(new AddWeatherDataToDatabaseConfig
+                {
+                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                });
                 return strategy;
             }
 
