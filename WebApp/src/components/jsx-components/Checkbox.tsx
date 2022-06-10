@@ -19,16 +19,18 @@ const doubledate = 'https://localhost:63286/BetweenDateQueryAndCity?BetweenDateQ
 
 
   const showDate = <div className="d-flex flex-row justify-content-center">
-  <div className="d-flex flex-row m-2"> <p className="me-2">Date:</p>  <DatePicker
-  className="m-l-2"
-  selectsRange={true}
-  startDate={startDateFrom}
-  endDate={endDateTo}
-  onChange={(update : [null, null]) => {
-    setDateRange(update);
-  }}
-  isClearable={true}
-/> </div></div>
+  <div className="d-flex flex-row m-2"> <p className="me-2">Date:</p>  
+      <DatePicker
+      className="m-l-2"
+      selectsRange={true}
+      startDate={startDateFrom}
+      endDate={endDateTo}
+      onChange={(update : [null, null]) => {
+        setDateRange(update);
+      }}
+      isClearable={true}
+    />
+ </div></div>
 
 
   const chooseDate = (activeDate) ? showDate : '';
