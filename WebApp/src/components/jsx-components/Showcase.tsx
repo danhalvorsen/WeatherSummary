@@ -1,36 +1,4 @@
-import axios, { Axios, AxiosResponse } from "axios";
-import React, { useEffect, useState } from "react";
-import { setEnvironmentData } from "worker_threads";
-// import { foo } from "../../tests/foo.test";
-import pic from './a.jpg'
-
-
-
-
-export const MyComp = () => {
-    
-    const [data, setData] = useState([]);
-    
-
-    useEffect(() => {
-        axios.get("http://localhost:3000/source")
-        .then((res : AxiosResponse) => {
-            setData(res.data);
-            
-        });
-    }, []);
-
-    
-
-    //console.log(data);
-
-
-    return(<><div></div></>)
-};
-
-
 function Navbar() {
-
 
     return (
         <div className=" p-5 text-center text-sm-start">

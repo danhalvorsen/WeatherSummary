@@ -3,13 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { MyComp } from './components/jsx-components/Showcase';
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    <MyComp></MyComp>
-  </React.StrictMode>,
+   </React.StrictMode>,
   document.getElementById('root')
 );
 
