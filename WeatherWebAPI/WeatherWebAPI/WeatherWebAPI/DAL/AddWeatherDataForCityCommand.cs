@@ -13,21 +13,6 @@ namespace WeatherWebAPI.DAL
         
         }
 
-        public async Task UpdateWeatherDataForCity(DateTime dateQuery, CityDto city, IGetWeatherDataStrategy<WeatherForecastDto> strategy)
-        {
-            Debug.Assert(city != null, "city is null");
-            
-            try
-            {
-                var weatherForecastData = await strategy.GetWeatherDataFrom(city, dateQuery);
-                UpdateWeatherDataToDatabaseForCityQuery(weatherForecastData, city, dateQuery);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
         //private WeatherForecastDto AddWeatherDataToDatabaseForCityQuery(WeatherForecastDto addWeatherData, CityDto cityData)
         //{
         //    string queryString = $"DECLARE @city_id INT " +
@@ -49,27 +34,27 @@ namespace WeatherWebAPI.DAL
         //    return InsertIntoDatabase(addWeatherData, queryString);
         //}
 
-        private WeatherForecastDto UpdateWeatherDataToDatabaseForCityQuery(WeatherForecastDto addWeatherData, CityDto cityData, DateTime dateToBeUpdated)
-        {
-            string queryString = $"UPDATE WeatherData " +
-                                    $"SET [Date] = '{addWeatherData.Date}', " +
-                                    $"WeatherType = '{addWeatherData.WeatherType}', " +
-                                    $"Temperature = {addWeatherData.Temperature}, " +
-                                    $"Windspeed = {addWeatherData.Windspeed}, " +
-                                    $"WindDirection = {addWeatherData.WindDirection}, " +
-                                    $"WindspeedGust = {addWeatherData.WindspeedGust}, " +
-                                    $"Pressure = {addWeatherData.Pressure}, " +
-                                    $"Humidity = {addWeatherData.Humidity}, " +
-                                    $"ProbOfRain = {addWeatherData.ProbOfRain}, " +
-                                    $"AmountRain = {addWeatherData.AmountRain}, " +
-                                    $"CloudAreaFraction = {addWeatherData.CloudAreaFraction}, " +
-                                    $"FogAreaFraction = {addWeatherData.FogAreaFraction}, " +
-                                    $"ProbOfThunder = {addWeatherData.ProbOfThunder} " +
-                                        $"FROM WeatherData " +
-                                            $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                $"WHERE CAST([Date] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{cityData.Name}'";
+        //private WeatherForecastDto UpdateWeatherDataToDatabaseForCityQuery(WeatherForecastDto addWeatherData, CityDto cityData, DateTime dateToBeUpdated)
+        //{
+        //    string queryString = $"UPDATE WeatherData " +
+        //                            $"SET [Date] = '{addWeatherData.Date}', " +
+        //                            $"WeatherType = '{addWeatherData.WeatherType}', " +
+        //                            $"Temperature = {addWeatherData.Temperature}, " +
+        //                            $"Windspeed = {addWeatherData.Windspeed}, " +
+        //                            $"WindDirection = {addWeatherData.WindDirection}, " +
+        //                            $"WindspeedGust = {addWeatherData.WindspeedGust}, " +
+        //                            $"Pressure = {addWeatherData.Pressure}, " +
+        //                            $"Humidity = {addWeatherData.Humidity}, " +
+        //                            $"ProbOfRain = {addWeatherData.ProbOfRain}, " +
+        //                            $"AmountRain = {addWeatherData.AmountRain}, " +
+        //                            $"CloudAreaFraction = {addWeatherData.CloudAreaFraction}, " +
+        //                            $"FogAreaFraction = {addWeatherData.FogAreaFraction}, " +
+        //                            $"ProbOfThunder = {addWeatherData.ProbOfThunder} " +
+        //                                $"FROM WeatherData " +
+        //                                    $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+        //                                        $"WHERE CAST([Date] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{cityData.Name}'";
 
-            return InsertIntoDatabase(addWeatherData, queryString);
-        }
+        //    return InsertIntoDatabase(addWeatherData, queryString);
+        //}
     }
 }

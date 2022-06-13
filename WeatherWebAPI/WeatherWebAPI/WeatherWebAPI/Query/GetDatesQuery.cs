@@ -2,7 +2,7 @@
 
 namespace WeatherWebAPI.Query
 {
-    public class GetDatesQuery
+    public class GetDatesQuery : IGetDatesQuery
     {
         private readonly IConfiguration config;
         private const string queryString = $"SELECT * FROM WeatherData";
@@ -31,6 +31,8 @@ namespace WeatherWebAPI.Query
                         });
                     }
                 }
+
+                await command.ExecuteNonQueryAsync();
                 return list;
             }
         }

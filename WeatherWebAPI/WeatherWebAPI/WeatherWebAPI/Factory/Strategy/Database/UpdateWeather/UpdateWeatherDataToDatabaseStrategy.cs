@@ -3,11 +3,6 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
 {
-    public interface IUpdateWeatherDataToDatabaseStrategy
-    {
-        Task Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated);
-    }
-
     public class UpdateWeatherDataToDatabaseStrategy : IUpdateWeatherDataToDatabaseStrategy
     {
         private readonly IDatabaseConfig config;
@@ -45,9 +40,5 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                 await command.ExecuteNonQueryAsync();
             }
         }
-    }
-    public class UpdateWeatherDataToDatabaseConfig : IDatabaseConfig
-    {
-        public string? ConnectionString { get; set; }
     }
 }

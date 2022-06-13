@@ -26,17 +26,17 @@ public class ResponseHeaderAttribute : ActionFilterAttribute
 [ResponseHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")]
 public class WeatherforecastController : ControllerBase
 {
-    private readonly IConfiguration config;
-    private readonly IFactory factory;
-    private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new List<IGetWeatherDataStrategy<WeatherForecastDto>>();
+    private readonly IConfiguration _config;
+    private readonly IFactory _factory;
+    private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _strategies = new();
 
 
     public WeatherforecastController(IConfiguration config, IFactory factory)
     {
-        this.config = config;
-        this.factory = factory;
-        strategies.Add(this.factory.Build<IYrStrategy>());
-        strategies.Add(this.factory.Build<IOpenWeatherStrategy>());
+        this._config = config;
+        this._factory = factory;
+        _strategies.Add(this._factory.Build<IYrStrategy>());
+        _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
     }
 
     [HttpGet("Date")]
@@ -68,23 +68,23 @@ public class WeatherforecastController : ControllerBase
         //    Console.WriteLine(e.Message);
         //}
 
-        var command = new GetWeatherForecastByDateCommand(config, factory);
+        var command = new GetWeatherForecastByDateCommand(_config, _factory);
         
-        return await command.GetWeatherForecastByDate(query, strategies);
+        return await command.GetWeatherForecastByDate(query, _strategies);
     }
 
     [HttpGet("Between")]
     public async Task<ActionResult<List<WeatherForecastDto>>> Between(BetweenDateQueryAndCity query)
     {
-        var command = new GetWeatherForecastBetweenDatesCommand(config, factory);
+        var command = new GetWeatherForecastBetweenDatesCommand(_config, _factory);
 
-        return await command.GetWeatherForecastBetweenDates(query, strategies);
+        return await command.GetWeatherForecastBetweenDates(query, _strategies);
     }
 
     [HttpGet("Week")]
     public ActionResult<List<WeatherForecastDto>> Week(int week, CityQuery query) // irriterende med liten "w" i week på selve endpointen.
     {
-        var command = new GetWeatherForecastByWeekCommand(config);
+        var command = new GetWeatherForecastByWeekCommand(_config, _factory);
         
         return command.GetWeatherForecastByWeek(week, query);
     }

@@ -2,25 +2,31 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
+using Tests.Fakes;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests
 {
     public class EndpointBetweenDatesLogicTest
     {
-        private string? cityName;
-        private DateTime fromDate;
-        private DateTime toDate;
+        private string? _cityName;
+        private DateTime _fromDate;
+        private DateTime _toDate;
+        private int _weatherAdded = 0;
+        private int _weatherUpdated = 0;
+        private IFactory? _factory;
+        private TimeSpan ts = new TimeSpan(DateTime.Now.Hour - 1, 0, 0);
+        
         private List<CityDto>? _cities;
-        private List<WeatherForecastDto>? dates;
+        private List<WeatherForecastDto>? _dates;
+
         List<IGetWeatherDataStrategy<WeatherForecastDto>>? strategies;
-        private IFactory? factory;
+        
+        
 
         [SetUp]
         public void Setup()
@@ -31,8 +37,9 @@ namespace Tests
                 new CityDto { Id = 2, Name = "Oslo", Country = "Norway", Latitude = 59.9133301, Longitude = 10.7389701 }
             };
 
-            dates = new()
+            _dates = new()
             {
+                new WeatherForecastDto { Date = DateTime.Now - ts }, // <- Skal være en time bak DateTime.Now
                 new WeatherForecastDto { Date = DateTime.Now },
                 new WeatherForecastDto { Date = DateTime.Now.AddDays(1) },
                 new WeatherForecastDto { Date = DateTime.Now.AddDays(3) },
@@ -41,7 +48,7 @@ namespace Tests
                 new WeatherForecastDto { Date = new DateTime(2022, 05, 28) }
             };
 
-            factory = new StrategyBuilderFactory(null);
+            _factory = new StrategyBuilderFactory(null);
             strategies = new();
 
             strategies.Add(new FakeYrStrategy());
@@ -49,23 +56,21 @@ namespace Tests
         }
 
         [Test]
-        public void WeatherForecastBetweenDatesLogicEndpointTest_DatesQuerySomeInDatabaseFuture()
+        public void WeatherForecastBetweenDatesLogicEndpointTest_DatesQuerySomeInDatabaseFutureAsync()
         {
             // Arrange
-            cityName = "Stavanger";
-            fromDate = DateTime.Now;
-            toDate = DateTime.Now.AddDays(7);
+            
+            _cityName = "Stavanger";
+            _fromDate = DateTime.Now;
+            _toDate = DateTime.Now.AddDays(6);
             var datesQuery = new List<DateTime>();
-            int weatherAdded = 0;
-            int weatherUpdated = 0;
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
 
-            // Getting the all the dates between the from and to datequeries
-            foreach (DateTime day in EachDay(fromDate, toDate))
+            foreach (DateTime day in EachDay(_fromDate, _toDate))
             {
                 datesQuery.Add(day);
             }
@@ -74,16 +79,16 @@ namespace Tests
 
             var result = string.Empty;
 
-
-            // Checking if the city is in our database, if not it's getting added.
-            if (CityExists(cityName))
+            if (!CityExists(_cityName))
             {
                 //await(new CreateCityCommand(config, factory).InsertCityIntoDatabase(cityName));
-                Console.WriteLine("Adding new City to database");
+                Console.WriteLine($"Adding new City: {_cityName} to database");
+
+
+                // UPDATE CITIES
+                Console.WriteLine("Updating cityquery");
             }
 
-            // UPDATE CITIES
-            Console.WriteLine("Updating cityquery");
 
             foreach (DateTime date in datesQuery)
             {
@@ -93,68 +98,58 @@ namespace Tests
                     {
                         if (GetWeatherDataBy(date))
                         {
-                            var city = GetCityDtoBy(cityName);
-                            strategy.GetWeatherDataFrom(city, date);
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData = strategy.GetWeatherDataFrom(city, date);
 
-                            weatherAdded++;                            
+                            var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
+                            var fakeAddWeather = fakeAddWeatherDataToDatabaseStrategy.Add(weatherData.Result, city);
+
+                            // Add(WeatherForecastDto weatherData, CityDto city)
+                            Console.WriteLine(weatherData.Result);
+                            _weatherAdded++;
                         }
                         if (UpdateWeatherDataBy(date))
                         {
-                            var city = GetCityDtoBy(cityName);
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData = strategy.GetWeatherDataFrom(city, date);
+                            
+                            var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
+                            var fakeUpdateWeather = fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData.Result, city, date.Date);
 
-                            strategy.GetWeatherDataFrom(city, date);
-                            weatherUpdated++;
+                            // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                            Console.WriteLine(fakeUpdateWeather);
+                            _weatherUpdated++;
                         }
                     }
                 }
             }
 
-            if (weatherAdded > 0 || weatherUpdated > 0)
-                result = $"Added {weatherAdded} and updated {weatherUpdated} forecasts. Now fetching forecasts from database";
+            if (_weatherAdded > 0 || _weatherUpdated > 0)
+                result = $"Added {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database";
             else
                 result = string.Empty;
 
             Console.WriteLine("\n" + result);
-            result.Should().Be($"Added {weatherAdded} and updated {weatherUpdated} forecasts. Now fetching forecasts from database");
-        }
-
-        private bool CityExists(string cityName)
-        {
-            return !_cities.ToList().Any(c => c.Name.Equals(cityName));
-        }
-
-        private CityDto GetCityDtoBy(string cityName)
-        {
-            return _cities.Where(c => c.Name.Equals(cityName)).First();
-        }
-
-        private bool UpdateWeatherDataBy(DateTime date)
-        {
-            return dates.ToList().Any(d => d.Date.Date.Equals(date));
-        }
-
-        private bool GetWeatherDataBy(DateTime date)
-        {
-            return !dates.ToList().Any(d => d.Date.Date.Equals(date));
+            result.Should().Be($"Added {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database");
         }
 
         [Test]
         public void WeatherForecastBetweenDatesLogicEndpointTest_DatesQueryInDatabaseHistorical()
         {
             // Arrange
-            cityName = "Stavanger";
-            fromDate = new DateTime(2022, 05, 25);
-            toDate = DateTime.Now;
+            
+            _cityName = "Stavanger";
+            _fromDate = new DateTime(2022, 05, 25);
+            _toDate = DateTime.Now;
             var datesQuery = new List<DateTime>();
 
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
 
-            // Getting the all the dates between the from and to datequeries
-            foreach (DateTime day in EachDay(fromDate, toDate))
+            foreach (DateTime day in EachDay(_fromDate, _toDate))
             {
                 datesQuery.Add(day);
             }
@@ -164,15 +159,15 @@ namespace Tests
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!_cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
                 //await(new CreateCityCommand(config, factory).InsertCityIntoDatabase(cityName));
-                Console.WriteLine("Adding new City to database");
+                Console.WriteLine($"Adding new City: {_cityName} to database");
+
+                // UPDATE CITIES
+                Console.WriteLine("Updating cityquery");
             }
 
-            // UPDATE CITIES
-            Console.WriteLine("Updating cityquery");
 
             foreach (DateTime date in datesQuery)
             {
@@ -180,22 +175,30 @@ namespace Tests
                 {
                     foreach (var strategy in strategies)
                     {
-                        if (!dates.ToList().Any(d => d.Date.Equals(date)))
+                        if (GetWeatherDataBy(date))
                         {
-                            var city = _cities.Where(c => c.Name.Equals(cityName)).First();
-                            Console.WriteLine("\n" + date);
-                            Console.WriteLine("Fetching weather");
-
-                            result = "Logic for fetching data for dates not in database where this is possible";
-                            //await new AddWeatherDataForCityCommand(config).GetWeatherDataForCity(date, city, strategy)
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData =  strategy.GetWeatherDataFrom(city, date);
+                            var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
+                            fakeAddWeatherDataToDatabaseStrategy.Add(weatherData.Result, city);
+                            
+                            // Add(WeatherForecastDto weatherData, CityDto city)
+                           
+                            Console.WriteLine(weatherData.Result);
+                            _weatherAdded++;
                         }
-                        if (dates.ToList().Any(d => d.Date.Equals(date)))
+                        if (UpdateWeatherDataBy(date))
                         {
-                            var city = _cities.Where(c => c.Name.Equals(cityName)).First();
-                            Console.WriteLine("\n" + date);
-                            Console.WriteLine("Update weather");
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData = strategy.GetWeatherDataFrom(city, date);
 
-                            result = "Logic for updating data for dates in database where this is possible";
+                            var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
+                            fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData.Result, city, date.Date);
+
+                            
+                            // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                            Console.WriteLine(weatherData.Result);
+                            _weatherUpdated++;
                         }
                     }
                 }
@@ -208,8 +211,28 @@ namespace Tests
 
         protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
         {
-            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+            for (var day = from; day <= thru; day = day.AddDays(1)) // Add .Date if you don't want time to from and thru
                 yield return day;
+        }
+
+        private bool CityExists(string cityName)
+        {
+            return _cities.ToList().Any(c => c.Name.Equals(cityName));
+        }
+
+        private CityDto GetCityDtoBy(string cityName)
+        {
+            return _cities.Where(c => c.Name.Equals(cityName)).First();
+        }
+
+        private bool UpdateWeatherDataBy(DateTime date) // DateExists(DateTime date)
+        {
+            return _dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
+        }
+
+        private bool GetWeatherDataBy(DateTime date) // !DateExists(DateTime date)
+        {
+            return !_dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using WeatherWebAPI.Factory.Strategy.Database;
+using WeatherWebAPI.Factory.Strategy.Database.GetWeather;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
 
@@ -28,6 +29,22 @@ namespace WeatherWebAPI.Factory
             if (typeof(S).Name == typeof(IAddWeatherDataToDatabaseStrategy).Name)
             {
                 var strategy = new AddWeatherDataToDatabaseStrategy(new AddWeatherDataToDatabaseConfig
+                {
+                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                });
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IUpdateWeatherDataToDatabaseStrategy).Name)
+            {
+                var strategy = new UpdateWeatherDataToDatabaseStrategy(new UpdateWeatherDataToDatabaseConfig
+                {
+                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                });
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IGetWeatherDataFromDatabaseStrategy).Name)
+            {
+                var strategy = new GetWeatherDataFromDatabaseStrategy(new GetWeatherDataFromDatabaseConfig
                 {
                     ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
                 });

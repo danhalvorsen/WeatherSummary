@@ -13,97 +13,97 @@ namespace Tests
 {
     public class EndpointByDateLogicTest
     {
-        private string? cityName;
-        private DateTime date;
-        private List<CityDto>? cities;
-        private List<WeatherForecastDto>? dates;
-        List<IGetWeatherDataStrategy<WeatherForecastDto>>? strategies;
-        private IFactory? factory;
+        private string? _cityName;
+        private DateTime _date;
+        private List<CityDto>? _cities;
+        private List<WeatherForecastDto>? _dates;
+        private IFactory? _factory;
+
+        List<IGetWeatherDataStrategy<WeatherForecastDto>>? weatherDataStrategies;
+        
 
         [SetUp]
         public void Setup()
         {
-            cities = new()
+            _cities = new()
             {
                 new CityDto { Id = 1, Name = "Stavanger", Country = "Norway", Latitude = 59.1020129, Longitude = 5.712611357275702 },
                 new CityDto { Id = 2, Name = "Oslo", Country = "Norway", Latitude = 59.9133301, Longitude = 10.7389701 }
             };
 
-            dates = new()
+            _dates = new()
             {
                 new WeatherForecastDto { Date = DateTime.Now },
                 new WeatherForecastDto { Date = DateTime.Now.AddDays(1) }
             };
 
-            factory = new StrategyBuilderFactory(null);
+            _factory = new StrategyBuilderFactory(null);
 
-            strategies = new();
-            strategies.Add(factory.Build<IYrStrategy>());
-            strategies.Add(factory.Build<IOpenWeatherStrategy>());
+            weatherDataStrategies = new();
+            weatherDataStrategies.Add(_factory.Build<IYrStrategy>());
+            weatherDataStrategies.Add(_factory.Build<IOpenWeatherStrategy>());
         }
 
         [Test]
-        public void WeatherForecastByDateLogicEndpointTest_DateNotInDatabaseFuture()
+        public void WeatherForecastByDateLogicEndpointTest_DateNotInDatabaseButInFuture()
         {
             // Arrange
-            date = DateTime.Now.AddDays(2); // Checking for 
-            cityName = "Stavanger";
-
+            _date = DateTime.Now.AddDays(2); // Checking for 
+            _cityName = "Stavanger";
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
             // Act
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
-                Console.WriteLine("Adding new City to database");
+                //await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
+                //_cities = await getCitiesQuery.GetAllCities();
+                Console.WriteLine($"Adding new city: {_cityName} to database");
+                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
 
                 // Updateing cityquery
                 Console.WriteLine("Updating cityquery");
-
-                foreach (var strategy in strategies)
-                {
-                    // Assert
-                    Console.WriteLine("Adding WeatherData to the city added");
-                }
-
-                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
             }
 
-            if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
+            if (_date > DateTime.Now)
             {
-                foreach (var strategy in strategies)
+                foreach (var weatherStrategy in weatherDataStrategies)
                 {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+                    if (GetWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
-                                        $" and not in the database." +
-                                            $" Adding weather forecast for given date: {date}");
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
+                                            $" and not in the database." +
+                                                $" Adding weather forecast for given date: {_date}");
+
+                        result = "Entering the logic for date not in database but in the future.";
+
+                    }
+                    if (UpdateWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {_date}");
+                        result = "Entering the logic for updating weather.";
+                    }
                 }
-                result = "Entering the logic for date not in database but in the future.";
             }
 
-            if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
-
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {date}");
-
-
-                }
-                result = $"Entering the logic for updating weather.";
-            }
-
-            Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
+            Console.WriteLine($"\nGetting weather forecast for {_cityName} from database.");
 
             result.Should().Be("Entering the logic for date not in database but in the future.");
         }
@@ -112,64 +112,63 @@ namespace Tests
         public void WeatherForecastByDateLogicEndpointTest_DateNotInDatabaseHistorical()
         {
             // Arrange
-            date = new DateTime(2022, 06, 07); // Set custom date <- should not be able to get data from back in time
-            cityName = "Stavanger";
+            _date = new DateTime(2022, 06, 07); // Set custom date <- should not be able to get data from back in time
+            _cityName = "Stavanger";
 
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
             // Act
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
-                Console.WriteLine("Adding new City to database");
+                //await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
+                //_cities = await getCitiesQuery.GetAllCities();
+                Console.WriteLine($"Adding new city: {_cityName} to database");
+                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
 
                 // Updateing cityquery
-                Console.WriteLine("Updateing cityquery");
-
-                foreach (var strategy in strategies)
-                {
-                    // Assert
-                    Console.WriteLine("Adding WeatherData to the city added");
-                }
-
-                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
+                Console.WriteLine("Updating cityquery");
             }
 
-            if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
+            if (_date > DateTime.Now)
             {
-                foreach (var strategy in strategies)
+                foreach (var weatherStrategy in weatherDataStrategies)
                 {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+                    if (GetWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                    // Assert
-                    Console.WriteLine($" {strategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
-                                        $" and not in the database." +
-                                            $" Adding weather forecast for given date: {date}");
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
+                                            $" and not in the database." +
+                                                $" Adding weather forecast for given date: {_date}");
+
+                        result = "Entering the logic for date not in database but in the future.";
+
+                    }
+                    if (UpdateWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {_date}");
+                        result = "Entering the logic for updating weather.";
+                    }
                 }
-                result = "Entering the logic for date not in database but in the future.";
             }
 
-            if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
-
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {date}");
-
-
-                }
-                result = $"Entering the logic for updating weather.";
-            }
-
-            Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
+            Console.WriteLine($"\nGetting weather forecast for {_cityName} from database.");
 
             result.Should().BeEmpty();
         }
@@ -178,130 +177,128 @@ namespace Tests
         public void WeatherForecastByDateLogicEndpointTest_DateInDatabaseFuture()
         {
             // Arrange
-            date = DateTime.Now.AddDays(1);
-            cityName = "Stavanger";
+            _date = DateTime.Now.AddDays(1);
+            _cityName = "Stavanger";
 
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
             // Act
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
-                Console.WriteLine("Adding new City to database");
+                //await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
+                //_cities = await getCitiesQuery.GetAllCities();
+                Console.WriteLine($"Adding new city: {_cityName} to database");
+                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
 
                 // Updateing cityquery
-                Console.WriteLine("Updateing cityquery");
-
-                foreach (var strategy in strategies)
-                {
-                    // Assert
-                    Console.WriteLine("Adding WeatherData to the city added");
-                }
-
-                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
+                Console.WriteLine("Updating cityquery");
             }
 
-            if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
+            if (_date > DateTime.Now)
             {
-                foreach (var strategy in strategies)
+                foreach (var weatherStrategy in weatherDataStrategies)
                 {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+                    if (GetWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
-                                        $" and not in the database." +
-                                            $" Adding weather forecast for given date: {date}");
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
+                                            $" and not in the database." +
+                                                $" Adding weather forecast for given date: {_date}");
+
+                        result = "Entering the logic for date not in database but in the future.";
+
+                    }
+                    if (UpdateWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {_date}");
+                        result = "Entering the logic for updating weather.";
+                    }
                 }
-                result = "Entering the logic for date not in database but in the future.";
             }
 
-            if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+            Console.WriteLine($"\nGetting weather forecast for {_cityName} from database.");
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {date}");
-
-
-                }
-                result = $"Entering the logic for updating weather.";
-            }
-
-            Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
-
-            result.Should().Be("Entering the logic for updating weather.");
+            result.Should().Be("Entering the logic for date not in database but in the future.");
         }
 
         [Test]
         public void WeatherForecastByDateLogicEndpointTest_DateInDatabaseHistorical()
         {
             // Arrange
-            date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
-            cityName = "Stavanger";
+            _date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            _cityName = "Stavanger";
 
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
             // Act
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
-                Console.WriteLine("Adding new City to database");
+                //await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
+                //_cities = await getCitiesQuery.GetAllCities();
+                Console.WriteLine($"Adding new city: {_cityName} to database");
+                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
 
                 // Updateing cityquery
-                Console.WriteLine("Updateing cityquery");
-
-                foreach (var strategy in strategies!)
-                {
-                    // Assert
-                    Console.WriteLine("Adding WeatherData to the city added");
-                }
-
-                result = "Entering logic for City missing from database. Adding weather forecast for this city.";
+                Console.WriteLine("Updating cityquery");
             }
 
-            if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
+            if (_date > DateTime.Now)
             {
-                foreach (var strategy in strategies!)
+                foreach (var weatherStrategy in weatherDataStrategies)
                 {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+                    if (GetWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
-                                        $" and not in the database." +
-                                            $" Adding weather forecast for given date: {date}");
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
+                                            $" and not in the database." +
+                                                $" Adding weather forecast for given date: {_date}");
+
+                        result = "Entering the logic for date not in database but in the future.";
+
+                    }
+                    if (UpdateWeatherDataBy(_date))
+                    {
+                        //var city = GetCityDtoBy(cityName);
+                        //await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+
+                        var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
+
+                        // Assert
+                        Console.WriteLine($"{weatherStrategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {_date}");
+                        result = "Entering the logic for updating weather.";
+                    }
                 }
-                result = "Entering the logic for date not in database but in the future.";
             }
 
-            if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies!)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
-
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {date}");
-
-
-                }
-                result = $"Entering the logic for updating weather.";
-            }
-
-            Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
+            Console.WriteLine($"\nGetting weather forecast for {_cityName} from database.");
 
             result.Should().BeEmpty();
         }
@@ -310,67 +307,85 @@ namespace Tests
         public void WeatherForecastByDateLogicEndpointTest_CityNotInDatabase()
         {
             // Arrange
-            date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
-            cityName = "Bergen";
+            _date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            _cityName = "Bergen";
 
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            cityName = textInfo.ToTitleCase(cityName);
+            _cityName = textInfo.ToTitleCase(_cityName);
 
             // Act
             var result = string.Empty;
 
 
-            // Checking if the city is in our database, if not it's getting added.
-            if (!cities.ToList().Any(c => c.Name.Equals(cityName)))
+            if (!CityExists(_cityName))
             {
-                Console.WriteLine("Adding new City to database");
-
-                // Updateing cityquery
-                Console.WriteLine("Updateing cityquery");
-
-                foreach (var strategy in strategies!)
-                {
-                    // Assert
-                    Console.WriteLine($"Adding WeatherData to the city added given date: {date}");
-                }
-
+                //await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
+                //_cities = await getCitiesQuery.GetAllCities();
+                Console.WriteLine($"Adding new city: {_cityName} to database");
                 result = "Entering logic for City missing from database. Adding weather forecast for this city.";
+                
+                // Updateing cityquery
+                Console.WriteLine("Updating cityquery");
             }
 
-            if ((!dates.ToList().Any(d => d.Date.Date.Equals(date.Date))) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies!)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+            //if (_date > DateTime.Now)
+            //{
+            //    foreach (var weatherStrategy in weatherDataStrategies)
+            //    {
+            //        if (GetWeatherDataBy(_date))
+            //        {
+            //            //var city = GetCityDtoBy(cityName);
+            //            //await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
-                                        $" and not in the database." +
-                                            $" Adding weather forecast for given date: {date}");
-                }
-                result = "Entering the logic for date not in database but in the future.";
-            }
+            //            var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
 
-            if (dates.ToList().Any(d => d.Date.Date.Equals(date.Date)) && DateTime.Now < date)
-            {
-                foreach (var strategy in strategies!)
-                {
-                    var city = cities.ToList().Where(c => c.Name.Equals(cityName)).First();
+            //            // Assert
+            //            Console.WriteLine($"{weatherStrategy.GetType().Name} -- If the date is in the future (bigger than DateTime.Now)" +
+            //                                $" and not in the database." +
+            //                                    $" Adding weather forecast for given date: {_date}");
 
-                    // Assert
-                    Console.WriteLine($"{strategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {date}");
+            //            result = "Entering the logic for date not in database but in the future.";
 
+            //        }
+            //        if (UpdateWeatherDataBy(_date))
+            //        {
+            //            //var city = GetCityDtoBy(cityName);
+            //            //await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
 
-                }
-                result = $"Entering the logic for updating weather.";
-            }
+            //            var city = _cities.ToList().Where(c => c.Name.Equals(_cityName)).First();
 
-            Console.WriteLine($"\nGetting weather forecast for {cityName} from database.");
+            //            // Assert
+            //            Console.WriteLine($"{weatherStrategy.GetType().Name} -- Updating {city.Name} with new WeatherForecast for given date: {_date}");
+            //            result = "Entering the logic for updating weather.";
+            //        }
+            //    }
+            //}
+
+            Console.WriteLine($"\nGetting weather forecast for {_cityName} from database.");
 
             result.Should().Be("Entering logic for City missing from database. Adding weather forecast for this city.");
         }
 
+        private bool CityExists(string cityName)
+        {
+            return _cities.ToList().Any(c => c.Name.Equals(cityName));
+        }
+
+        private CityDto GetCityDtoBy(string cityName)
+        {
+            return _cities.Where(c => c.Name.Equals(cityName)).First();
+        }
+
+        private bool UpdateWeatherDataBy(DateTime date)
+        {
+            return _dates.ToList().Any(d => d.Date.Date.Equals(date));
+        }
+
+        private bool GetWeatherDataBy(DateTime date)
+        {
+            return !_dates.ToList().Any(d => d.Date.Date.Equals(date));
+        }
     }
 }

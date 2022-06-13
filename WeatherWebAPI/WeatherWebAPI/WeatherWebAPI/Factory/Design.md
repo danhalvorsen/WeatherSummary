@@ -91,6 +91,7 @@ classDiagram
 
         + Update()
         + Add()
+        + Get()
     }
 
     class DatabaseCommand {

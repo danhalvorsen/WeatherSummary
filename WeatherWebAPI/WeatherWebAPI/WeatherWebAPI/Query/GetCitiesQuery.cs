@@ -3,7 +3,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetCitiesQuery : ICityQuery
+    public class GetCitiesQuery : IGetCityQuery
     {
         private readonly IConfiguration config;
         private const string queryString = $"SELECT * FROM City";
@@ -37,6 +37,8 @@ namespace WeatherWebAPI.Query
                         });
                     }
                 }
+
+                await command.ExecuteNonQueryAsync();
                 return list;
             }
         }

@@ -7,16 +7,16 @@ namespace WeatherWebAPI
 {
     public class MyBackgroundService : BackgroundService
     {
-        private readonly IFactory factory;
-        private readonly IConfiguration config;
-        private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new();
+        private readonly IFactory _factory;
+        private readonly IConfiguration _config;
+        private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _weatherDataStrategies = new();
 
         public MyBackgroundService(IConfiguration config, IFactory factory)
         {
-            this.config = config;
-            this.factory = factory;
-            strategies.Add(this.factory.Build<IYrStrategy>());
-            strategies.Add(this.factory.Build<IOpenWeatherStrategy>());
+            this._config = config;
+            this._factory = factory;
+            _weatherDataStrategies.Add(this._factory.Build<IYrStrategy>());
+            _weatherDataStrategies.Add(this._factory.Build<IOpenWeatherStrategy>());
         }
 
 
