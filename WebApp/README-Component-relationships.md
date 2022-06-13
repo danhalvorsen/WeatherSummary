@@ -5,42 +5,57 @@
 
 graph TD;
 
-App<-->Search;
-
-App-->Resource-selection;
+App<-->SearchComponent;
+App -->Navbar
+App -->Showcase
 
 subgraph Get-data-from-User
-Search-->SearchDetails;
-Resource-selection;
+SearchComponent-->SearchDetails;
+SearchComponent-->cityName;
+SearchComponent-->SelectDate;
+SearchComponent-->ButtonSearch;
+SearchComponent-->CreateRequest;
 end
 
 
 
-App-->OpenAPI-Generated;
+CreateRequest-->MakeHttpRequestGet;
 
-App--->ShowResults
+
 subgraph Show-data;
 ShowResults-->ShowDetails
 end
 
+
 subgraph communication-To-Server
-OpenAPI
-OpenAPI-.->Db1[(Database)];
 subgraph GiveRate
-ShowResults-->Make-Post-Request
-
+ShowResults-->MakeHttpRequestSet
+MakeHttpRequestSet-->ShowResults
 end
 
-Make-Post-Request-->OpenAPI
+
+
+MakeHttpRequestSet
 subgraph GetData
-OpenAPI-Generated
+
+MakeHttpRequestGet-->ShowResults
+MakeHttpRequestGet
 end
-OpenAPI-Generated-->OpenAPI
+
 
 end
 
 
-OpenAPI-.->Db1[(Database)];
 
+subgraph Back Side
+
+
+Db1[(Database2)];
+WebAPI-.->Db1[(Database)];
+MakeHttpRequestGet-->WebAPI
+MakeHttpRequestSet-->WebAPI
+
+
+end
 
 ````

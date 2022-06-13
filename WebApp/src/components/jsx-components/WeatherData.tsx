@@ -1,10 +1,7 @@
-import { render } from "@testing-library/react";
 import React, { useCallback } from "react";
 import { useState, useEffect } from "react";
-import ShowHtml from "./ShowHtml";
 import { IresultJson as IResultJson } from "../../Interfaces";
 import {ShowTable} from  './ShowTable'
-import { isTemplateExpression } from "typescript";
 
 type Props = {
   city: string;
