@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WeatherWebAPI.OpenWeather;
+using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
@@ -26,7 +26,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             mapperConfig = MapperConfig;
         }
 
-        public MapperConfiguration Get(DateTime queryDate)
+        public MapperConfiguration Get(DateTime queryDate) // ADD DIFFERENT CFG FOR TODAY OR FUTURE??
         {
             MapperConfig = new MapperConfiguration(
 
@@ -56,10 +56,10 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                              .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
                                  .pop * 100))
                       .ForPath(dest => dest.AmountRain, opt => opt // percipitation amount (amount of rain)
-                         .MapFrom(src => src.minutely
-                             .ToList()
-                             .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
-                                 .precipitation))
+                         .MapFrom(src => src.hourly
+                        .ToList()
+                        .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
+                            .rain._1h))
                       .ForPath(dest => dest.CloudAreaFraction, opt => opt // cloud area fraction
                          .MapFrom(src => src.current.clouds))
                       .ForPath(dest => dest.FogAreaFraction, opt => opt // fog area fraction
@@ -71,6 +71,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                        //           .data.next_1_hours.details.probability_of_thunder))
                        .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
                        .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction((double)d.FogAreaFraction))
+                      //.AfterMap((s, d) => d.Date = UnixTimeStampToDateTime(1655195797))
                       );
             return MapperConfig;
         }

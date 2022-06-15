@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WeatherWebAPI.YR;
+using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.YR
 {
@@ -31,7 +31,9 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             MapperConfig = new MapperConfiguration(
             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
             .ForPath(dest => dest.Date, opt => opt         // date
-            .MapFrom(src => src.properties.meta.updated_at)) // (OR SHOULD WE HAVE TIMESERIES WHERE ITS ADDED FROM?)
+            .MapFrom(src => src.properties.timeseries
+                    .ToList()
+                        .Single(i => i.time.Equals(queryDate)).time)) // (OR SHOULD WE HAVE TIMESERIES WHERE ITS ADDED FROM?)
             .ForPath(dest => dest.WeatherType, opt => opt  // weathertype
                .MapFrom(src => src.properties.timeseries
                    .ToList()
@@ -92,7 +94,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 .ToList()
                 .Single(i => i.time.Equals(queryDate))
                     .data.next_1_hours.details.probability_of_thunder))
-            .AfterMap((s, d) => d.Source.DataProvider = "Yr") // DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
+            .AfterMap((s, d) => d.Source.DataProvider = DataSource) // DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
             );
 
             return MapperConfig;

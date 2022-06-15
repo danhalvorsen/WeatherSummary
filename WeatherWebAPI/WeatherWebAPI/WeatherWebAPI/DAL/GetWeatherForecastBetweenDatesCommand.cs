@@ -2,22 +2,15 @@
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
-using WeatherWebAPI.Factory.Strategy.Database.GetWeather;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastBetweenDatesCommand
+    public class GetWeatherForecastBetweenDatesCommand : BaseGetWeatherForecastCommands
     {
-        private readonly IConfiguration config;
-        private readonly IFactory _factory;
-        private List<CityDto>? _cities;
-        private List<WeatherForecastDto>? _datesDatabase;
-
-        public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory)
+        public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
-            this.config = config;
-            _factory = factory;
+
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
@@ -27,14 +20,13 @@ namespace WeatherWebAPI.DAL
             DateTime toDate = betweenDateQueryAndCity.BetweenDateQuery.To;
 
             var datesQuery = new List<DateTime>();
-            var getCitiesQuery = new GetCitiesQuery(config);
-            var getDatesQueryDatabase = new GetDatesQuery(config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var getDatesQueryDatabase = new GetDatesForCityQuery(_config);
 
             try
             {
-                // Itterating through all the cities & dates in the database
-                _cities = await getCitiesQuery.GetAllCities();
-                _datesDatabase = await getDatesQueryDatabase.GetAllDates();
+                _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
@@ -46,15 +38,17 @@ namespace WeatherWebAPI.DAL
                     datesQuery.Add(day);
                 }
 
-                if (CityExists(cityName))
+                if (!CityExists(cityName))
                 {
-                    await (new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName));
-                    _cities = await getCitiesQuery.GetAllCities();
+                    await GetCityAndAddToDatabase(cityName);
+                    _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                 }
+
+                _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(cityName);
 
                 foreach (DateTime date in datesQuery)
                 {
-                    if (date > DateTime.Now)
+                    if (date >= DateTime.Now.Date)
                     {
                         foreach (var weatherStrategy in weatherDataStrategies)
                         {
@@ -92,49 +86,9 @@ namespace WeatherWebAPI.DAL
                                 $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                     $"WHERE CAST([Date] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}'";
 
-            IGetWeatherDataFromDatabaseStrategy weatherData = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
-            
-            return weatherData.Query(queryString);
-        }
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
-        private async Task GetWeatherDataAndUpdateDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
-        {
-            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
-            IUpdateWeatherDataToDatabaseStrategy updateDatabaseStrategy = _factory.Build<IUpdateWeatherDataToDatabaseStrategy>();
-            await updateDatabaseStrategy.Update(weatherData, city, date);
-        }
-
-        private async Task GetWeatherDataAndAddToDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
-        {
-            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
-            var addToDatabaseStrategy = _factory.Build<IAddWeatherDataToDatabaseStrategy>();
-            addToDatabaseStrategy.Add(weatherData);
-        }
-
-        private bool CityExists(string cityName)
-        {
-            return !_cities.ToList().Any(c => c.Name.Equals(cityName));
-        }
-
-        private CityDto GetCityDtoBy(string cityName)
-        {
-            return _cities.Where(c => c.Name.Equals(cityName)).First();
-        }
-
-        private bool UpdateWeatherDataBy(DateTime date)
-        {
-            return _datesDatabase.ToList().Any(d => d.Date.Date.Equals(date));
-        }
-
-        private bool GetWeatherDataBy(DateTime date)
-        {
-            return !_datesDatabase.ToList().Any(d => d.Date.Date.Equals(date));
-        }
-
-        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
-        {
-            for (var day = from; day <= thru; day = day.AddDays(1)) // Add .Date if you don't want time to from and thru
-                yield return day;
+            return getWeatherDataFromDatabaseStrategy.Query(queryString);
         }
     }
 }

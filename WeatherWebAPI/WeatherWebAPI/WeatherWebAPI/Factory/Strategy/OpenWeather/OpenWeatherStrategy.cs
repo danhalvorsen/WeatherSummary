@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.OpenWeather;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
@@ -34,7 +33,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 var weatherData = JsonSerializer.Deserialize<ApplicationOpenWeather>(responseBody);
 
                 // Mapper
-                TimeSpan ts = new TimeSpan(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                TimeSpan ts = new (queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
                 openWeatherConfig.Get(queryDate);
 

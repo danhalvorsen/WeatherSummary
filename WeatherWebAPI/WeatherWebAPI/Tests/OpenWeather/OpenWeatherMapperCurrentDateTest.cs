@@ -4,13 +4,13 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.OpenWeather;
 
-namespace Tests
+namespace Tests.OpenWeather
 {
-    public class OpenWeatherMapperTest
+    public class OpenWeatherMapperCurrentDateTest
     {
         private int _unix;
         private DateTime dateTime;
@@ -45,10 +45,10 @@ namespace Tests
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
                             .pop * 100))
                  .ForPath(dest => dest.AmountRain, opt => opt // percipitation amount (amount of rain)
-                    .MapFrom(src => src.minutely
+                    .MapFrom(src => src.hourly
                         .ToList()
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate)))
-                            .precipitation))
+                            .rain._1h))
                  .ForPath(dest => dest.CloudAreaFraction, opt => opt // cloud area fraction
                     .MapFrom(src => src.current.clouds))
                  .ForPath(dest => dest.FogAreaFraction, opt => opt // fog area fraction
@@ -81,7 +81,7 @@ namespace Tests
 
         private float VisibilityConvertedToFogAreaFraction(float value)
         {
-            return Math.Abs((value / 100) - 100);
+            return Math.Abs(value / 100 - 100);
         }
 
 
@@ -89,8 +89,8 @@ namespace Tests
         public void Setup()
         {
             IGetWeatherDataStrategy<WeatherForecastDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
-            _unix = 1652853600; // Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
-            dateTime = new DateTime(2022, 05, 18, 8, 0, 0); // May 18, 2022 8:00:00
+            dateTime = DateTime.Now; /*new DateTime(2022, 05, 18, 8, 0, 0); */// May 18, 2022 8:00:00
+            _unix = DateTimeToUnixTime(dateTime); //1652853600; Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
             config = CreateConfig(dateTime);
         }
 
@@ -112,7 +112,7 @@ namespace Tests
 
             // Assert
             Console.WriteLine(result.Date);
-            result.Date.Should().Be(UnixTimeStampToDateTime(1652853600));
+            result.Date.Should().Be(UnixTimeStampToDateTime(_unix));
         }
 
         [Test]
@@ -307,7 +307,7 @@ namespace Tests
             // Assert
             Console.WriteLine(probOfRain);
 
-            result.ProbOfRain.Should().Be(probOfRain*100);
+            result.ProbOfRain.Should().Be(probOfRain * 100);
         }
 
         [Test]
@@ -318,9 +318,12 @@ namespace Tests
             // Arrange
             var application = new ApplicationOpenWeather
             {
-                minutely = new List<Minutely> { new Minutely {
+                hourly = new List<Hourly> { new Hourly {
                     dt = _unix,
-                    precipitation = amountOfRain
+                    rain = new Rain
+                    {
+                        _1h = amountOfRain
+                    }
                 }}
             };
             Mapper mapper = new Mapper(config);
@@ -380,7 +383,7 @@ namespace Tests
 
             // Assert
             result.FogAreaFraction.Should().Be((float)VisibilityConvertedToFogAreaFraction(fogAreaFraction));
-            
+
             Console.WriteLine(VisibilityConvertedToFogAreaFraction(fogAreaFraction));
         }
 

@@ -1,17 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace Tests.Fakes
 {
-    public class FakeAddWeatherToDatabaseStrategy : IAddWeatherDataToDatabaseStrategy
+    public class FakeUpdateWeatherToDatabaseStrategy /*: IUpdateWeatherDataToDatabaseStrategy*/
     {
-        public Task Add(WeatherForecastDto weatherData, CityDto city)
+        public async Task<WeatherForecastDto> Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
         {
-            return Task.FromResult(CreateTestData(weatherData, city));
+            return await Task.FromResult(CreateTestData(weatherData, city, dateToBeUpdated));
         }
-
-        private static WeatherForecastDto CreateTestData(WeatherForecastDto weatherData, CityDto city)
+        private static WeatherForecastDto CreateTestData(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
         {
             return new WeatherForecastDto
             {
@@ -28,7 +27,7 @@ namespace Tests.Fakes
                 FogAreaFraction = weatherData.FogAreaFraction,
                 ProbOfThunder = weatherData.ProbOfThunder,
                 City = city.Name,
-                WeatherType = weatherData.WeatherType,
+                WeatherType = $"{weatherData.Date} -- UPDATED",
                 Source = new WeatherSourceDto()
             };
         }

@@ -6,7 +6,7 @@ using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.YR;
 
-namespace Tests
+namespace Tests.Yr
 {
     public class YrStrategyTest
     {
@@ -31,7 +31,7 @@ namespace Tests
 
             //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
             Console.WriteLine(result.Date);
-            
+
             result.Date
                 .Date
                     .Should()
@@ -44,7 +44,7 @@ namespace Tests
             var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Temperature);
-            
+
             result.Temperature
             .Should()
                 .BeGreaterThan(-20)

@@ -6,7 +6,7 @@ using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
-namespace Tests
+namespace Tests.OpenWeather
 {
     public class OpenWeatherStrategyTest
     {
@@ -23,7 +23,7 @@ namespace Tests
         };
         //private double _latitude = 59.1020129; // Coordinates from OpenWeather for Stavanger
         //private double _longitude = 5.712611357275702;
-        
+
         private DateTime _date = DateTime.Now;
         private DateTime _dateTomorrow = DateTime.Now.AddDays(1);
 

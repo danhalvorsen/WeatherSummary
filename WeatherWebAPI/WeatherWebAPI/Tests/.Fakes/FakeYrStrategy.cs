@@ -28,16 +28,16 @@ namespace Tests.Fakes
 
         public Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            return Task.FromResult(CreateTestData(city.Name));
+            return Task.FromResult(CreateTestData(city.Name, queryDate));
         }
 
-        private static WeatherForecastDto CreateTestData(string cityName)
+        private static WeatherForecastDto CreateTestData(string cityName, DateTime date)
         {
             if (cityName == STAVANGER || cityName == OSLO)
             {
                 return new WeatherForecastDto
                 {
-                    Date = new DateTime(YEAR, MONTH, DAY),
+                    Date = date,
                     Temperature = TEMP,
                     Windspeed = WIND_SPEED,
                     WindDirection = WIND_DIRECTION,

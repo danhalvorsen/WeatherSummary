@@ -1,4 +1,6 @@
-﻿namespace WeatherWebAPI.Factory.Strategy.Database.GetWeather
+﻿using WeatherWebAPI.Controllers;
+
+namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public interface IGetWeatherDataFromDatabaseStrategy
     {

@@ -7,9 +7,9 @@ using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
-namespace Tests
+namespace Tests.OpenWeather
 {
-    public class OpenWeatherFetchCityDataStrategyTest
+    public class OpenWeatherGetCityDataStrategyTest
     {
         //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
         private IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());

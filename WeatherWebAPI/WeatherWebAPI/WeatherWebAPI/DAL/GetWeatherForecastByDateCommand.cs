@@ -2,22 +2,15 @@
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
-using WeatherWebAPI.Factory.Strategy.Database.GetWeather;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastByDateCommand
+    public class GetWeatherForecastByDateCommand : BaseGetWeatherForecastCommands
     {
-        private readonly IConfiguration config;
-        private readonly IFactory _factory;
-        private List<CityDto>? _cities;
-        private List<WeatherForecastDto>? _dates;
-
-        public GetWeatherForecastByDateCommand(IConfiguration config, IFactory factory)
+        public GetWeatherForecastByDateCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
-            this.config = config;
-            _factory = factory;
+
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
@@ -25,28 +18,29 @@ namespace WeatherWebAPI.DAL
             string? cityName = query?.CityQuery?.City;
             DateTime date = query.DateQuery.Date;
 
-            var getCitiesQuery = new GetCitiesQuery(config);
-            var getDatesQuery = new GetDatesQuery(config);
+            var getCitiesQuery = new GetCitiesQuery(_config);
+            var getDatesQuery = new GetDatesForCityQuery(_config);
 
             try
             {
                 // Itterating through all the cities and dates in the database   
-                _cities = await getCitiesQuery.GetAllCities();
-                _dates = await getDatesQuery.GetAllDates();
+                _citiesDatabase = await getCitiesQuery.GetAllCities();
+                
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
                 cityName = textInfo.ToTitleCase(cityName);
 
                 // Checking if the city is in our database, if not it's getting added.
-                if (CityExists(cityName))
+                if (!CityExists(cityName))
                 {
-                    await new CreateCityCommand(config, _factory).InsertCityIntoDatabase(cityName);
-                    _cities = await getCitiesQuery.GetAllCities();
-
+                    await GetCityAndAddToDatabase(cityName);
+                    _citiesDatabase = await getCitiesQuery.GetAllCities();
                 }
 
-                if (date > DateTime.Now)
+                _datesDatabase = await getDatesQuery.GetDatesForCity(cityName);
+
+                if (date >= DateTime.Now.Date)
                 {
                     foreach (var weatherStrategy in weatherDataStrategies)
                     {
@@ -63,61 +57,27 @@ namespace WeatherWebAPI.DAL
                         }
                     }
                 }
+                return GetWeatherForecastFromDatabase(cityName, date);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-
-            return GetWeatherForecastFromDatabase(cityName, date);
+            return new List<WeatherForecastDto>();
         }
 
         private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date)
         {
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
-                                        $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
-                                            $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                    $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}'";
+            $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
+                $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+                    $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                        $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                            $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}'";
 
-            IGetWeatherDataFromDatabaseStrategy weatherData = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
-            return weatherData.Query(queryString);
-        }
-
-        private async Task GetWeatherDataAndUpdateDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
-        {
-            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
-            IUpdateWeatherDataToDatabaseStrategy updateDatabaseStrategy = _factory.Build<IUpdateWeatherDataToDatabaseStrategy>();
-            await updateDatabaseStrategy.Update(weatherData, city, date);
-        }
-
-        private async Task GetWeatherDataAndAddToDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
-        {
-            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
-            var addToDatabaseStrategy = _factory.Build<IAddWeatherDataToDatabaseStrategy>();
-            addToDatabaseStrategy.Add(weatherData);
-        }
-
-        private bool CityExists(string cityName)
-        {
-            return !_cities.ToList().Any(c => c.Name.Equals(cityName));
-        }
-
-        private CityDto GetCityDtoBy(string cityName)
-        {
-            return _cities.Where(c => c.Name.Equals(cityName)).First();
-        }
-
-        private bool UpdateWeatherDataBy(DateTime date)
-        {
-            return _dates.ToList().Any(d => d.Date.Date.Equals(date));
-        }
-
-        private bool GetWeatherDataBy(DateTime date)
-        {
-            return _dates.ToList().Any(d => d.Date.Date.Equals(date));
+            return getWeatherDataFromDatabaseStrategy.Query(queryString);
         }
     }
 }

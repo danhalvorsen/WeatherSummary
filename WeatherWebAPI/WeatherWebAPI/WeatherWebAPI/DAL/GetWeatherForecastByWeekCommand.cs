@@ -1,18 +1,15 @@
-﻿using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.Database.GetWeather;
+﻿using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastByWeekCommand
+    public class GetWeatherForecastByWeekCommand : BaseGetWeatherForecastCommands
     {
-        private readonly IConfiguration _config;
-        private readonly IFactory _factory;
-
-        public GetWeatherForecastByWeekCommand(IConfiguration config, IFactory factory)
+        public GetWeatherForecastByWeekCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
-            this._config = config;
-            this._factory = factory;
+
         }
 
         public List<WeatherForecastDto> GetWeatherForecastByWeek(int week, CityQuery query)
@@ -34,13 +31,5 @@ namespace WeatherWebAPI.DAL
 
             return weatherData.Query(queryString);
         }
-
-        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
-        {
-            for (var day = from; day <= thru; day = day.AddDays(1)) // Add .Date if you don't want time to from and thru
-                yield return day;
-        }
     }
-
-
 }

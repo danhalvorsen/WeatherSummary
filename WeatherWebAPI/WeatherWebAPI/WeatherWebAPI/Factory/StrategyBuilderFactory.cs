@@ -1,5 +1,4 @@
 ﻿using WeatherWebAPI.Factory.Strategy.Database;
-using WeatherWebAPI.Factory.Strategy.Database.GetWeather;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
 
@@ -7,11 +6,11 @@ namespace WeatherWebAPI.Factory
 {
     public class StrategyBuilderFactory : IFactory
     {
-        private readonly IConfiguration config;
+        private readonly IConfiguration _config;
 
         public StrategyBuilderFactory(IConfiguration config)
         {
-            this.config = config;
+            this._config = config;
         }
 
         public dynamic Build<S>() //Build(GetType(YrStrategy)
@@ -30,7 +29,7 @@ namespace WeatherWebAPI.Factory
             {
                 var strategy = new AddWeatherDataToDatabaseStrategy(new AddWeatherDataToDatabaseConfig
                 {
-                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                    ConnectionString = _config.GetConnectionString("WeatherForecastDatabase")
                 });
                 return strategy;
             }
@@ -38,7 +37,7 @@ namespace WeatherWebAPI.Factory
             {
                 var strategy = new UpdateWeatherDataToDatabaseStrategy(new UpdateWeatherDataToDatabaseConfig
                 {
-                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                    ConnectionString = _config.GetConnectionString("WeatherForecastDatabase")
                 });
                 return strategy;
             }
@@ -46,7 +45,15 @@ namespace WeatherWebAPI.Factory
             {
                 var strategy = new GetWeatherDataFromDatabaseStrategy(new GetWeatherDataFromDatabaseConfig
                 {
-                    ConnectionString = config.GetConnectionString("WeatherForecastDatabase")
+                    ConnectionString = _config.GetConnectionString("WeatherForecastDatabase")
+                });
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IAddCityToDatabaseStrategy).Name)
+            {
+                var strategy = new AddCityToDatabaseStrategy(new AddCityToDatabaseConfig
+                {
+                    ConnectionString = _config.GetConnectionString("WeatherForecastDatabase")
                 });
                 return strategy;
             }

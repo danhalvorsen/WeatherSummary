@@ -1,7 +1,9 @@
-﻿namespace WeatherWebAPI.Query
+﻿using WeatherWebAPI.Controllers;
+
+namespace WeatherWebAPI.Query
 {
     public interface IGetDatesQuery
     {
-        Task<List<WeatherForecastDto>> GetAllDates();
+        Task<List<WeatherForecastDto>> GetDatesForCity(string cityName);
     }
 }

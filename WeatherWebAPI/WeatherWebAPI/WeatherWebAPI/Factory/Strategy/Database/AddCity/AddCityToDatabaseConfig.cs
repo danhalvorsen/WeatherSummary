@@ -1,6 +1,6 @@
 ﻿namespace WeatherWebAPI.Factory.Strategy.Database
 {
-    public class GetWeatherDataFromDatabaseConfig : IDatabaseConfig
+    public class AddCityToDatabaseConfig : IDatabaseConfig
     {
         public string? ConnectionString { get; set; }
     }

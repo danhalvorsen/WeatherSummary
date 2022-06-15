@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.YR;
 
 namespace WeatherWebAPI.Factory.Strategy.YR
 {
@@ -41,7 +40,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 // Mapper
-                TimeSpan ts = new TimeSpan((queryDate.Hour + 1), 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
                 yrConfig.Get(queryDate);
 

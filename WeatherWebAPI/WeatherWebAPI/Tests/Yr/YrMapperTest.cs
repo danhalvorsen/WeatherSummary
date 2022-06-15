@@ -4,9 +4,10 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.YR;
+using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory.Strategy.YR;
 
-namespace Tests
+namespace Tests.Yr
 {
     public class YrMapperTest
     {
@@ -17,7 +18,9 @@ namespace Tests
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
              .ForPath(dest => dest.Date, opt => opt         // date
-                .MapFrom(src => src.properties.meta.updated_at)) // (OR SHOULD WE HAVE TIMESERIES WHERE ITS ADDED FROM?)
+                .MapFrom(src => src.properties.timeseries
+                    .ToList()
+                        .Single(i => i.time.Equals(queryDate)).time)) // TIMESERIES OVER UPDATED AT; WEATHER MORE EQUAL TO REAL TIME (properties.meta.updated_at))
              .ForPath(dest => dest.WeatherType, opt => opt  // weathertype
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
@@ -87,25 +90,25 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            dateTime = new DateTime(1999, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = new DateTime(1999, 1, 1, 0, 0, 0);
             config = CreateConfig(dateTime);
         }
 
         [Test]
-        public void ShouldMapFieldUpdatedAtToFieldDateTime()
+        public void ShouldMapDate()
         {
             var application = new ApplicationYr
             {
                 properties = new Properties
                 {
-                    //timeseries = new List<Timeseries> { new Timeseries
+                    timeseries = new List<Timeseries> { new Timeseries {
+                        time = dateTime
+
+                    }}
+                    //meta = new Meta
                     //{
-                    //    time = dateTime
-                    //}}
-                    meta = new Meta
-                    {
-                        updated_at = dateTime
-                    }
+                    //    updated_at = dateTime
+                    //}
                 }
             };
 
@@ -391,7 +394,7 @@ namespace Tests
                                 }
                             }
                         }
-                    }} 
+                    }}
                 }
             };
             Mapper mapper = new Mapper(config);

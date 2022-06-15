@@ -5,11 +5,11 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class AddWeatherDataToDatabaseStrategy : IAddWeatherDataToDatabaseStrategy
     {
-        private readonly IDatabaseConfig config;
+        private readonly IDatabaseConfig _config;
 
         public AddWeatherDataToDatabaseStrategy(IDatabaseConfig config)
         {
-            this.config = config;
+            this._config = config;
         }
 
         public async Task Add(WeatherForecastDto weatherData, CityDto city)
@@ -30,9 +30,9 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                                         $"INSERT INTO SourceWeatherData(ConnectionDate, FK_SourceId, FK_WeatherDataId) " +
                                             $"VALUES('{weatherData.Date}', @source_id, @fk_weatherdata_id)";
 
-            using (SqlConnection connection = new SqlConnection(config.ConnectionString))
+            using (SqlConnection connection = new(_config.ConnectionString))
             {
-                SqlCommand command = new SqlCommand(queryString, connection);
+                SqlCommand command = new(queryString, connection);
                 connection.Open();
 
                 await command.ExecuteNonQueryAsync();

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -28,7 +29,7 @@ public class WeatherforecastController : ControllerBase
 {
     private readonly IConfiguration _config;
     private readonly IFactory _factory;
-    private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _strategies = new();
+    private List<IGetWeatherDataStrategy<WeatherForecastDto>> _strategies = new();
 
 
     public WeatherforecastController(IConfiguration config, IFactory factory)
@@ -40,8 +41,7 @@ public class WeatherforecastController : ControllerBase
     }
 
     [HttpGet("Date")]
-
-    public async Task<ActionResult<List<WeatherForecastDto>>> Day(DateQueryAndCity query)
+    public async Task<ActionResult<List<WeatherForecastDto>>> Date(DateQueryAndCity query)
     {
 
         //try
