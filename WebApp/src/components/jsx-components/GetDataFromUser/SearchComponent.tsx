@@ -2,6 +2,8 @@ import React , {useState , useEffect} from 'react';
 import { ButtonSearch } from './ButtonSearch';
 import InputCity from './InputCity';
 import { PickDate } from './PickDate';
+import {SingleRequest} from './SingleRequest';
+import {BetweenRequest} from './BetweenRequest';
 
 
 interface IfuncType {
@@ -11,25 +13,43 @@ interface IfuncType {
 
 export default function SearchComponent() {
 
-    const todayDate = Date().substring(0, 15);
+    const date = new Date();
+    const todayDate = date.toISOString().substring(0 , 10);
+
+
+
 
     const [cityName , setCityName] = useState('Oslo');
-    const [dates , setDates] = useState([todayDate]);
+    const [betweenDates , setBetweenDates]= useState(['2022-06-10' , '2022-06-16']);
+    const [isRequestForOneDay , setIsRequestForOneDay ]= useState(true);
 
 
     const saveCityName = (cityName: string)=>{
         setCityName(cityName);
     }
 
+
+
+
+    const request = ()=>{
+        return (isRequestForOneDay ? SingleRequest(todayDate) :  BetweenRequest(betweenDates));
+    }
     const clicked: ()=>void =  ()=>{
        console.log('clicked on Button to make a request');
+         request();
     }
 
-    const getDates = (e:null[])=>{
-        //  setDates([startDateFrom, endDateTo])
-       // console.log(e)
+
+
+    const getDates = (betweenDates:string[] , check:boolean)=>{
+        setBetweenDates(betweenDates)
+        console.log(betweenDates);
+        console.log(check);
 
     }
+
+
+
 
 
     useEffect(()=>{

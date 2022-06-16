@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface Idates {
-    getDates: (e:null[])=>void
+  getDates: (betweenDates:string[] , check: boolean) => void
 }
 
 
@@ -17,6 +17,7 @@ export function PickDate(props: Idates) {
 
   
   const isoFormat = new Date().toISOString();
+  
   const isoDate = []  ;
   isoDate.push(isoFormat.substring(0,10));
 
@@ -28,10 +29,21 @@ export function PickDate(props: Idates) {
 
     const getUpdate = (update : [null, null]) => {
         setDateRange(update);
-        props.getDates(dateRange)
+        props.getDates(['date1' , 'date2'] , !check)
       };
+      
+      
+      
+      
+      
+      //console.log(dateRange);
+      //props.getDates(['date1' , 'date2'])
 
-      const getUpdate2 = props.getDates(dateRange);
+
+
+
+
+      //const getUpdate2 = props.getDates(dateRange);
 
   const showDate = <div className="d-flex flex-row justify-content-center">
   <div className="d-flex flex-row m-2"> <p className="me-2">Date:</p>  
