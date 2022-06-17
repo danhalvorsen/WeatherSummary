@@ -6,12 +6,12 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class YrStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IYrStrategy
     {
-        private readonly YrConfig yrConfig;
+        private readonly YrConfig _yrConfig;
 
         public YrStrategy(YrConfig config)
         {
 
-            yrConfig = config;
+            _yrConfig = config;
 
         }
 
@@ -19,7 +19,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = yrConfig.BaseUrl
+                BaseAddress = _yrConfig.BaseUrl
             };
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -27,7 +27,6 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
             var response = await httpClient.GetAsync($"complete?lat={city.Latitude}&lon={city.Longitude}");
-
             //var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
             //var response = await httpClient.SendAsync(new HttpRequestMessage
             //{
@@ -42,14 +41,19 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 // Mapper
                 TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
-                yrConfig.Get(queryDate);
+                _yrConfig.Get(queryDate);
 
 
-                var resultWeatherData = yrConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                var resultWeatherData = _yrConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
                 return resultWeatherData;
             }
 
             return new WeatherForecastDto();
+        }
+
+        public string GetDataSource()
+        {
+            return _yrConfig.DataSource!;
         }
     }
 }

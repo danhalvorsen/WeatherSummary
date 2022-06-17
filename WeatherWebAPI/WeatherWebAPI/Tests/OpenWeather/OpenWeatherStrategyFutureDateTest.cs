@@ -1,15 +1,20 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.YR;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
-namespace Tests.Yr
+namespace Tests.OpenWeather
 {
-    public class YrStrategyTest
+    public class OpenWeatherStrategyFutureDateTest
     {
+        private IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+
         private CityDto _city = new CityDto
         {
             Name = "Stavanger",
@@ -19,10 +24,7 @@ namespace Tests.Yr
             Longitude = 5.712611357275702,
         };
 
-        private IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new YrStrategy(new YrConfig());
-        //private double _latitude = 59.1020129; // Coordinates from OpenWeather for Stavanger
-        //private double _longitude = 5.712611357275702;
-        DateTime _date = DateTime.UtcNow;
+        private DateTime _date = DateTime.UtcNow.AddDays(1);
 
         [Test]
         public async Task ShouldGetDate()
@@ -32,10 +34,9 @@ namespace Tests.Yr
             //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
             Console.WriteLine(result.Date);
 
-            result.Date
-                .Date
-                    .Should()
-                        .Be(DateTime.Now.Date);
+            result.Date.Date
+                .Should()
+                    .Be(_date.Date);
         }
 
         [Test]
@@ -170,19 +171,19 @@ namespace Tests.Yr
                     .BeLessThanOrEqualTo(100);
         }
 
-        [Test]
-        public async Task ShouldGetProbabilityOfThunder()
-        {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+        //[Test]
+        //public async Task ShouldGetProbabilityOfThunder()
+        //{
+        //    var result = await _factory.GetWeatherDataFrom(_strategy);
 
-            Console.WriteLine(result.ProbOfRain);
+        //    Console.WriteLine(result.ProbOfRain);
 
-            result.ProbOfThunder
-                .Should()
-                    .BeGreaterThanOrEqualTo(0)
-                    .And
-                    .BeLessThanOrEqualTo(100);
-        }
+        //    result.ProbOfThunder
+        //        .Should()
+        //            .BeGreaterThanOrEqualTo(0)
+        //            .And
+        //            .BeLessThanOrEqualTo(100);
+        //}
 
         [Test]
         public async Task ShouldGetWeatherType()

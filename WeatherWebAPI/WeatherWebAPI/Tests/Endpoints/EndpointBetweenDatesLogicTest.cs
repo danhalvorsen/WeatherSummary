@@ -24,7 +24,7 @@ namespace Tests.Endpoints
         private List<CityDto>? _cities;
         private List<WeatherForecastDto>? _dates;
 
-        List<IGetWeatherDataStrategy<WeatherForecastDto>>? weatherDataStrategies;
+        private List<IGetWeatherDataStrategy<WeatherForecastDto>>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -37,13 +37,13 @@ namespace Tests.Endpoints
 
             _dates = new()
             {
-                new WeatherForecastDto { Date = DateTime.Now.AddDays(-1) },
-                new WeatherForecastDto { Date = DateTime.Now },
-                new WeatherForecastDto { Date = DateTime.Now.AddDays(1) },
-                new WeatherForecastDto { Date = DateTime.Now.AddDays(3) },
-                new WeatherForecastDto { Date = DateTime.Now.AddDays(5) },
-                new WeatherForecastDto { Date = new DateTime(2022, 05, 25, 12, 0, 0) },
-                new WeatherForecastDto { Date = new DateTime(2022, 05, 28, 12, 0, 0) }
+                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(-1) },
+                new WeatherForecastDto { Date = DateTime.UtcNow },
+                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(1) },
+                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(3) },
+                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(5) },
+                new WeatherForecastDto { Date = new DateTime(2022, 05, 25, 12, 0, 0, DateTimeKind.Utc) },
+                new WeatherForecastDto { Date = new DateTime(2022, 05, 28, 12, 0, 0, DateTimeKind.Utc) }
             };
 
             _weatherDatabase = 0;
@@ -51,9 +51,9 @@ namespace Tests.Endpoints
             _weatherUpdated = 0;
 
             _factory = new StrategyBuilderFactory(null);
-            weatherDataStrategies = new();
+            _weatherDataStrategies = new();
 
-            weatherDataStrategies.Add(new FakeYrStrategy());
+            _weatherDataStrategies.Add(new FakeYrStrategy());
             //strategies.Add(factory.Build<IOpenWeatherStrategy>());
         }
 
@@ -63,8 +63,8 @@ namespace Tests.Endpoints
             // Arrange
 
             _cityName = "Stavanger";
-            _fromDate = DateTime.Now;
-            _toDate = DateTime.Now.AddDays(6);
+            _fromDate = DateTime.UtcNow;
+            _toDate = DateTime.UtcNow.AddDays(6);
             var datesQuery = new List<DateTime>();
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
@@ -94,9 +94,9 @@ namespace Tests.Endpoints
 
             foreach (DateTime date in datesQuery)
             {
-                if (date >= DateTime.Now.Date)
+                if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -147,8 +147,8 @@ namespace Tests.Endpoints
             // Arrange
 
             _cityName = "Stavanger";
-            _fromDate = new DateTime(2022, 05, 25);
-            _toDate = DateTime.Now;
+            _fromDate = new DateTime(2022, 05, 25, 0, 0, 0, DateTimeKind.Utc);
+            _toDate = DateTime.UtcNow;
             var datesQuery = new List<DateTime>();
 
 
@@ -179,9 +179,9 @@ namespace Tests.Endpoints
 
             foreach (DateTime date in datesQuery)
             {
-                if (date >= DateTime.Now.Date)
+                if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -232,8 +232,8 @@ namespace Tests.Endpoints
             // Arrange
 
             _cityName = "Stavanger";
-            _fromDate = DateTime.Now.AddDays(-1);
-            _toDate = DateTime.Now.AddDays(6);
+            _fromDate = DateTime.UtcNow.AddDays(-1);
+            _toDate = DateTime.UtcNow.AddDays(6);
             var datesQuery = new List<DateTime>();
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
@@ -263,9 +263,9 @@ namespace Tests.Endpoints
 
             foreach (DateTime date in datesQuery)
             {
-                if (date >= DateTime.Now.Date)
+                if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -300,6 +300,91 @@ namespace Tests.Endpoints
 
 
             if (_weatherAdded + _weatherDatabase == datesQuery.Count())
+                result = datesQuery.Count();
+            else
+                result = -1;
+
+            Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
+                $"\n{_weatherDatabase}/{datesQuery.Count()} forecasts in database that were asked for.");
+
+            result.Should().Be(datesQuery.Count());
+        }
+
+
+        [Test]
+        public async Task WeatherForecastBetweenDatesLogicEndpointTest_DatesIsTheSame()
+        {
+            // Arrange
+
+            _cityName = "Stavanger";
+            _fromDate = DateTime.UtcNow;
+            _toDate = DateTime.UtcNow;
+            var datesQuery = new List<DateTime>();
+
+            // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
+            TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
+            _cityName = textInfo.ToTitleCase(_cityName);
+
+
+            foreach (DateTime day in EachDay(_fromDate, _toDate))
+            {
+                datesQuery.Add(day);
+            }
+
+            // Act
+
+            var result = 0;
+
+            if (!CityExists(_cityName))
+            {
+                //await(new CreateCityCommand(config, factory).InsertCityIntoDatabase(cityName));
+                Console.WriteLine($"Adding new City: {_cityName} to database");
+
+
+                // UPDATE CITIES
+                Console.WriteLine("Updating cityquery");
+            }
+
+
+            foreach (DateTime date in datesQuery)
+            {
+                if (date >= DateTime.UtcNow.Date)
+                {
+                    foreach (var strategy in _weatherDataStrategies)
+                    {
+                        if (GetWeatherDataBy(date))
+                        {
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
+
+                            var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
+                            var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
+
+                            // Add(WeatherForecastDto weatherData, CityDto city)
+                            Console.WriteLine($"{weatherData.Date} -> {fakeAddWeather.Date} -- ADDED");
+                            _weatherAdded++;
+                        }
+                        if (UpdateWeatherDataBy(date))
+                        {
+                            var city = GetCityDtoBy(_cityName);
+                            var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
+
+                            var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
+                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+
+
+                            // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                            Console.WriteLine($"{weatherData.Date} -> {fakeUpdateWeather.Date} -- UPDATED");
+                            _weatherUpdated++;
+                        }
+                    }
+                }
+
+                if (_dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                    _weatherDatabase++;
+            }
+
+            if (datesQuery.Count() == 1)
                 result = datesQuery.Count();
             else
                 result = -1;

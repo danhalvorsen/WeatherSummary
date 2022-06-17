@@ -28,7 +28,7 @@ namespace Tests.Fakes
                 ProbOfThunder = weatherData.ProbOfThunder,
                 City = city.Name,
                 WeatherType = weatherData.WeatherType,
-                Source = new WeatherSourceDto()
+                Source = weatherData.Source
             };
         }
     }

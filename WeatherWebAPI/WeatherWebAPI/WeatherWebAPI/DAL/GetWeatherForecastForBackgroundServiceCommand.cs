@@ -13,7 +13,7 @@ namespace WeatherWebAPI.DAL
 
         public async Task GetWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
 
             var getCitiesQuery = new GetCitiesQuery(_config);
             var getDatesQuery = new GetDatesForCityQuery(_config);
@@ -22,22 +22,22 @@ namespace WeatherWebAPI.DAL
             {
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
 
-                if (date >= DateTime.Now.Date)
+                if (date >= DateTime.UtcNow.Date)
                 {
                     foreach (var weatherStrategy in weatherDataStrategies)
                     {
                         foreach (var city in _citiesDatabase)
                         {
-                            _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name);
+                            _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name, weatherStrategy);
 
+                            if (UpdateWeatherDataBy(date))
+                            {
+                                await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+                            }
                             if (GetWeatherDataBy(date))
                             {
                                 await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
-                            }
-                            if (UpdateWeatherDataBy(date))
-                            {
-                                await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
                             }
                         }
                     }

@@ -16,7 +16,7 @@ namespace WeatherWebAPI.DAL
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             string? cityName = query?.CityQuery?.City;
-            DateTime date = query.DateQuery.Date;
+            DateTime date = query.DateQuery.Date.ToUniversalTime();
 
             var getCitiesQuery = new GetCitiesQuery(_config);
             var getDatesQuery = new GetDatesForCityQuery(_config);
@@ -25,7 +25,6 @@ namespace WeatherWebAPI.DAL
             {
                 // Itterating through all the cities and dates in the database   
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
-                
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
@@ -36,23 +35,24 @@ namespace WeatherWebAPI.DAL
                 {
                     await GetCityAndAddToDatabase(cityName);
                     _citiesDatabase = await getCitiesQuery.GetAllCities();
+                    //cityName = _citiesDatabase.Last().Name; <- Tror dette fikser navn skrevet inn på flere språk.
+                    // Fikser kun ved adding første gang. Trengs nok api for translation..?
                 }
 
-                _datesDatabase = await getDatesQuery.GetDatesForCity(cityName);
-
-                if (date >= DateTime.Now.Date)
+                if (date >= DateTime.UtcNow.Date)
                 {
+                    var city = GetCityDtoBy(cityName);
+
                     foreach (var weatherStrategy in weatherDataStrategies)
                     {
+                        _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name, weatherStrategy);
+
                         if (GetWeatherDataBy(date))
                         {
-                            var city = GetCityDtoBy(cityName);
                             await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-
                         }
                         if (UpdateWeatherDataBy(date))
                         {
-                            var city = GetCityDtoBy(cityName);
                             await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
                         }
                     }
@@ -80,4 +80,5 @@ namespace WeatherWebAPI.DAL
             return getWeatherDataFromDatabaseStrategy.Query(queryString);
         }
     }
+
 }

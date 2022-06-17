@@ -16,7 +16,7 @@ namespace Tests.Endpoints
         private DateTime _date;
 
         private List<CityDto>? _cities;
-        List<IGetWeatherDataStrategy<WeatherForecastDto>>? weatherDataStrategies;
+        private List<IGetWeatherDataStrategy<WeatherForecastDto>>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -26,16 +26,16 @@ namespace Tests.Endpoints
                 new CityDto { Id = 1, Name = "Stavanger", Country = "Norway", Latitude = 59.1020129, Longitude = 5.712611357275702 },
                 new CityDto { Id = 2, Name = "Oslo", Country = "Norway", Latitude = 59.9133301, Longitude = 10.7389701 }
             };
-            weatherDataStrategies = new();
+            _weatherDataStrategies = new();
 
-            weatherDataStrategies.Add(new FakeYrStrategy());
+            _weatherDataStrategies.Add(new FakeYrStrategy());
         }
 
         [Test]
         public async Task AddCityToDatabaseEndpointTest_CityNotInDatabaseAsync()
         {
             // Arrange
-            _date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
             var cityInput = "Bergen";
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
@@ -75,7 +75,7 @@ namespace Tests.Endpoints
         public async Task AddCityToDatabaseEndpointTest_CityInDatabaseAsync()
         {
             // Arrange
-            _date = DateTime.Now; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
             var cityInput = "Stavanger";
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)

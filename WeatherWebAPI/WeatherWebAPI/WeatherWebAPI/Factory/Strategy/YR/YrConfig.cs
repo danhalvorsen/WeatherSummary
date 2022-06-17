@@ -5,7 +5,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class YrConfig : IHttpConfig
     {
-        private MapperConfiguration mapperConfig;
+        private MapperConfiguration _mapperConfig;
         public string? DataSource { get; }
         //public string? Uri { get; set; }
         //public string? GeoUri { get; set; }
@@ -13,7 +13,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
         //public Uri? BaseGeoUrl { get; }
         public Uri? HomePage { get; set; }
 
-        public MapperConfiguration MapperConfig { get => mapperConfig; set => mapperConfig = value; }
+        public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
 
         public YrConfig()
         {
@@ -23,17 +23,21 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             HomePage = new Uri("https://www.yr.no/");
             //BaseGeoUrl = null;
             //GeoUri = "";
-            mapperConfig = MapperConfig;
+            _mapperConfig = MapperConfig;
         }
 
-        public MapperConfiguration Get(object? queryDate)
+        public MapperConfiguration Get(DateTime queryDate)
         {
+            if (queryDate.Date > DateTime.UtcNow.Date)
+                    queryDate = queryDate.Date + new TimeSpan(12, 0, 0);
+
+
             MapperConfig = new MapperConfiguration(
             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
             .ForPath(dest => dest.Date, opt => opt         // date
             .MapFrom(src => src.properties.timeseries
                     .ToList()
-                        .Single(i => i.time.Equals(queryDate)).time)) // (OR SHOULD WE HAVE TIMESERIES WHERE ITS ADDED FROM?)
+                        .Single(i => i.time.Equals(queryDate)).time))
             .ForPath(dest => dest.WeatherType, opt => opt  // weathertype
                .MapFrom(src => src.properties.timeseries
                    .ToList()

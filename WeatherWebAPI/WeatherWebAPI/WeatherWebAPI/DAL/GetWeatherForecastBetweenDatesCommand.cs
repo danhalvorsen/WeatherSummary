@@ -16,8 +16,8 @@ namespace WeatherWebAPI.DAL
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             string? cityName = betweenDateQueryAndCity?.CityQuery?.City;
-            DateTime fromDate = betweenDateQueryAndCity.BetweenDateQuery.From;
-            DateTime toDate = betweenDateQueryAndCity.BetweenDateQuery.To;
+            DateTime fromDate = betweenDateQueryAndCity.BetweenDateQuery.From.ToUniversalTime();
+            DateTime toDate = betweenDateQueryAndCity.BetweenDateQuery.To.ToUniversalTime();
 
             var datesQuery = new List<DateTime>();
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
@@ -44,14 +44,14 @@ namespace WeatherWebAPI.DAL
                     _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                 }
 
-                _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(cityName);
-
                 foreach (DateTime date in datesQuery)
                 {
                     if (date >= DateTime.Now.Date)
                     {
                         foreach (var weatherStrategy in weatherDataStrategies)
                         {
+                            _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(cityName, weatherStrategy);
+
                             if (GetWeatherDataBy(date))
                             {
                                 var city = GetCityDtoBy(cityName);

@@ -6,19 +6,18 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
     public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
-        private readonly OpenWeatherConfig openWeatherConfig;
-
+        private readonly OpenWeatherConfig _openWeatherConfig;
 
         public OpenWeatherStrategy(OpenWeatherConfig config)
         {
-            openWeatherConfig = config;
+            _openWeatherConfig = config;
         }
 
         public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = openWeatherConfig.BaseUrl
+                BaseAddress = _openWeatherConfig.BaseUrl
             };
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -35,10 +34,10 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 // Mapper
                 TimeSpan ts = new (queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
-                openWeatherConfig.Get(queryDate);
+                _openWeatherConfig.Get(queryDate);
 
 
-                var resultWeatherData = openWeatherConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                var resultWeatherData = _openWeatherConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
                 return resultWeatherData;
             }
 
@@ -49,7 +48,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = openWeatherConfig.BaseGeoUrl
+                BaseAddress = _openWeatherConfig.BaseGeoUrl
             };
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -65,6 +64,11 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             }
 
             return new List<CityDto>();
+        }
+
+        public string GetDataSource()
+        {
+            return _openWeatherConfig.DataSource!;
         }
     }
 }

@@ -73,10 +73,15 @@ namespace Tests.Fakes
                     ProbOfThunder = PROB_OF_THUNDER,
                     City = cityName,
                     WeatherType = WEATHERTYPE,
-                    Source = new WeatherSourceDto()
+                    Source = new WeatherSourceDto { DataProvider = "OpenWeather"}
                 };
             }
             throw new ArgumentException("City name doesn't match test constants");
+        }
+
+        public string GetDataSource()
+        {
+            return "OpenWeather";
         }
     }
 }

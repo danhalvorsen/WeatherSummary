@@ -43,31 +43,6 @@ public class WeatherforecastController : ControllerBase
     [HttpGet("Date")]
     public async Task<ActionResult<List<WeatherForecastDto>>> Date(DateQueryAndCity query)
     {
-
-        //try
-        //{
-
-        //}
-        //catch (Exception e)
-        //{
-        //    switch (httpcontext.response.statuscode)
-        //    {
-        //        case 404:
-        //            response.statuscode = 404;
-        //            return statuscode(response.statuscode, e.message);
-        //        case 500:
-        //            response.statuscode = 500;
-        //            return statuscode(response.statuscode, e.message);
-
-        //        default:
-        //            return statuscode(response.statuscode, response.body);
-        //    }
-        //    return statuscode(response.statuscode, response.body);
-        //    return statuscode(404, e.message); // error not found 404
-
-        //    Console.WriteLine(e.Message);
-        //}
-
         var command = new GetWeatherForecastByDateCommand(_config, _factory);
         
         return await command.GetWeatherForecastByDate(query, _strategies);

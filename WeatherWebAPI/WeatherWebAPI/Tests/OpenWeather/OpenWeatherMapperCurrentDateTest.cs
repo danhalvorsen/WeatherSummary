@@ -13,8 +13,8 @@ namespace Tests.OpenWeather
     public class OpenWeatherMapperCurrentDateTest
     {
         private int _unix;
-        private DateTime dateTime;
-        private MapperConfiguration? config;
+        private DateTime _dateTime;
+        private MapperConfiguration? _config;
         private MapperConfiguration CreateConfig(DateTime queryDate)
         {
             var config = new MapperConfiguration(
@@ -59,7 +59,7 @@ namespace Tests.OpenWeather
                   //       .Single(i => i.time.Equals(queryDate))
                   //           .data.next_1_hours.details.probability_of_thunder))
                   .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
-                  .AfterMap((s, d) => d.FogAreaFraction = VisibilityConvertedToFogAreaFraction((float)d.FogAreaFraction))
+                  .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
                  );
             return config;
         }
@@ -89,9 +89,9 @@ namespace Tests.OpenWeather
         public void Setup()
         {
             IGetWeatherDataStrategy<WeatherForecastDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
-            dateTime = DateTime.Now; /*new DateTime(2022, 05, 18, 8, 0, 0); */// May 18, 2022 8:00:00
-            _unix = DateTimeToUnixTime(dateTime); //1652853600; Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
-            config = CreateConfig(dateTime);
+            _dateTime = DateTime.UtcNow; /*new DateTime(2022, 05, 18, 8, 0, 0); */// May 18, 2022 8:00:00
+            _unix = DateTimeToUnixTime(_dateTime); //1652853600; Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
+            _config = CreateConfig(_dateTime);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Tests.OpenWeather
                 }
             };
             // Act
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             var result = mapper.Map<WeatherForecastDto>(application);
 
@@ -131,7 +131,7 @@ namespace Tests.OpenWeather
                     }
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -155,7 +155,7 @@ namespace Tests.OpenWeather
                 }
             };
 
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             //Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -180,7 +180,7 @@ namespace Tests.OpenWeather
                     wind_speed = windspeed
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -204,7 +204,7 @@ namespace Tests.OpenWeather
                     wind_deg = windDirection
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -227,7 +227,7 @@ namespace Tests.OpenWeather
                     wind_gust = windspeedGust
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -251,7 +251,7 @@ namespace Tests.OpenWeather
                     pressure = pressure
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -275,7 +275,7 @@ namespace Tests.OpenWeather
                     humidity = humidity
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -299,7 +299,7 @@ namespace Tests.OpenWeather
                     pop = probOfRain
                 }}
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -326,15 +326,15 @@ namespace Tests.OpenWeather
                     }
                 }}
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
 
             // Assert
             Console.WriteLine(result.AmountRain);
-            Console.WriteLine(DateTimeToUnixTime(dateTime));
-            Console.WriteLine(dateTime);
+            Console.WriteLine(DateTimeToUnixTime(_dateTime));
+            Console.WriteLine(_dateTime);
 
             result.AmountRain.Should().Be(amountOfRain);
         }
@@ -352,7 +352,7 @@ namespace Tests.OpenWeather
                     clouds = cloudAreaFraction
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -376,7 +376,7 @@ namespace Tests.OpenWeather
                     visibility = fogAreaFraction
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -411,7 +411,7 @@ namespace Tests.OpenWeather
         public void ShouldSetDataSourceName()
         {
             var application = new ApplicationOpenWeather();
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);

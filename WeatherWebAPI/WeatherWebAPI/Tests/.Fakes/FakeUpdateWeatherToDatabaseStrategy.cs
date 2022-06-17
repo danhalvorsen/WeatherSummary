@@ -27,8 +27,8 @@ namespace Tests.Fakes
                 FogAreaFraction = weatherData.FogAreaFraction,
                 ProbOfThunder = weatherData.ProbOfThunder,
                 City = city.Name,
-                WeatherType = $"{weatherData.Date} -- UPDATED",
-                Source = new WeatherSourceDto()
+                WeatherType = weatherData.WeatherType,
+                Source = weatherData.Source
             };
         }
     }

@@ -8,12 +8,11 @@ using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
 {
-    public class OpenWeatherStrategyTest
+    public class OpenWeatherStrategyCurrentDateTest
     {
-        //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
-        private IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+        private readonly IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
 
-        private CityDto city = new CityDto
+        private CityDto _city = new CityDto
         {
             Name = "Stavanger",
             Country = "Norway",
@@ -21,23 +20,20 @@ namespace Tests.OpenWeather
             Latitude = 59.1020129,
             Longitude = 5.712611357275702,
         };
-        //private double _latitude = 59.1020129; // Coordinates from OpenWeather for Stavanger
-        //private double _longitude = 5.712611357275702;
 
-        private DateTime _date = DateTime.Now;
-        private DateTime _dateTomorrow = DateTime.Now.AddDays(1);
+        private DateTime _date = DateTime.UtcNow;
 
         [Test]
         public async Task ShouldGetDate()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
             Console.WriteLine(result.Date);
 
             result.Date.Date
                 .Should()
-                    .Be(DateTime.Now.Date);
+                    .Be(DateTime.UtcNow.Date);
         }
 
         //[Test]
@@ -199,9 +195,9 @@ namespace Tests.OpenWeather
         //}
 
         [Test]
-        public async Task ShouldGetTemperatureBasedOnDate()
+        public async Task ShouldGetTemperature()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Temperature);
 
@@ -213,9 +209,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetWindspeedBasedOnDate()
+        public async Task ShouldGetWindspeed()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Windspeed);
 
@@ -225,9 +221,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetWindDirectionBasedOnDate()
+        public async Task ShouldGetWindDirection()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WindDirection);
 
@@ -239,9 +235,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetWindspeedGustBasedOnDate()
+        public async Task ShouldGetWindspeedGust()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WindspeedGust);
 
@@ -251,9 +247,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetPressureBasedOnDate()
+        public async Task ShouldGetPressure()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Pressure);
 
@@ -263,9 +259,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetHumidityBasedOnDate()
+        public async Task ShouldGetHumidity()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Humidity);
 
@@ -277,9 +273,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetProbabilityOfRainBasedOnDate()
+        public async Task ShouldGetProbabilityOfRain()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.ProbOfRain);
 
@@ -291,9 +287,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetAmountOfRainBasedOnDate()
+        public async Task ShouldGetAmountOfRain()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.AmountRain);
 
@@ -303,9 +299,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetCloudAreaFractionBasedOnDate()
+        public async Task ShouldGetCloudAreaFraction()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.CloudAreaFraction);
 
@@ -317,9 +313,9 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public async Task ShouldGetFogAreaFractionBasedOnDate()
+        public async Task ShouldGetFogAreaFraction()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.FogAreaFraction);
 
@@ -345,9 +341,9 @@ namespace Tests.OpenWeather
         //}
 
         [Test]
-        public async Task ShouldGetWeatherTypeBasedOnDate()
+        public async Task ShouldGetWeatherType()
         {
-            var result = await _strategy.GetWeatherDataFrom(city, _date);
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WeatherType);
 

@@ -11,10 +11,12 @@ namespace Tests.Yr
 {
     public class YrMapperTest
     {
-        private DateTime dateTime;
-        private MapperConfiguration? config;
+        private DateTime _dateTime;
+        private MapperConfiguration? _config;
         private static MapperConfiguration CreateConfig(DateTime queryDate)
         {
+            // Yr at this point in time changes some of it's data after 3 days. e.g; 17th(date today) - 19th is the same => changes on the 20th.
+
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
              .ForPath(dest => dest.Date, opt => opt         // date
@@ -90,8 +92,8 @@ namespace Tests.Yr
         [SetUp]
         public void Setup()
         {
-            dateTime = new DateTime(1999, 1, 1, 0, 0, 0);
-            config = CreateConfig(dateTime);
+            _dateTime = new DateTime(1999, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            _config = CreateConfig(_dateTime);
         }
 
         [Test]
@@ -102,7 +104,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime
+                        time = _dateTime
 
                     }}
                     //meta = new Meta
@@ -113,13 +115,13 @@ namespace Tests.Yr
             };
 
 
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             var result = mapper.Map<WeatherForecastDto>(application);
 
             Console.WriteLine(result.Date);
 
-            result.Date.Should().Be(dateTime);
+            result.Date.Should().Be(_dateTime);
         }
 
         [Test]
@@ -133,7 +135,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             next_6_hours = new Next__hours6 {
                                 summary = new SummaryNext6h {
@@ -144,7 +146,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -164,7 +166,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant = new Instant {
                                 details = new Details {
@@ -176,7 +178,7 @@ namespace Tests.Yr
                 }
             };
 
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             //Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -198,7 +200,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant = new Instant {
                                 details = new Details {
@@ -209,7 +211,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -230,7 +232,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant= new Instant {
                                 details = new Details {
@@ -241,7 +243,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -262,7 +264,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant = new Instant {
                                 details = new Details {
@@ -273,7 +275,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -293,7 +295,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant = new Instant {
                                 details = new Details {
@@ -304,7 +306,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -324,7 +326,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             instant = new Instant {
                                 details = new Details {
@@ -335,7 +337,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -355,7 +357,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             next_6_hours = new Next__hours6 {
                                 details = new DetailsNext6h {
@@ -366,7 +368,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -386,7 +388,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             next_6_hours = new Next__hours6 {
                                 details = new DetailsNext6h {
@@ -397,7 +399,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -417,7 +419,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data{
                             instant = new Instant {
                                 details = new Details {
@@ -428,7 +430,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -448,7 +450,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data{
                             instant = new Instant {
                                 details = new Details {
@@ -459,7 +461,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            IMapper mapper = new Mapper(config);
+            IMapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -479,7 +481,7 @@ namespace Tests.Yr
                 properties = new Properties
                 {
                     timeseries = new List<Timeseries> { new Timeseries {
-                        time = dateTime,
+                        time = _dateTime,
                         data = new Data {
                             next_1_hours = new Next__hours1 {
                                 details = new DetailsNext1h {
@@ -490,7 +492,7 @@ namespace Tests.Yr
                     }}
                 }
             };
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
@@ -503,7 +505,7 @@ namespace Tests.Yr
         public void ShouldSetDataSourceName() // Remember to change strategy name to test for different forecast websites
         {
             var application = new ApplicationYr();
-            Mapper mapper = new Mapper(config);
+            Mapper mapper = new Mapper(_config);
 
             // Act
             var result = mapper.Map<WeatherForecastDto>(application);
