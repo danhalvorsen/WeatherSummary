@@ -54,7 +54,7 @@ namespace Tests.Endpoints
             _weatherDataStrategies = new();
 
             _weatherDataStrategies.Add(new FakeYrStrategy());
-            //strategies.Add(factory.Build<IOpenWeatherStrategy>());
+            _weatherDataStrategies.Add(new FakeOpenWeatherStrategy());
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace Tests.Endpoints
             {
                 if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in _weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies!)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -126,19 +126,19 @@ namespace Tests.Endpoints
                     }
                 }
 
-                if (_dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                if (_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date)))
                     _weatherDatabase++;
             }
 
-            if (_weatherAdded + _weatherUpdated == datesQuery.Count())
-                result = datesQuery.Count();
+            if (_weatherAdded + _weatherUpdated == datesQuery.Count * _weatherDataStrategies.Count)
+                result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
 
-            result.Should().Be(datesQuery.Count());
+            result.Should().Be(datesQuery.Count);
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace Tests.Endpoints
             {
                 if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in _weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies!)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -211,7 +211,7 @@ namespace Tests.Endpoints
                     }
                 }
 
-                if (_dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                if (_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date)))
                     _weatherDatabase++;
             }
 
@@ -221,7 +221,7 @@ namespace Tests.Endpoints
                 result = _weatherDatabase;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherDatabase);
         }
@@ -265,7 +265,7 @@ namespace Tests.Endpoints
             {
                 if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in _weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies!)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -294,20 +294,20 @@ namespace Tests.Endpoints
                         }
                     }
                 }
-                if (_dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                if (_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date)))
                     _weatherDatabase++;
             }
 
 
-            if (_weatherAdded + _weatherDatabase == datesQuery.Count())
-                result = datesQuery.Count();
+            if (_weatherAdded + (_weatherDatabase * _weatherDataStrategies.Count) == datesQuery.Count * _weatherDataStrategies.Count())
+                result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
 
-            result.Should().Be(datesQuery.Count());
+            result.Should().Be(datesQuery.Count);
         }
 
 
@@ -350,7 +350,7 @@ namespace Tests.Endpoints
             {
                 if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var strategy in _weatherDataStrategies)
+                    foreach (var strategy in _weatherDataStrategies!)
                     {
                         if (GetWeatherDataBy(date))
                         {
@@ -380,22 +380,22 @@ namespace Tests.Endpoints
                     }
                 }
 
-                if (_dates.ToList().Any(d => d.Date.Date.Equals(date.Date)))
+                if (_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date)))
                     _weatherDatabase++;
             }
 
-            if (datesQuery.Count() == 1)
-                result = datesQuery.Count();
+            if (datesQuery.Count == 1)
+                result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count());
         }
 
-        protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
+        protected static IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
         {
             for (var day = from; day <= thru; day = day.AddDays(1)) // Add .Date if you don't want time to from and thru
                 yield return day;
@@ -403,22 +403,22 @@ namespace Tests.Endpoints
 
         private bool CityExists(string cityName)
         {
-            return _cities.ToList().Any(c => c.Name.Equals(cityName));
+            return _cities!.ToList().Any(c => c.Name!.Equals(cityName));
         }
 
         private CityDto GetCityDtoBy(string cityName)
         {
-            return _cities.Where(c => c.Name.Equals(cityName)).First();
+            return _cities!.Where(c => c.Name!.Equals(cityName)).First();
         }
 
         private bool UpdateWeatherDataBy(DateTime date) // DateExists(DateTime date)
         {
-            return _dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
+            return _dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
         private bool GetWeatherDataBy(DateTime date) // !DateExists(DateTime date)
         {
-            return !_dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
+            return !_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
     }
 }

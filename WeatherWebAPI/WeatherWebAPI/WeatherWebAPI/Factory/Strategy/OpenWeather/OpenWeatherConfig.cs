@@ -84,6 +84,8 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             }
             else
             {
+                queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 3, 0, 0);
+
                 MapperConfig = new MapperConfiguration(
 
                 cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()

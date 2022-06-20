@@ -21,7 +21,9 @@ namespace Tests.OpenWeather
             Longitude = 5.712611357275702,
         };
 
-        private DateTime _date = DateTime.UtcNow;
+        // Checking so it works without time part. 
+        private DateTime _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc);
+        
 
         [Test]
         public async Task ShouldGetDate()

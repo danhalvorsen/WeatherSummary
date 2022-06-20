@@ -57,10 +57,10 @@ namespace Tests.Endpoints
                 FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
                 var city = await addCityToDatabaseStrategy.Add(cityinfo);
 
-                _cities.Add(city);
+                _cities!.Add(city);
             }
 
-            if (_cities.Count() > 2)
+            if (_cities!.Count > 2)
                 result = 0;
             else
                 result = -1;
@@ -97,10 +97,10 @@ namespace Tests.Endpoints
                 FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
                 var city = await addCityToDatabaseStrategy.Add(cityinfo);
 
-                _cities.Add(city);
+                _cities!.Add(city);
             }
 
-            if (_cities.Count() == 2)
+            if (_cities!.Count == 2)
                 result = $"City {cityName} in database";
             else
                 result = $"City {cityName} not in database"; ;
@@ -112,7 +112,7 @@ namespace Tests.Endpoints
 
         private bool CityExists(string cityName)
         {
-            return _cities.ToList().Any(c => c.Name.Equals(cityName));
+            return _cities!.ToList().Any(c => c.Name!.Equals(cityName));
         }
     }
 }

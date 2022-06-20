@@ -83,7 +83,7 @@ namespace Tests.Yr
                     .ToList()
                     .Single(i => i.time.Equals(queryDate))
                         .data.next_1_hours.details.probability_of_thunder))
-              .AfterMap((s, d) => d.Source.DataProvider = "Yr") // DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
+              .AfterMap((s, d) => d.Source.DataProvider = "Yr") // Adding the datasource name to weatherforceastdto
              );
 
             return config;

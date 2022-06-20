@@ -40,7 +40,7 @@ namespace Tests.OpenWeather
 
             // Test for formatering av landskode
             Console.WriteLine(result[0].Country);
-            var c = new CultureInfo(result[0].Country);
+            var c = new CultureInfo(result[0].Country!);
             var r = new RegionInfo(c.Name);
             result[0].Country = r.EnglishName;
 

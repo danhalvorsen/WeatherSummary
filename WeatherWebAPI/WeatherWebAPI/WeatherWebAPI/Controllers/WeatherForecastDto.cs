@@ -7,27 +7,27 @@
             Source = new WeatherSourceDto();
         }
 
-        public WeatherForecastDto(DateTime date, float temperature, float windspeed, float windDirection,
-            float windspeedGust, float pressure, float humidity, float probOfRain, float amountRain, float cloudAreaFraction, float fogAreaFraction, float probOfThunder, string city, string weatherType)
-        {
-            //Id = id;
-            //FK_CityId = cityId;
-            Date = date;
-            Temperature = temperature;
-            Windspeed = windspeed;
-            WindDirection = windDirection;
-            WindspeedGust = windspeedGust;
-            Pressure = pressure;
-            Humidity = humidity;
-            ProbOfRain = probOfRain;
-            AmountRain = amountRain;
-            CloudAreaFraction = cloudAreaFraction;
-            FogAreaFraction = fogAreaFraction;
-            ProbOfThunder = probOfThunder;
-            City = city;
-            WeatherType = weatherType;
-            Source = new WeatherSourceDto();
-        }
+        //public WeatherForecastDto(DateTime date, float temperature, float windspeed, float windDirection,
+        //    float windspeedGust, float pressure, float humidity, float probOfRain, float amountRain, float cloudAreaFraction, float fogAreaFraction, float probOfThunder, string city, string weatherType)
+        //{
+        //    //Id = id;
+        //    //FK_CityId = cityId;
+        //    Date = date;
+        //    Temperature = temperature;
+        //    Windspeed = windspeed;
+        //    WindDirection = windDirection;
+        //    WindspeedGust = windspeedGust;
+        //    Pressure = pressure;
+        //    Humidity = humidity;
+        //    ProbOfRain = probOfRain;
+        //    AmountRain = amountRain;
+        //    CloudAreaFraction = cloudAreaFraction;
+        //    FogAreaFraction = fogAreaFraction;
+        //    ProbOfThunder = probOfThunder;
+        //    City = city;
+        //    WeatherType = weatherType;
+        //    Source = new WeatherSourceDto();
+        //}
 
         //public int Id { get; set; }
         //public int FK_CityId { get; set; }

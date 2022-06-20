@@ -31,8 +31,8 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var weatherData = JsonSerializer.Deserialize<ApplicationOpenWeather>(responseBody);
 
-                // Mapper
-                TimeSpan ts = new (queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                //Mapper
+                TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
                 queryDate = queryDate.Date + ts;
                 _openWeatherConfig.Get(queryDate);
 

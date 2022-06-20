@@ -29,13 +29,16 @@ namespace WeatherWebAPI.Factory.Strategy.YR
         public MapperConfiguration Get(DateTime queryDate)
         {
             if (queryDate.Date > DateTime.UtcNow.Date)
-                    queryDate = queryDate.Date + new TimeSpan(12, 0, 0);
+                queryDate = queryDate.Date + new TimeSpan(12, 0, 0);
+
+            if (queryDate.Date == DateTime.UtcNow.Date)     // Date could be set to just date and no hour for DateTime.Now -> aka Date today.
+                queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 1, 0, 0);
 
 
             MapperConfig = new MapperConfiguration(
             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
             .ForPath(dest => dest.Date, opt => opt         // date
-            .MapFrom(src => src.properties.timeseries
+                .MapFrom(src => src.properties.timeseries
                     .ToList()
                         .Single(i => i.time.Equals(queryDate)).time))
             .ForPath(dest => dest.WeatherType, opt => opt  // weathertype
@@ -98,7 +101,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 .ToList()
                 .Single(i => i.time.Equals(queryDate))
                     .data.next_1_hours.details.probability_of_thunder))
-            .AfterMap((s, d) => d.Source.DataProvider = DataSource) // DataSource.ToString().Replace("Strategy", "")) // Adding the datasource name to weatherforceastdto
+            .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
             );
 
             return MapperConfig;

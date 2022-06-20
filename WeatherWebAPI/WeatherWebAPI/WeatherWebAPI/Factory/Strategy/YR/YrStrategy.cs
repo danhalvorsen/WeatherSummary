@@ -39,8 +39,8 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 // Mapper
-                TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
-                queryDate = queryDate.Date + ts;
+                //TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
+                //queryDate = queryDate.Date + ts;
                 _yrConfig.Get(queryDate);
 
 

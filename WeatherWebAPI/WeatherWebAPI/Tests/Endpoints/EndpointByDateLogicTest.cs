@@ -81,7 +81,7 @@ namespace Tests.Endpoints
             {
                 var city = GetCityDtoBy(_cityName);
 
-                foreach (var strategy in _weatherDataStrategies)
+                foreach (var strategy in _weatherDataStrategies!)
                 {
                     //_dates = GetDatesForCity(city.Name, strategy);
 
@@ -115,8 +115,8 @@ namespace Tests.Endpoints
             }
             else
             {
-                foreach (var strategy in _weatherDataStrategies)
-                    if (_dates.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
+                foreach (var strategy in _weatherDataStrategies!)
+                    if (_dates!.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
                         _weatherDatabase++;
             }
 
@@ -126,7 +126,7 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{_dates.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{_dates!.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherAdded);
         }
@@ -160,7 +160,7 @@ namespace Tests.Endpoints
             {
                 var city = GetCityDtoBy(_cityName);
 
-                foreach (var strategy in _weatherDataStrategies)
+                foreach (var strategy in _weatherDataStrategies!)
                 {
                     if (GetWeatherDataBy(_date))
                     {
@@ -192,8 +192,8 @@ namespace Tests.Endpoints
             }
             else
             {
-                foreach (var strategy in _weatherDataStrategies)
-                    if (_dates.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
+                foreach (var strategy in _weatherDataStrategies!)
+                    if (_dates!.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
                         _weatherDatabase++;
             }
 
@@ -203,7 +203,7 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{_dates.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{_dates!.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherDatabase);
         }
@@ -237,7 +237,7 @@ namespace Tests.Endpoints
             {
                 var city = GetCityDtoBy(_cityName);
 
-                foreach (var strategy in _weatherDataStrategies)
+                foreach (var strategy in _weatherDataStrategies!)
                 {
                     if (GetWeatherDataBy(_date))
                     {
@@ -273,7 +273,7 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{_dates.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{_dates!.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherUpdated);
         }
@@ -307,7 +307,7 @@ namespace Tests.Endpoints
             {
                 var city = GetCityDtoBy(_cityName);
 
-                foreach (var strategy in _weatherDataStrategies)
+                foreach (var strategy in _weatherDataStrategies!)
                 {
                     if (GetWeatherDataBy(_date))
                     {
@@ -336,8 +336,8 @@ namespace Tests.Endpoints
             }
             else
             {
-                foreach (var strategy in _weatherDataStrategies)
-                    if (_dates.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
+                foreach (var strategy in _weatherDataStrategies!)
+                    if (_dates!.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
                         _weatherDatabase++;
             }
 
@@ -347,34 +347,34 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{_dates.Count()} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{_dates!.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherDatabase);
         }
 
         private bool CityExists(string cityName)
         {
-            return _cities.ToList().Any(c => c.Name.Equals(cityName));
+            return _cities!.ToList().Any(c => c.Name!.Equals(cityName));
         }
 
         private CityDto GetCityDtoBy(string cityName)
         {
-            return _cities.Where(c => c.Name.Equals(cityName)).First();
+            return _cities!.Where(c => c.Name!.Equals(cityName)).First();
         }
 
         private bool UpdateWeatherDataBy(DateTime date) // DateExists(DateTime date)
         {
-            return _dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
+            return _dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
         private bool GetWeatherDataBy(DateTime date) // !DateExists(DateTime date)
         {
-            return !_dates.ToList().Any(d => d.Date.Date.Equals(date.Date));
+            return !_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
         public List<WeatherForecastDto>? GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecastDto> strategy)
         {
-            return (List<WeatherForecastDto>?)_dates.ToList().Where(d => d.City.Equals(cityName) && d.Source.Equals(strategy.GetDataSource()));
+            return (List<WeatherForecastDto>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source.Equals(strategy.GetDataSource()));
         }
     }
 }

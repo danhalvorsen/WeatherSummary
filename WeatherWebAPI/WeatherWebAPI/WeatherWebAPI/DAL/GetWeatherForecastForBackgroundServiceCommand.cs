@@ -28,7 +28,7 @@ namespace WeatherWebAPI.DAL
                     {
                         foreach (var city in _citiesDatabase)
                         {
-                            _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name, weatherStrategy);
+                            _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name!, weatherStrategy);
 
                             if (UpdateWeatherDataBy(date))
                             {

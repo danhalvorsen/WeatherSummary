@@ -28,7 +28,7 @@ namespace WeatherWebAPI
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     Console.WriteLine("BackgroundService doing work");
-
+                    
                     var command = new GetWeatherForecastForBackgroundServiceCommand(_config, _factory);
                     await command.GetWeatherForecastForAllCities(_weatherDataStrategies);
 

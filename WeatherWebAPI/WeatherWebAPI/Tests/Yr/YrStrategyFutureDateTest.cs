@@ -8,7 +8,7 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests.Yr
 {
-    public class YrStrategyTest
+    public class YrStrategyFutureDateTest
     {
         private CityDto _city = new CityDto
         {
@@ -22,7 +22,7 @@ namespace Tests.Yr
         private IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new YrStrategy(new YrConfig());
         //private double _latitude = 59.1020129; // Coordinates from OpenWeather for Stavanger
         //private double _longitude = 5.712611357275702;
-        DateTime _date = DateTime.UtcNow;
+        private DateTime _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day + 1, 0, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
 
         [Test]
         public async Task ShouldGetDate()
@@ -35,7 +35,7 @@ namespace Tests.Yr
             result.Date
                 .Date
                     .Should()
-                        .Be(DateTime.Now.Date);
+                        .Be(_date.Date);
         }
 
         [Test]

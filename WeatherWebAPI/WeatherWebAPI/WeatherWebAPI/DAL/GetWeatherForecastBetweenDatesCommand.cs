@@ -16,8 +16,8 @@ namespace WeatherWebAPI.DAL
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             string? cityName = betweenDateQueryAndCity?.CityQuery?.City;
-            DateTime fromDate = betweenDateQueryAndCity.BetweenDateQuery.From.ToUniversalTime();
-            DateTime toDate = betweenDateQueryAndCity.BetweenDateQuery.To.ToUniversalTime();
+            DateTime fromDate = betweenDateQueryAndCity!.BetweenDateQuery!.From.ToUniversalTime();
+            DateTime toDate = betweenDateQueryAndCity!.BetweenDateQuery.To!.ToUniversalTime();
 
             var datesQuery = new List<DateTime>();
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
@@ -27,10 +27,9 @@ namespace WeatherWebAPI.DAL
             {
                 _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
 
-
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
-                cityName = textInfo.ToTitleCase(cityName);
+                cityName = textInfo.ToTitleCase(cityName!);
 
                 // Getting the all the dates between the from and to datequeries
                 foreach (DateTime day in EachDay(fromDate, toDate))
@@ -44,24 +43,22 @@ namespace WeatherWebAPI.DAL
                     _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                 }
 
+                var city = GetCityDtoBy(cityName);
+
                 foreach (DateTime date in datesQuery)
                 {
-                    if (date >= DateTime.Now.Date)
+                    if (date >= DateTime.UtcNow.Date)
                     {
                         foreach (var weatherStrategy in weatherDataStrategies)
                         {
-                            _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(cityName, weatherStrategy);
+                            _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
 
                             if (GetWeatherDataBy(date))
-                            {
-                                var city = GetCityDtoBy(cityName);
+                            {  
                                 await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-
                             }
                             if (UpdateWeatherDataBy(date))
                             {
-                                var city = GetCityDtoBy(cityName);
-
                                 await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
                             }
                         }
