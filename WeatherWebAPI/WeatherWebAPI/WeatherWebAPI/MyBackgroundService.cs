@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.DAL;
+﻿using WeatherWebAPI.Controllers;
+using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
@@ -7,16 +8,16 @@ namespace WeatherWebAPI
 {
     public class MyBackgroundService : BackgroundService
     {
-        private readonly IFactory factory;
-        private readonly IConfiguration config;
-        private List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies = new List<IGetWeatherDataStrategy<WeatherForecastDto>>();
+        private readonly IFactory _factory;
+        private readonly IConfiguration _config;
+        private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _weatherDataStrategies = new();
 
         public MyBackgroundService(IConfiguration config, IFactory factory)
         {
-            this.config = config;
-            this.factory = factory;
-            strategies.Add(this.factory.Build<IYrStrategy>());
-            strategies.Add(this.factory.Build<IOpenWeatherStrategy>());
+            this._config = config;
+            this._factory = factory;
+            _weatherDataStrategies.Add(this._factory.Build<IYrStrategy>());
+            _weatherDataStrategies.Add(this._factory.Build<IOpenWeatherStrategy>());
         }
 
 
@@ -27,14 +28,14 @@ namespace WeatherWebAPI
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     Console.WriteLine("BackgroundService doing work");
-
-                    var command = new GetWeatherForecastForBackgroundServiceCommand(config, factory);
-                    await command.GetWeatherForecastForAllCities(strategies);
+                    
+                    var command = new GetWeatherForecastForBackgroundServiceCommand(_config, _factory);
+                    await command.GetWeatherForecastForAllCities(_weatherDataStrategies);
 
                     await Task.Delay(new TimeSpan(24, 0, 0)); // 24 hours delay
                     //await Task.Delay(1000);
                 }
-                await Task.CompletedTask;
+                //await Task.CompletedTask;
             }
             catch (Exception e)
             {

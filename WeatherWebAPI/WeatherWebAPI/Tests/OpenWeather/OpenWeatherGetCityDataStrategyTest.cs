@@ -7,9 +7,9 @@ using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
-namespace Tests
+namespace Tests.OpenWeather
 {
-    public class OpenWeatherFetchCityDataStrategyTest
+    public class OpenWeatherGetCityDataStrategyTest
     {
         //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
         private IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
@@ -40,7 +40,7 @@ namespace Tests
 
             // Test for formatering av landskode
             Console.WriteLine(result[0].Country);
-            var c = new CultureInfo(result[0].Country);
+            var c = new CultureInfo(result[0].Country!);
             var r = new RegionInfo(c.Name);
             result[0].Country = r.EnglishName;
 

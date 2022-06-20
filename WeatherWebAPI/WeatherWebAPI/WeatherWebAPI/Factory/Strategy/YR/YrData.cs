@@ -1,4 +1,4 @@
-﻿namespace WeatherWebAPI.YR
+﻿namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class Geometry
     {

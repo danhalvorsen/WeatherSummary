@@ -2,7 +2,7 @@
 
 namespace WeatherWebAPI.Query
 {
-    public interface IQuery
+    public interface IGetCityQuery
     {
         Task<List<CityDto>> GetAllCities();
     }

@@ -82,7 +82,19 @@ classDiagram
     }
 
 
-    class SqlConfig {
+    class IDatabaseConfig {
         + string connectionString
+    }
+
+    class IDataBaseCommand {
+        <<interface>>
+
+        + Update()
+        + Add()
+        + Get()
+    }
+
+    class DatabaseCommand {
+        + DatabaseCommand(IDatabaseConfig)
     }
 ```

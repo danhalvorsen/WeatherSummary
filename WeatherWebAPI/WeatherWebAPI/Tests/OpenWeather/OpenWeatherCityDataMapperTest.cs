@@ -4,9 +4,8 @@ using NUnit.Framework;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.OpenWeather;
 
-namespace Tests
+namespace Tests.OpenWeather
 {
     public class OpenWeatherCityDataMapperTest // Not getting used because of GetSteamAsync.
     {
