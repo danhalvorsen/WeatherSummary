@@ -41,7 +41,8 @@ public class WeatherforecastController : ControllerBase
         _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
     }
 
-    [HttpGet("/Date")]
+    [Route("api/weatherforecast/date/")]
+    [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Date(DateQueryAndCity query)
     {
         var command = new GetWeatherForecastByDateCommand(_config, _factory);
@@ -49,7 +50,8 @@ public class WeatherforecastController : ControllerBase
         return await command.GetWeatherForecastByDate(query, _strategies);
     }
 
-    [HttpGet("/Between")]
+    [Route("api/weatherforecast/between/")]
+    [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Between(BetweenDateQueryAndCity query)
     {
         var command = new GetWeatherForecastBetweenDatesCommand(_config, _factory);
@@ -57,7 +59,8 @@ public class WeatherforecastController : ControllerBase
         return await command.GetWeatherForecastBetweenDates(query, _strategies);
     }
 
-    [HttpGet("/Week")]
+    [Route("api/weatherforecast/week/")]
+    [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Week(
         [Required()] int week,
             CityQuery query) // irriterende med liten "w" i week på selve endpointen.
