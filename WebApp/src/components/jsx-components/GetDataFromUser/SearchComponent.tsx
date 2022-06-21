@@ -31,12 +31,9 @@ export default function SearchComponent() {
 
 
 
-    const request = ()=>{
-        return (isRequestForOneDay ? SingleRequest(todayDate) :  BetweenRequest(betweenDates));
-    }
+
     const clicked: ()=>void =  ()=>{
-       console.log('clicked on Button to make a request');
-         request();
+    return (isRequestForOneDay ? SingleRequest(date , cityName) :  BetweenRequest(betweenDates , cityName));
     }
 
 

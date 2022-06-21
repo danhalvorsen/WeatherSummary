@@ -24,9 +24,9 @@ function App() {
       <br/>
       <SearchComponent/>
       <br/><br/>
-      <a>--------------</a>
-      <SearchBar onSubmit = 'test' fn = {callback} />
-      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/>
+      {/* <a>--------------</a> */}
+      {/* <SearchBar onSubmit = 'test' fn = {callback} />
+      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/> */}
       </div>
   );
 }

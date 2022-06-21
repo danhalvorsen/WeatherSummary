@@ -16,10 +16,16 @@ export function PickDate(props: Idates) {
 
 
   
+
   const isoFormat = new Date().toISOString();
-  
   const isoDate = []  ;
   isoDate.push(isoFormat.substring(0,10));
+
+
+  //console.log(dateRange);
+  console.log([startDateFrom, endDateTo]);
+
+
 
 
 
