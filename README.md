@@ -125,6 +125,9 @@ sequenceDiagram
 [Azure devops](/Backlog/AzDevOps.md)
 
 # API endpoint(s)
+> GET /api/weatherforecast/date?DateQuery.Date=[Date]&CityQuery.City=[cityName]
 
-GET /api/weatherforecast/city/[cityName]
+> GET /api/weatherforecast/between?BetweenDateQuery.From=[fromDate]&BetweenDateQuery.To=[toDate]&CityQuery.City=[cityName]
+
+> GET /api/weatherforecast/week?week=[weekNumber]&City=[cityName]
 
