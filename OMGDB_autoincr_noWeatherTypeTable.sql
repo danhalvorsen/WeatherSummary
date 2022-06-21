@@ -33,7 +33,7 @@ CREATE TABLE WeatherData (
     WeatherType VARCHAR(255),
     Temperature FLOAT,
     Windspeed FLOAT,
-    WindDirection INT,
+    WindDirection FLOAT,
     WindspeedGust FLOAT,
     Pressure FLOAT,
     Humidity FLOAT,
@@ -76,7 +76,7 @@ INSERT INTO [Source]
 	([Name], [URL], [Authentication])
 VALUES
 	('Yr', 'www.yr.no', 'admin'),
-	('Storm', 'www.storm.no', 'admin'),
+	('OpenWeather', 'www.openweathermap.org', 'admin'),
 	('FreeWeather', 'www.freeweather.com', 'admin');
 GO
 
@@ -130,7 +130,7 @@ DECLARE @FK_SourceYRId INT
 DECLARE @FK_SourceStormId INT
 DECLARE @FK_SourceFreeWeatherId INT
 SELECT @FK_SourceYRId = Id FROM [Source] WHERE [Name] = 'Yr'
-SELECT @FK_SourceStormId = Id FROM [Source] WHERE [Name] = 'Storm'
+SELECT @FK_SourceStormId = Id FROM [Source] WHERE [Name] = 'OpenWeather'
 SELECT @FK_SourceFreeWeatherId = Id FROM [Source] WHERE [Name] = 'FreeWeather'
 
 
