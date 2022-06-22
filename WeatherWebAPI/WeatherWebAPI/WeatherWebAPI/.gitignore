@@ -35,6 +35,11 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+.vs\
+
 
 bin
 bin/Debug
+
+bin\Debug\net6.0
+obj\Debug\net6.0
