@@ -1,0 +1,17 @@
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.deps.json
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.runtimeconfig.json
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\appsettings.Development.json
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\appsettings.json
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.exe
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\System.Data.SqlClient.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\AutoMapper.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\Microsoft.OpenApi.dll
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\bin\Debug\WeatherWebAPI.pdb
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
+C:\Users\torbjorn.jacobsen\source\repos\WeatherSummary\WeatherWebAPI\WeatherWebAPI\obj\Debug\docker-compose.dcproj.CopyComplete

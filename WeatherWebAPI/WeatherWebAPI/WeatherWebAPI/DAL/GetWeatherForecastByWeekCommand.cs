@@ -87,7 +87,7 @@ namespace WeatherWebAPI.DAL
                                             $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                                 $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE DATEPART(week, [Date]) = {week+1} AND City.Name = '{query.City}'"; // Should change this to match the between query. Since we're basically doing the same in both.
+                                                        $"WHERE DATEPART(week, [Date]) = {week + 1} AND City.Name = '{query.City}'"; // Should we change this to match the betweenDates query?. Since we're basically doing the same in both.
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 

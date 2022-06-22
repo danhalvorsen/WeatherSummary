@@ -63,17 +63,18 @@ namespace WeatherWebAPI.DAL
                 Console.WriteLine(e.Message);
             }
 
-            return GetWeatherForecastFromDatabase(cityName, date);
+            return GetWeatherForecastFromDatabase(cityName, date, weatherDataStrategies);
         }
 
-        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date)
+        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
+            string queryString = $"SELECT TOP {weatherDataStrategies.Count} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
             $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                         $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                            $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}'";
+                            $"WHERE CAST([Date] as Date) >= '{date}' AND City.Name = '{cityName}' " +
+                                $"ORDER BY [Date]";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
