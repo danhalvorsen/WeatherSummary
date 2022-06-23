@@ -4,6 +4,7 @@ import InputCity from './InputCity';
 import { PickDate } from './PickDate';
 import {SingleRequest} from './SingleRequest';
 import {BetweenRequest} from './BetweenRequest';
+import { ShowNewTable } from './ShowNewTable';
 
 
 interface IfuncType {
@@ -14,12 +15,10 @@ interface IfuncType {
 export default function SearchComponent() {
 
     const date = new Date();
-    const todayDate = date.toISOString().substring(0 , 10);
-
-
-
+    //const todayDate = date.toISOString().substring(0 , 10);
 
     const [cityName , setCityName] = useState('Oslo');
+    const [todayDate , setTodayDate] = useState(date);
     const [betweenDates , setBetweenDates]= useState(['2022-06-10' , '2022-06-16']);
     const [isRequestForOneDay , setIsRequestForOneDay ]= useState(true);
 
@@ -28,30 +27,21 @@ export default function SearchComponent() {
         setCityName(cityName);
     }
 
+    let showResult = <ShowNewTable/>
 
-
-
-
-    const clicked: ()=>void =  ()=>{
-    return (isRequestForOneDay ? SingleRequest(date , cityName) :  BetweenRequest(betweenDates , cityName));
+    const clicked= ()=>{
+    
+      // let showResult = <showNewTable/>
+    //return (isRequestForOneDay ? <SingleRequest date={date} , cityName={cityName}/> :  BetweenRequest(betweenDates , cityName));
+   //return <SingleRequest date={date} , cityName={cityName}/>
     }
 
 
 
     const getDates = (betweenDates:string[] , check:boolean)=>{
         setBetweenDates(betweenDates)
-        console.log(betweenDates);
-        console.log(check);
-
     }
 
-
-
-
-
-    useEffect(()=>{
-        //console.log(dates[0]);
-    } , [])
 
 
     return(
@@ -60,6 +50,9 @@ export default function SearchComponent() {
         <InputCity City={saveCityName}/> <br/><br/>
         <PickDate getDates={getDates} /> <br/><br/>
         <ButtonSearch func={clicked}/>
+
+       {showResult}
+        
 
 
         </>

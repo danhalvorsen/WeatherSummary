@@ -1,14 +1,10 @@
 
 interface IfuncType {
-    func : ()=>void
+    func: () => void | JSX.Element
 }
 
 
 export function ButtonSearch (props: IfuncType){
-
-    const submit = ()=>{
-
-    }
 
     return (
         <>

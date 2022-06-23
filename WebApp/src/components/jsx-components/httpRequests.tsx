@@ -1,7 +1,7 @@
-//import axios from "axios";
+
 import axios, { AxiosResponse } from "axios";
-import { resourceLimits } from "worker_threads";
-// import { ResultFormat } from "./WeatherData";
+
+
 import { IresultJson } from "../../Interfaces";
 
 export async function MakeHttpRequest(node: string): Promise<IresultJson[]> {
