@@ -35,11 +35,12 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
-.vs\
-
 
 bin
 bin/Debug
 
+# Update June 2022
 bin\Debug\net6.0
 obj\Debug\net6.0
+
+.vs\WeatherWebAPI

@@ -23,6 +23,7 @@ namespace WeatherWebAPI.DAL
         {
             IGetCityDataStrategy<CityDto> strategy = _factory.Build<IOpenWeatherStrategy>();
             var city = await strategy.GetCityDataFor(cityName!);
+            GetCountryFromAbbreviation(city);
 
             IAddCityToDatabaseStrategy addCityToDatabaseStrategy = _factory.Build<IAddCityToDatabaseStrategy>();
             await addCityToDatabaseStrategy.Add(city);
@@ -95,6 +96,13 @@ namespace WeatherWebAPI.DAL
 
             // Subtract 3 days from Thursday to get Monday, which is the first weekday in ISO8601
             return result.AddDays(-3);
+        }
+
+        private static void GetCountryFromAbbreviation(List<CityDto> city)
+        {
+            var twoLetterCountryAbbreviation = new CultureInfo(city[0].Country!);
+            var countryName = new RegionInfo(twoLetterCountryAbbreviation.Name);
+            city[0].Country = countryName.EnglishName;
         }
     }
 }

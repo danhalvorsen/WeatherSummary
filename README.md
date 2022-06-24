@@ -42,13 +42,13 @@ docker network create YourNetWorkName
 ```json
 {
   "ConnectionStrings": {
-    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=DB;User ID=sa; Password=123456a@;Connect Timeout=20;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=DB;User ID=sa; Password=123456a@;Connect Timeout=99999;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
   },
+
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Microsoft.AspNetCore": "Warning"
     }
   },
   "AllowedHosts": "*"
@@ -59,15 +59,13 @@ docker network create YourNetWorkName
 version: '3.4'
 
 services:
-  basicwebapi:
-    container_name: WebAPI
-    image: ${DOCKER_REGISTRY-}basicwebapi
-    networks: 
-            - default
+  weatherwebapi:
+    image: ${DOCKER_REGISTRY-}weatherwebapi
     build:
       context: .
-      dockerfile: Dockerfile
-
+      dockerfile: WeatherWebAPI/Dockerfile
+    networks: 
+            - default   
   db:
     container_name: SqlServer
     image: mcr.microsoft.com/mssql/server 
@@ -80,7 +78,6 @@ services:
       - SA_PASSWORD=123456a@
     networks: 
             - default
-    
 networks:
   default:
     external:
