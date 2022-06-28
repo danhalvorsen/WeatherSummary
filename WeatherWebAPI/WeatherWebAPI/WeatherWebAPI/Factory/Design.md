@@ -1,88 +1,166 @@
 ```mermaid 
 classDiagram 
+    
     class IGetWeatherDataStrategy {
         <<interface>>
-        GetWeatherDataAsync() List~T~
+
+        + GetWeatherDataFrom(CityDto city, DateTime queryDate) List~T~
+        + GetDataSource()
     }
-    IGetWeatherDataStrategy <|-- IGetWeatherByHttp
-    IGetWeatherDataStrategy <|-- IGetWeatherFromDatabase
+    IGetWeatherDataStrategy <|-- IOpenWeatherStrategy
+    IGetWeatherDataStrategy <|-- IYrStrategy
 
         class IGetCityDataStrategy {
         <<interface>>
-        GetCityDataAsync() List~T~
+
+        + GetCityDataFor(string city) List~T~
     }
-    IGetCityDataStrategy <|-- IGetCityByHttp
+    IGetCityDataStrategy <|-- IOpenWeatherStrategy
 
 
-    class IGetWeatherByHttp {
-        <<interface>>
+    class IYrStrategy {
 
+        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
     }
-    IGetWeatherByHttp <|-- OpenWeatherStrategy
-    IGetWeatherByHttp <|-- YrStrategy
-
-
-    class IGetCityByHttp {
-        <<interface>>
-
-    }
-    IGetCityByHttp <|-- OpenWeatherStrategy
-
-
-    class IGetWeatherFromDatabase {
-        <<interface>>
-    }
-    IGetWeatherFromDatabase <|-- SqlConfig
-
-
-    class YrStrategy {
-        + T GetWeatherDataAsync(Citydto city) 
-    }
+    IYrStrategy <|-- YrStrategy
     YrStrategy -- YrConfig
 
+    class YrStrategy {
+
+        - YrConfig _yrConfig
+        + YrStrategy(YrConfig config)
+
+        + List<WeatherForecastDto> GetWeatherDataFrom(Citydto city, DateTime queryDate)
+        + string GetDataSource()
+    }
+
+
+    class IOpenWeatherStrategy {
+
+        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        + List<CityDto> GetCityDataFor(string city)
+    }
+    IOpenWeatherStrategy <|-- OpenWeatherStrategy
+    OpenWeatherStrategy -- OpenWeatherConfig
 
     class OpenWeatherStrategy {
-        + T GetWeatherDataAsync(CityDto city, OpenWeatherConfig)
-        + T GetCityDataAsync(CityDto city, OpenWeatherCityConfig)
+
+        - OpenWeatherConfig _openWeatherConfig
+        + OpenWeatherConfig(OpenWeatherConfig config)
+
+        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        + List<CityDto> GetCityDataFor(string city)
+
+        + string GetDataSource()
     }
-    OpenWeatherStrategy -- OpenWeatherConfig
-    OpenWeatherStrategy -- OpenWeatherCityConfig
 
 
     class YrConfig {
-        + HttpConfig httpConfig
-        - MapperConfiguration mapperConfig
+
+        + string DataSource
+        + Uri BaseUrl
+        + Uri HomePage
+
+        - MapperConfiguration _mapperConfig
         + MapperConfiguration MapperConfig
-        MapperConfiguration Get(object? queryDate)
+        + MapperConfiguration Get(DateTime queryDate)
     }
     YrConfig -- HttpConfig
 
 
       class OpenWeatherConfig {
-        + HttpConfig httpConfig
-        - MapperConfiguration mapperConfig
+
+        + string DataSource
+        + Uri BaseUrl
+        + Uri BaseGeoUrl
+        + Uri HomePage
+        - MapperConfiguration _mapperConfig
         + MapperConfiguration MapperConfig
-        MapperConfiguration Get(object? queryDate)
+        + MapperConfiguration Get(DateTime queryDate)
     }
     OpenWeatherConfig -- HttpConfig
 
 
-      class OpenWeatherCityConfig {
-        + HttpConfig httpConfig
-        - MapperConfiguration mapperConfig
-        + MapperConfiguration MapperConfig
-        MapperConfiguration Get(object? queryDate)
-    }
-    OpenWeatherCityConfig -- HttpConfig
+      %%class OpenWeatherCityConfig {
+       %%  + HttpConfig httpConfig
+       %% - MapperConfiguration mapperConfig
+       %% + MapperConfiguration MapperConfig
+       %% MapperConfiguration Get(object? queryDate)
+    %%}
+    %%OpenWeatherCityConfig -- HttpConfig
 
 
     class HttpConfig {
+
+        + string DataSource
         + Uri BaseURL
-        + Uri Partial
+        + Uri HomePage
     }
 
 
-    class SqlConfig {
+    class IDatabaseConfig {
         + string connectionString
     }
+    AddCityToDatabaseStrategy -- IDatabaseConfig
+    AddWeatherDataToDatabaseStrategy -- IDatabaseConfig
+    GetWeatherDataFromDatabaseStrategy -- IDatabaseConfig
+    UpdateWeatherDataToDatabaseStrategy -- IDatabaseConfig
+
+
+    class IAddCityToDatabaseStrategy {
+        <<interface>>
+
+        + Add(List<CityDto> city)
+    }
+    IAddCityToDatabaseStrategy <|-- AddCityToDatabaseStrategy
+
+
+    class AddCityToDatabaseStrategy {
+        + AddCityToDatabaseStrategy(IDatabaseConfig config)
+        + Add(List<CityDto> city)
+    }
+
+
+    class IAddWeatherDataToDatabaseStrategy {
+        <<interface>>
+
+        + Add(WeatherForecastDto weatherData, CityDto city)
+    }
+    IAddWeatherDataToDatabaseStrategy <|-- AddWeatherDataToDatabaseStrategy
+
+
+    class AddWeatherDataToDatabaseStrategy {
+        + AddWeatherDataToDatabaseStrategy(IDatabaseConfig config)
+        + Add(WeatherForecastDto weatherData, CityDto city)
+    }
+
+
+    class IGetWeatherDataFromDatabaseStrategy {
+        <<interface>>
+
+        + List<WeatherForecastDto> Get(string queryString)
+    }
+    IGetWeatherDataFromDatabaseStrategy <|-- GetWeatherDataFromDatabaseStrategy
+
+
+    class GetWeatherDataFromDatabaseStrategy {
+        + GetWeatherDataFromDatabaseStrategy(IDatabaseConfig config)
+        + List<WeatherForecastDto> Get(string queryString)
+    }
+
+
+    class IUpdateWeatherDataToDatabaseStrategy {
+        <<interface>>
+
+        + Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+    }
+    IUpdateWeatherDataToDatabaseStrategy <|-- UpdateWeatherDataToDatabaseStrategy
+
+
+    class UpdateWeatherDataToDatabaseStrategy {
+        + UpdateWeatherDataToDatabaseStrategy(IDatabaseConfig config)
+        + Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+    }
+
+
 ```

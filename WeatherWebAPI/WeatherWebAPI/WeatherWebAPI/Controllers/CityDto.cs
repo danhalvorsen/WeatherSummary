@@ -28,10 +28,5 @@ namespace WeatherWebAPI.Controllers
         public double Longitude { get; set; }
         [JsonPropertyName("lat")]
         public double Latitude { get; set; }
-
-        //public override string ToString()
-        //{
-        //    return $"CityId: {Id}\nName: {Name}\nCountry: {Country}\nAltitude: {Altitude}\nLongitude: {Longitude}\nLatitude {Latitude}";
-        //}
     }
 }

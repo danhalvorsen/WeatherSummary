@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include=".Fakes\FakeAddCityToDatabaseStrategy.cs" />
+    <Compile Include=".Fakes\FakeAddWeatherToDatabaseStrategy.cs" />
+    <Compile Include=".Fakes\FakeOpenWeatherStrategy.cs" />
+    <Compile Include=".Fakes\FakeUpdateWeatherToDatabaseStrategy.cs" />
+    <Compile Include=".Fakes\FakeYrStrategy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="AutoMapper" Version="11.0.1" />
 	  <PackageReference Include="FluentAssertions" Version="6.6.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />

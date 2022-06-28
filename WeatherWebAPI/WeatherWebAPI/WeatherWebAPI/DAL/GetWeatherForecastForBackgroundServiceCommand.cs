@@ -1,29 +1,45 @@
-﻿using WeatherWebAPI.Factory;
+﻿using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastForBackgroundServiceCommand : BaseWeatherForecastQuery
+    public class GetWeatherForecastForBackgroundServiceCommand : BaseGetWeatherForecastCommands
     {
-        private readonly IFactory factory;
-
-        public GetWeatherForecastForBackgroundServiceCommand(IConfiguration config, IFactory factory) : base(config)
+        public GetWeatherForecastForBackgroundServiceCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
-            this.factory = factory;
+
         }
 
-        public async Task GetWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> strategies)
+        public async Task GetWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
+            DateTime date = DateTime.UtcNow;
+
+            var getCitiesQuery = new GetCitiesQuery(_config);
+            var getDatesQuery = new GetDatesForCityQuery(_config);
+
             try
             {
-                var getCitiesQuery = new GetCitiesQuery(config);
-                var cities = await getCitiesQuery.GetAllCities();
+                _citiesDatabase = await getCitiesQuery.GetAllCities();
 
-                foreach (var strategy in strategies)
+                if (date >= DateTime.UtcNow.Date)
                 {
-                    foreach (var city in cities)
+                    foreach (var weatherStrategy in weatherDataStrategies)
                     {
-                        await (new AddWeatherDataForCityCommand(config, factory).GetWeatherDataForCity(city, strategy));
+                        foreach (var city in _citiesDatabase)
+                        {
+                            _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name!, weatherStrategy);
+
+                            if (UpdateWeatherDataBy(date))
+                            {
+                                await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+                            }
+                            if (GetWeatherDataBy(date))
+                            {
+                                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
+
+                            }
+                        }
                     }
                 }
             }
