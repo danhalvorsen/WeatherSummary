@@ -5,11 +5,12 @@ import "react-datepicker/dist/react-datepicker.css";
 interface Idates {
   getDates: (betweenDates:string[] , check: boolean) => void
 }
-
+const date = new Date();
+date.toString()
 
 export function PickDate(props: Idates) {
   const [check, setCheck] = useState(true);
-  const todayDate = Date().substring(0, 15);
+  const todayDate = date.toUTCString()
   const [activeDate , setActiveDate] = useState(false);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDateFrom, endDateTo] = dateRange;

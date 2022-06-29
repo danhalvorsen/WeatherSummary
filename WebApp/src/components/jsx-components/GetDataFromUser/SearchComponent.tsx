@@ -2,7 +2,7 @@ import React , {useState , useEffect} from 'react';
 import { ButtonSearch } from './ButtonSearch';
 import InputCity from './InputCity';
 import { PickDate } from './PickDate';
-import {SingleRequest} from './SingleRequest';
+import {SingleRequest} from './SingleRequest'
 import {BetweenRequest} from './BetweenRequest';
 import { ShowNewTable } from './ShowNewTable';
 
@@ -15,7 +15,7 @@ interface IfuncType {
 export default function SearchComponent() {
 
     const date = new Date();
-    //const todayDate = date.toISOString().substring(0 , 10);
+    
 
     const [cityName , setCityName] = useState('Oslo');
     const [todayDate , setTodayDate] = useState(date);
@@ -23,17 +23,29 @@ export default function SearchComponent() {
     const [isRequestForOneDay , setIsRequestForOneDay ]= useState(true);
 
 
+    //date.toISOString()
+
     const saveCityName = (cityName: string)=>{
         setCityName(cityName);
     }
 
-    let showResult = <ShowNewTable/>
+    let showTable = <ShowNewTable/>
+
+ 
+    let showSingleRequest: JSX.Element | undefined = <SingleRequest date={date} cityName={cityName}/> ;
+
+
 
     const clicked= ()=>{
     
-      // let showResult = <showNewTable/>
+     console.log('I am SearchComponent');
+     <SingleRequest date={date} cityName={cityName}/>
+
+     showSingleRequest = <SingleRequest date={date} cityName={cityName}/>
+     
+
+
     //return (isRequestForOneDay ? <SingleRequest date={date} , cityName={cityName}/> :  BetweenRequest(betweenDates , cityName));
-   //return <SingleRequest date={date} , cityName={cityName}/>
     }
 
 
@@ -51,7 +63,8 @@ export default function SearchComponent() {
         <PickDate getDates={getDates} /> <br/><br/>
         <ButtonSearch func={clicked}/>
 
-       {showResult}
+       {showTable}
+       {showSingleRequest}
         
 
 
