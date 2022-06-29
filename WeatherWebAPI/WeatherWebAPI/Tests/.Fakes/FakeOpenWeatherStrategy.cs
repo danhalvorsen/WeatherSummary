@@ -50,7 +50,11 @@ namespace Tests.Fakes
 
         public Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            return Task.FromResult(CreateTestWeatherData(city.Name, queryDate));
+            if (city != null && !string.IsNullOrEmpty(city.Name))
+            {
+                return Task.FromResult(CreateTestWeatherData(city.Name, queryDate));
+            }
+            throw new ArgumentException("Should not have a city without a name");
         }
 
         private static WeatherForecastDto CreateTestWeatherData(string cityName, DateTime date)
@@ -73,7 +77,7 @@ namespace Tests.Fakes
                     ProbOfThunder = PROB_OF_THUNDER,
                     City = cityName,
                     WeatherType = WEATHERTYPE,
-                    Source = new WeatherSourceDto { DataProvider = "OpenWeather"}
+                    Source = new WeatherSourceDto { DataProvider = "OpenWeather" }
                 };
             }
             throw new ArgumentException("City name doesn't match test constants");

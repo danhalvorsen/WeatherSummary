@@ -35,6 +35,8 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 1, 0, 0);
 
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
             MapperConfig = new MapperConfiguration(
             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
             .ForPath(dest => dest.Date, opt => opt         // date
@@ -103,6 +105,8 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                     .data.next_1_hours.details.probability_of_thunder))
             .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
             );
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             return MapperConfig;
         }

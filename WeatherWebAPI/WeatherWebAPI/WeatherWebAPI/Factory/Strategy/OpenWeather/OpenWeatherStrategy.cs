@@ -55,10 +55,12 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 
             if (response.IsSuccessStatusCode)
             {
-                var streamTask = httpClient.GetStreamAsync($"direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
-                var cityInfo = await JsonSerializer.DeserializeAsync<List<CityDto>>(await streamTask);
+                var streamTask = await httpClient.GetStreamAsync($"direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
+                var cityInfo = await JsonSerializer.DeserializeAsync<List<CityDto>>(streamTask);
 
-                return cityInfo;
+                if(cityInfo != null)
+                    return cityInfo;
+                throw new Exception();
             }
 
             return new List<CityDto>();
