@@ -24,7 +24,7 @@ export function PickDate(props: Idates) {
 
 
   //console.log(dateRange);
-  console.log([startDateFrom, endDateTo]);
+  // console.log([startDateFrom, endDateTo]);
 
 
 

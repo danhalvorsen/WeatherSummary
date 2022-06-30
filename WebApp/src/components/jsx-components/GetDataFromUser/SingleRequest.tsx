@@ -1,25 +1,53 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import React , { FC, useCallback, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { IresultJson as IResultJson } from "../../../Interfaces";
+//import Table from "./Table";
+import { IresultJson } from "../../../Interfaces"
 
-interface Iprops {
 
-    date: Date,
-    cityName: string
+export interface Iprops {
+    date: Date ,
+    cityName: string,
+   
     }
 
-export const SingleRequest: FC<Iprops> = ({date , cityName})=>{
+export const  SingleRequest: FC<Iprops> =  ({date , cityName})=>{
 
-    console.log('I am SingleRequest')
-    console.log(cityName);
-    console.log(date);
-return(
+    const [result , setResult] = useState<IresultJson[]>();
+
+    const source = "http://localhost:3000/data/?weatherType=sunny"
+    useEffect(()=>{
+
+        const getRequest = async ()=>{
+      
+        const request: IresultJson[]  = await axios.get(source);
+
+        if (request !== undefined && request !== null ) {
+                   setResult(request);
+                } 
+
+               };
+
+        getRequest()
+
+    },[]);
+   
+    console.log(result)
+   const items = result?.map((item)=>{
+        
+    })
+
+
+
+    return(
     <>
-   <div> Single Request Table would be here</div>
    
    <div>City is: {cityName}</div>
 
    <div>Date is: {date.toISOString()}</div>
+  
+
+   {/* <Table data={newResult}/> */}
     </>
 )
 
@@ -46,9 +74,7 @@ return(
 // //    } 
 
        
-//     console.log('this is for single request');
-//     console.log(singledate);
-//     console.log(cityName);
+
 
 
 //     return(

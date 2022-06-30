@@ -5,6 +5,7 @@ import { PickDate } from './PickDate';
 import {SingleRequest} from './SingleRequest'
 import {BetweenRequest} from './BetweenRequest';
 import { ShowNewTable } from './ShowNewTable';
+import {Iprops} from './SingleRequest'
 
 
 interface IfuncType {
@@ -21,6 +22,7 @@ export default function SearchComponent() {
     const [todayDate , setTodayDate] = useState(date);
     const [betweenDates , setBetweenDates]= useState(['2022-06-10' , '2022-06-16']);
     const [isRequestForOneDay , setIsRequestForOneDay ]= useState(true);
+    const [flag , setFlag] = useState(false);
 
 
     //date.toISOString()
@@ -29,24 +31,10 @@ export default function SearchComponent() {
         setCityName(cityName);
     }
 
-    let showTable = <ShowNewTable/>
+    const showTable = <ShowNewTable/>
 
  
-    let showSingleRequest: JSX.Element | undefined = <SingleRequest date={date} cityName={cityName}/> ;
-
-
-
-    const clicked= ()=>{
-    
-     console.log('I am SearchComponent');
-     <SingleRequest date={date} cityName={cityName}/>
-
-     showSingleRequest = <SingleRequest date={date} cityName={cityName}/>
-     
-
-
-    //return (isRequestForOneDay ? <SingleRequest date={date} , cityName={cityName}/> :  BetweenRequest(betweenDates , cityName));
-    }
+    const showResultData= flag ? <SingleRequest date={date} cityName={cityName}/> : <></> 
 
 
 
@@ -61,10 +49,10 @@ export default function SearchComponent() {
         <div>Search a City</div>
         <InputCity City={saveCityName}/> <br/><br/>
         <PickDate getDates={getDates} /> <br/><br/>
-        <ButtonSearch func={clicked}/>
+        <ButtonSearch setFlag={setFlag}/>
 
        {showTable}
-       {showSingleRequest}
+       {showResultData}
         
 
 

@@ -1,14 +1,15 @@
+import { Dispatch , FC, SetStateAction } from "react"
 
-interface IfuncType {
-    func: () => void | JSX.Element
+interface IFlagType {
+    setFlag: Dispatch<SetStateAction<boolean>>
 }
 
 
-export function ButtonSearch (props: IfuncType){
+export const ButtonSearch: FC<IFlagType> = ({setFlag})=> {
 
     return (
         <>
-              <button type="button" className="btn btn-success" onClick={props.func}>Search City2</button>
+              <button type="button" className="btn btn-success" onClick={()=>{setFlag(true)}}>Search City2</button>
 
         </>
     )
