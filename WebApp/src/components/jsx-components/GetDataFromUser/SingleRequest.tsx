@@ -1,7 +1,7 @@
 import React , { FC, useCallback, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { IresultJson as IResultJson } from "../../../Interfaces";
-//import Table from "./Table";
+import Table from "./Table";
 import { IresultJson } from "../../../Interfaces"
 
 
@@ -13,41 +13,36 @@ export interface Iprops {
 
 export const  SingleRequest: FC<Iprops> =  ({date , cityName})=>{
 
-    const [result , setResult] = useState<IresultJson[]>();
+    const [result , setResult] = useState<IresultJson[] | undefined>();
+    const [component , setComponent] = useState<JSX.Element >();
 
+//|
+    //const source = "http://localhost:3000/data"
     const source = "http://localhost:3000/data/?weatherType=sunny"
     useEffect(()=>{
 
-        const getRequest = async ()=>{
+        const getRequest =( async ()=>{
       
-        const request: IresultJson[]  = await axios.get(source);
+        const res  = await axios.get(source);
+        if (res !== undefined && res !== null ) {
+            if(res.status == 200) {
+                setResult(res.data);
+              //  setComponent(<Table data={result}/>)
 
-        if (request !== undefined && request !== null ) {
-                   setResult(request);
-                } 
-
-               };
-
-        getRequest()
-
+            }
+            } 
+             })();
     },[]);
    
-    console.log(result)
-   const items = result?.map((item)=>{
-        
-    })
-
-
-
     return(
     <>
+      <div>City is: {cityName}</div>
+      <div>Date is: {date.toISOString()}</div>
+        
+        {/* {component} */}
+        <Table data={result}/>
+
    
-   <div>City is: {cityName}</div>
-
-   <div>Date is: {date.toISOString()}</div>
-  
-
-   {/* <Table data={newResult}/> */}
     </>
 )
 

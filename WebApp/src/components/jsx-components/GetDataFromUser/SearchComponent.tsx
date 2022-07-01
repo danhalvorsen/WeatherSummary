@@ -51,7 +51,7 @@ export default function SearchComponent() {
         <PickDate getDates={getDates} /> <br/><br/>
         <ButtonSearch setFlag={setFlag}/>
 
-       {showTable}
+       {/* {showTable} */}
        {showResultData}
         
 
