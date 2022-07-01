@@ -4,13 +4,16 @@ import { IresultJson } from "../../../Interfaces";
 
 interface Iprops  {
   data: IresultJson[] | undefined
+  city: string
   };
 
-const Table:FC<Iprops> = ({ data }) => {
+const Table:FC<Iprops> = ({ data, city  }) => {
 //const [city , setCity] = useState('');
 //console.log(data![0].city)
     const  contactOfData = data?.map((row , index)=> {
-     // if (data[0].city) {setCity(  data[0]?.city);}
+    //  if (data[0].city) {
+    //   //setCity(  data[0]?.city);
+    // }
       
       return (
         <tr key={index}>
@@ -60,7 +63,7 @@ const Table:FC<Iprops> = ({ data }) => {
                 <br />
                 <div className="fs-4 col text-center">
                   <p>City Name:</p>
-                  {/* <strong> {city}</strong> */}
+                  <strong> {city}</strong>
                 </div>
                 <br />
                 <br />

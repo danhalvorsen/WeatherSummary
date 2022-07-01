@@ -40,7 +40,7 @@ export const  SingleRequest: FC<Iprops> =  ({date , cityName})=>{
       <div>Date is: {date.toISOString()}</div>
         
         {/* {component} */}
-        <Table data={result}/>
+        <Table data={result} city={cityName}/>
 
    
     </>
