@@ -54,7 +54,7 @@ docker network create YourNetWorkName
   "AllowedHosts": "*"
 }
 ```
-#### **Docker-compose.yml**
+#### **docker-compose.yml**
 ```csharp
 version: '3.4'
 
@@ -87,6 +87,24 @@ volumes:
   Sql-server-storage:
     external: true
     
+```
+
+#### **docker-compose.override.yml**
+***Remember*** to set the port for your swagger API in the override file. If you set this in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
+```yml
+version: '3.4'
+
+services:
+  weatherwebapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports: 
+      - "80"
+      - "5000:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 ```
 ---
 ### **SQL Server Management Studio**
