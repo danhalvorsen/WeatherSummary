@@ -17,6 +17,8 @@ namespace Tests.Yr
         {
             // Yr at this point in time changes some of it's data after 3 days. e.g; 17th(date today) - 19th is the same => changes on the 20th.
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
              .ForPath(dest => dest.Date, opt => opt         // date
@@ -85,6 +87,8 @@ namespace Tests.Yr
                         .data.next_1_hours.details.probability_of_thunder))
               .AfterMap((s, d) => d.Source.DataProvider = "Yr") // Adding the datasource name to weatherforceastdto
              );
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             return config;
         }

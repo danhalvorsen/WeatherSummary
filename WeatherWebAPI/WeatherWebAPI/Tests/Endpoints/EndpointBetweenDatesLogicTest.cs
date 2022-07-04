@@ -50,7 +50,7 @@ namespace Tests.Endpoints
             _weatherAdded = 0;
             _weatherUpdated = 0;
 
-            _factory = new StrategyBuilderFactory(null);
+            _factory = new StrategyBuilderFactory(null!);
             _weatherDataStrategies = new();
 
             _weatherDataStrategies.Add(new FakeYrStrategy());
@@ -130,13 +130,13 @@ namespace Tests.Endpoints
                     _weatherDatabase++;
             }
 
-            if (_weatherAdded + _weatherUpdated == datesQuery.Count * _weatherDataStrategies.Count)
+            if (_weatherAdded + _weatherUpdated == datesQuery.Count * _weatherDataStrategies?.Count)
                 result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count);
         }
@@ -221,7 +221,7 @@ namespace Tests.Endpoints
                 result = _weatherDatabase;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherDatabase);
         }
@@ -299,13 +299,13 @@ namespace Tests.Endpoints
             }
 
 
-            if (_weatherAdded + (_weatherDatabase * _weatherDataStrategies.Count) == datesQuery.Count * _weatherDataStrategies.Count())
+            if (_weatherAdded + (_weatherDatabase * _weatherDataStrategies?.Count) == datesQuery.Count * _weatherDataStrategies?.Count())
                 result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count);
         }
@@ -390,7 +390,7 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count());
         }
