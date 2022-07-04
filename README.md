@@ -88,7 +88,6 @@ volumes:
     external: true
     
 ```
-
 #### **docker-compose.override.yml**
 ***Remember*** to set the port for your swagger API in the override file. If you set this in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
 ```yml
