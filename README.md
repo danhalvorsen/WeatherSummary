@@ -55,7 +55,7 @@ docker network create YourNetWorkName
 }
 ```
 #### **docker-compose.yml**
-```csharp
+```yml
 version: '3.4'
 
 services:
