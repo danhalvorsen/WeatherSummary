@@ -28,7 +28,7 @@ namespace Tests.Fakes
 
         public Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            return Task.FromResult(CreateTestData(city.Name, queryDate));
+            return Task.FromResult(CreateTestData(city.Name!, queryDate));
         }
 
         private static WeatherForecastDto CreateTestData(string cityName, DateTime date)

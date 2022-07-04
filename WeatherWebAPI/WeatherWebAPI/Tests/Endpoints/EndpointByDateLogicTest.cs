@@ -47,7 +47,7 @@ namespace Tests.Endpoints
             _weatherAdded = 0;
             _weatherUpdated = 0;
 
-            _factory = new StrategyBuilderFactory(null);
+            _factory = new StrategyBuilderFactory(null!);
             _weatherDataStrategies = new();
 
             _weatherDataStrategies.Add(new FakeYrStrategy());

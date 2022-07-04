@@ -9,7 +9,7 @@ namespace Tests.OpenWeather
 {
     public class OpenWeatherCityDataMapperTest // Not getting used because of GetSteamAsync.
     {
-        private MapperConfiguration _config;
+        private MapperConfiguration ?_config;
 
         private MapperConfiguration CreateConfigForFetchingCityCoordinates()
         {
@@ -18,10 +18,10 @@ namespace Tests.OpenWeather
             config = new MapperConfiguration(
 
             cfg => cfg.CreateMap<ApplicationOpenWeather, CityDto>()
-            .ForPath(dest => dest.Name, opt => opt.MapFrom(src => src.city.name)) // name
-            .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.city.lon))
-            .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.city.lat))
-            .ForPath(dest => dest.Country, opt => opt.MapFrom(src => src.city.country)));
+            .ForPath(dest => dest.Name, opt => opt.MapFrom(src => src.city!.name)) // name
+            .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.city!.lon))
+            .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.city!.lat))
+            .ForPath(dest => dest.Country, opt => opt.MapFrom(src => src.city!.country)));
             return config;
         }
 
