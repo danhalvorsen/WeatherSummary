@@ -8,19 +8,19 @@ services:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
     networks: 
-            - default   
+        - default
   db:
     container_name: SqlServer
     image: mcr.microsoft.com/mssql/server 
     ports:
-      - 1433:1433
+        - 1433:1433
     volumes:
-      - Sql-server-storage:/var/opt/mssql
+        - Sql-server-storage:/var/opt/mssql
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=123456a@
-    networks: 
-            - default
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=123456a@
+    networks:
+        - default
 networks:
   default:
     external:
