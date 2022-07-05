@@ -13,10 +13,10 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(int week, CityQuery query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string? cityName = query.City;
-            DateTime monday = FirstDateOfWeekISO8601(DateTime.UtcNow.Year, week);
+            string? cityName = query.CityQuery?.City;
+            DateTime monday = FirstDateOfWeekISO8601(DateTime.UtcNow.Year, query.Week);
             DateTime sunday = monday.AddDays(6);
 
 
@@ -76,10 +76,10 @@ namespace WeatherWebAPI.DAL
                 Console.WriteLine(e.Message);
             }
 
-            return GetWeatherForecastFromDatabase(week, query);
+            return GetWeatherForecastFromDatabase(query);
         }
 
-        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(int week, CityQuery query)
+        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(WeekQueryAndCity query)
         {
             string queryString = $"SET DATEFIRST 1 " +
                                   $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
@@ -87,7 +87,7 @@ namespace WeatherWebAPI.DAL
                                             $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                                 $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE DATEPART(week, [Date]) = {week + 1} AND City.Name = '{query.City}'"; // Should we change this to match the betweenDates query?. Since we're basically doing the same in both.
+                                                        $"WHERE DATEPART(week, [Date]) = {query.Week} AND City.Name = '{query.CityQuery?.City}'";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 

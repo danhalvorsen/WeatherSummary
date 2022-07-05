@@ -9,7 +9,7 @@ using Tests.Fakes;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 
-namespace Tests.Endpoints
+namespace Tests.Endpoints.Logic
 {
     public class EndpointBetweenDatesLogicTest
     {
@@ -299,7 +299,7 @@ namespace Tests.Endpoints
             }
 
 
-            if (_weatherAdded + (_weatherDatabase * _weatherDataStrategies?.Count) == datesQuery.Count * _weatherDataStrategies?.Count())
+            if (_weatherAdded + _weatherDatabase * _weatherDataStrategies?.Count == datesQuery.Count * _weatherDataStrategies?.Count())
                 result = datesQuery.Count;
             else
                 result = -1;

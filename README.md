@@ -60,6 +60,7 @@ version: '3.4'
 
 services:
   weatherwebapi:
+    container_name: WeatherWebAPI
     image: ${DOCKER_REGISTRY-}weatherwebapi
     build:
       context: .

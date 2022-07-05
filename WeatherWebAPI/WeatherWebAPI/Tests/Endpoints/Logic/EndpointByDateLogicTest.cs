@@ -9,7 +9,7 @@ using Tests.Fakes;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 
-namespace Tests.Endpoints
+namespace Tests.Endpoints.Logic
 {
     public class EndpointByDateLogicTest
     {
@@ -17,7 +17,6 @@ namespace Tests.Endpoints
         private DateTime _date;
         private List<CityDto>? _cities;
         private List<WeatherForecastDto>? _dates;
-        private IFactory? _factory;
         private int _weatherAdded;
         private int _weatherUpdated;
         private int _weatherDatabase;
@@ -46,12 +45,11 @@ namespace Tests.Endpoints
             _weatherDatabase = 0;
             _weatherAdded = 0;
             _weatherUpdated = 0;
-
-            _factory = new StrategyBuilderFactory(null!);
-            _weatherDataStrategies = new();
-
-            _weatherDataStrategies.Add(new FakeYrStrategy());
-            _weatherDataStrategies.Add(new FakeOpenWeatherStrategy());
+            _weatherDataStrategies = new()
+            {
+                new FakeYrStrategy(),
+                new FakeOpenWeatherStrategy()
+            };
         }
 
         [Test]
@@ -86,7 +84,7 @@ namespace Tests.Endpoints
                     //_dates = GetDatesForCity(city.Name, strategy);
 
                     if (GetWeatherDataBy(_date))
-                    { 
+                    {
                         var weatherData = strategy.GetWeatherDataFrom(city, _date).Result;
 
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
@@ -185,7 +183,7 @@ namespace Tests.Endpoints
                         Console.WriteLine($"{weatherData.Date} -> {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                     }
-                    
+
                     //if (_dates.ToList().Any(d => d.Date.Date.Equals(_date.Date)))
                     //    _weatherDatabase++;
                 }
@@ -219,10 +217,6 @@ namespace Tests.Endpoints
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
             _cityName = textInfo.ToTitleCase(_cityName);
-
-            // Act
-            var result = 0;
-
             if (!CityExists(_cityName))
             {
                 //await(new CreateCityCommand(config, factory).InsertCityIntoDatabase(cityName));
@@ -241,7 +235,7 @@ namespace Tests.Endpoints
                 {
                     if (GetWeatherDataBy(_date))
                     {
-                        
+
                         var weatherData = strategy.GetWeatherDataFrom(city, _date).Result;
 
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
@@ -267,6 +261,9 @@ namespace Tests.Endpoints
                 }
             }
 
+
+            // Act
+            int result;
             if (_weatherUpdated > 0)
                 result = _weatherUpdated;
             else

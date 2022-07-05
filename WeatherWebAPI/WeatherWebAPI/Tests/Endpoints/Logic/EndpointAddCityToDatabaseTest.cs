@@ -9,7 +9,7 @@ using Tests.Fakes;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 
-namespace Tests.Endpoints
+namespace Tests.Endpoints.Logic
 {
     public class EndpointAddCityToDatabaseTest
     {
