@@ -6,6 +6,8 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
+
+
     public class GetWeatherForecastByDateCommand : BaseGetWeatherForecastCommands
     {
         public GetWeatherForecastByDateCommand(IConfiguration config, IFactory factory) : base(config, factory)
@@ -15,7 +17,8 @@ namespace WeatherWebAPI.DAL
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string? cityName = query?.CityQuery?.City;
+            string? citySearchedFor = query?.CityQuery?.City;
+            string? cityName = "";
             DateTime date = query!.DateQuery!.Date.ToUniversalTime();
 
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
@@ -28,20 +31,31 @@ namespace WeatherWebAPI.DAL
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-                cityName = textInfo.ToTitleCase(cityName!);
+                citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
                 // Checking if the city is in our database, if not it's getting added.
-                if (!CityExists(cityName))
+                if (!CityExists(citySearchedFor!))
                 {
-                    await GetCityAndAddToDatabase(cityName);
-                    _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
-                    //cityName = _citiesDatabase.Last().Name; <- Tror dette fikser navn skrevet inn på flere språk.
-                    // Fikser kun ved adding første gang. Trengs nok api for translation..?
+                    var cityData = await GetCityData(citySearchedFor);
+                    cityName = cityData[0].Name;
+
+                    if(cityName != "")
+                    {
+                        if (!CityExists(cityName!))
+                        {
+                            await AddCityToDatabase(cityData);
+                            _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                        }
+                    }
+                }
+                else
+                {
+                    cityName = citySearchedFor;
                 }
 
                 if (date >= DateTime.UtcNow.Date)
                 {
-                    var city = GetCityDtoBy(cityName);
+                    var city = GetCityDtoBy(cityName!);
 
                     foreach (var weatherStrategy in weatherDataStrategies)
                     {
@@ -56,7 +70,7 @@ namespace WeatherWebAPI.DAL
                             await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
                         }
                     }
-                } 
+                }
             }
             catch (Exception e)
             {

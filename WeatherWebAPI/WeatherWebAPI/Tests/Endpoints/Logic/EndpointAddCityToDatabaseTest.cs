@@ -37,67 +37,37 @@ namespace Tests.Endpoints.Logic
             // Arrange
             _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
             var cityInput = "Bergen";
+            var cityName = "";
 
             // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
             TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            string cityName = textInfo.ToTitleCase(cityInput);
-
-            // Act
-            var result = 0;
-
-
-            if (!CityExists(cityName))
-            {
-                //await GetCityAndAddToDatabase(cityName);
-                //_citiesDatabase = await getCitiesQuery.GetAllCities();
-
-                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
-                var cityinfo = strategy.GetCityDataFor(cityName).Result;
-
-                FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
-                var city = await addCityToDatabaseStrategy.Add(cityinfo);
-
-                _cities!.Add(city);
-            }
-
-            if (_cities!.Count > 2)
-                result = 0;
-            else
-                result = -1;
-
-            Console.WriteLine($"{_cities[2].Name} added to database.");
-            Console.WriteLine($"\nGetting weather forecast for {_cities[2].Name} from database.");
-
-            result.Should().Be(0);
-        }
-
-        [Test]
-        public async Task AddCityToDatabaseEndpointTest_CityInDatabaseAsync()
-        {
-            // Arrange
-            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
-            var cityInput = "Stavanger";
-
-            // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
-            TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-            string cityName = textInfo.ToTitleCase(cityInput);
+            cityInput = textInfo.ToTitleCase(cityInput);
 
             // Act
             var result = "";
 
-
-            if (!CityExists(cityName))
+            if (!CityExists(cityInput!))
             {
-                //await GetCityAndAddToDatabase(cityName);
-                //_citiesDatabase = await getCitiesQuery.GetAllCities();
-
                 IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
-                var cityinfo = strategy.GetCityDataFor(cityName).Result;
+                var cityInfo = strategy.GetCityDataFor(cityInput).Result;
 
-                FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
-                var city = await addCityToDatabaseStrategy.Add(cityinfo);
+                cityInfo[0].Name = "Bergen";
+                cityName = cityInfo[0].Name;
 
-                _cities!.Add(city);
+                if (cityName != "")
+                {
+                    if (!CityExists(cityName!))
+                    {
+                        FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
+                        var city = await addCityToDatabaseStrategy.Add(cityInfo);
+
+                        _cities!.Add(city);
+                    }
+                }
+            }
+            else
+            {
+                cityName = cityInput;
             }
 
             if (_cities!.Count == 2)
@@ -107,7 +77,170 @@ namespace Tests.Endpoints.Logic
 
             Console.WriteLine(result);
 
+            foreach (var city in _cities)
+            {
+                Console.WriteLine(city.Name);
+            }
+
+            result.Should().Be($"City {cityName} not in database");
+        }
+
+        [Test]
+        public async Task AddCityToDatabaseEndpointTest_CityInDatabaseAsync()
+        {
+            // Arrange
+            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            var cityInput = "Stavanger";
+            var cityName = "";
+
+            // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
+            TextInfo textInfo = new CultureInfo("no", true).TextInfo;
+            cityInput = textInfo.ToTitleCase(cityInput);
+
+            // Act
+            var result = "";
+
+            if (!CityExists(cityInput!))
+            {
+                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                var cityInfo = strategy.GetCityDataFor(cityInput).Result;
+
+                cityInfo[0].Name = "Stavanger";
+                cityName = cityInfo[0].Name;
+
+                if (cityName != "")
+                {
+                    if (!CityExists(cityName!))
+                    {
+                        FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
+                        var city = await addCityToDatabaseStrategy.Add(cityInfo);
+
+                        _cities!.Add(city);
+                    }
+                }
+            }
+            else
+            {
+                cityName = cityInput;
+            }
+
+            if (_cities!.Count == 2)
+                result = $"City {cityName} in database";
+            else
+                result = $"City {cityName} not in database"; ;
+
+            Console.WriteLine(result);
+
+            foreach (var city in _cities)
+            {
+                Console.WriteLine(city.Name);
+            }
+
             result.Should().Be($"City {cityName} in database");
+        }
+
+        [Test]
+        public async Task AddCityToDatabaseEndpointTest_CityNameNotInEnglish()
+        {
+            // Arrange
+            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            var cityInput = "Stafangur";
+            var cityName = "";
+
+            // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
+            TextInfo textInfo = new CultureInfo("no", true).TextInfo;
+            cityInput = textInfo.ToTitleCase(cityInput);
+
+            // Act
+            var result = "";
+
+            if (!CityExists(cityInput!))
+            {
+                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                var cityInfo = strategy.GetCityDataFor(cityInput).Result;
+                cityInfo[0].Name = "Stavanger";
+                cityName = cityInfo[0].Name;
+
+                if (cityName != "")
+                {
+                    if (!CityExists(cityName!))
+                    {
+                        FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
+                        var city = await addCityToDatabaseStrategy.Add(cityInfo);
+
+                        _cities!.Add(city);
+                    }
+                }
+            }
+            else
+            {
+                cityName = cityInput;
+            }
+
+            if (_cities!.Count == 2)
+                result = $"City {cityName} in database";
+            else
+                result = $"City {cityName} not in database"; ;
+
+            Console.WriteLine(result);
+
+            foreach (var city in _cities)
+            {
+                Console.WriteLine(city.Name);
+            }
+
+            result.Should().Be($"City {cityName} in database");
+        }
+
+        [Test]
+        public async Task AddCityToDatabaseEndpointTest_CityNameNotValid()
+        {
+            // Arrange
+            _date = DateTime.UtcNow; // The check is for DateTime.Now < Date.Date, this will give the same outcome as if the date were from back in time.
+            var cityInput = "asdf";
+            var cityName = "";
+
+            // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
+            TextInfo textInfo = new CultureInfo("no", true).TextInfo;
+            cityInput = textInfo.ToTitleCase(cityInput);
+
+            // Act
+            var result = "";
+
+            if (!CityExists(cityInput!))
+            {
+                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                var cityInfo = strategy.GetCityDataFor(cityInput).Result;
+                cityInfo[0].Name = "";
+                cityName = cityInfo[0].Name;
+
+                if (cityName != "")
+                {
+                    if (!CityExists(cityName!))
+                    {
+                        FakeAddCityToDatabaseStrategy addCityToDatabaseStrategy = new FakeAddCityToDatabaseStrategy();
+                        var city = await addCityToDatabaseStrategy.Add(cityInfo);
+
+                        _cities!.Add(city);
+                    }
+                }
+            }
+            else
+            {
+                cityName = cityInput;
+            }
+
+            if (result == "")
+                result = $"Invalid city {cityInput}. Response: {cityName}";
+
+            Console.WriteLine(result);
+
+            foreach (var city in _cities!)
+            {
+                Console.WriteLine(city.Name);
+            }
+
+            result.Should().Be($"Invalid city {cityInput}. Response: {cityName}");
         }
 
         private bool CityExists(string cityName)

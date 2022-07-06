@@ -15,7 +15,8 @@ namespace WeatherWebAPI.DAL
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string? cityName = betweenDateQueryAndCity?.CityQuery?.City;
+            string? citySearchedFor = betweenDateQueryAndCity?.CityQuery?.City;
+            string? cityName = "";
             DateTime fromDate = betweenDateQueryAndCity!.BetweenDateQuery!.From.ToUniversalTime();
             DateTime toDate = betweenDateQueryAndCity!.BetweenDateQuery.To!.ToUniversalTime();
 
@@ -29,7 +30,7 @@ namespace WeatherWebAPI.DAL
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
-                cityName = textInfo.ToTitleCase(cityName!);
+                citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
                 // Getting the all the dates between the from and to datequeries
                 foreach (DateTime day in EachDay(fromDate, toDate))
@@ -37,13 +38,26 @@ namespace WeatherWebAPI.DAL
                     datesQuery.Add(day);
                 }
 
-                if (!CityExists(cityName))
+                if (!CityExists(citySearchedFor!))
                 {
-                    await GetCityAndAddToDatabase(cityName);
-                    _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                    var cityData = await GetCityData(citySearchedFor);
+                    cityName = cityData[0].Name;
+
+                    if (cityName != "")
+                    {
+                        if (!CityExists(cityName!))
+                        {
+                            await AddCityToDatabase(cityData);
+                            _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                        }
+                    }
+                }
+                else
+                {
+                    cityName = citySearchedFor;
                 }
 
-                var city = GetCityDtoBy(cityName);
+                var city = GetCityDtoBy(cityName!);
 
                 foreach (DateTime date in datesQuery)
                 {
