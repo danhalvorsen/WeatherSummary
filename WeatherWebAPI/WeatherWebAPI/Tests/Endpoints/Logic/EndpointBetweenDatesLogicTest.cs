@@ -116,7 +116,7 @@ namespace Tests.Endpoints.Logic
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -201,7 +201,7 @@ namespace Tests.Endpoints.Logic
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -285,7 +285,7 @@ namespace Tests.Endpoints.Logic
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -370,7 +370,7 @@ namespace Tests.Endpoints.Logic
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)

@@ -19,12 +19,17 @@ namespace WeatherWebAPI.DAL
             this._factory = factory;
         }
 
-        protected async Task GetCityAndAddToDatabase(string? cityName)
+        protected async Task<List<CityDto>> GetCityData(string? citySearchedFor)
         {
             IGetCityDataStrategy<CityDto> strategy = _factory.Build<IOpenWeatherStrategy>();
-            var city = await strategy.GetCityDataFor(cityName!);
+            var city = await strategy.GetCityDataFor(citySearchedFor!);
             GetCountryFromAbbreviation(city);
+            
+            return city;
+        }
 
+        protected async Task AddCityToDatabase(List<CityDto> city)
+        {
             IAddCityToDatabaseStrategy addCityToDatabaseStrategy = _factory.Build<IAddCityToDatabaseStrategy>();
             await addCityToDatabaseStrategy.Add(city);
         }
@@ -73,7 +78,7 @@ namespace WeatherWebAPI.DAL
 
         protected static DateTime FirstDateOfWeekISO8601(int year, int weekOfYear)
         {
-            DateTime jan1 = new DateTime(year, 1, 1);
+            DateTime jan1 = new(year, 1, 1);
             int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
             // Use first Thursday in January to get first week of the year as
@@ -85,7 +90,7 @@ namespace WeatherWebAPI.DAL
             var weekNum = weekOfYear;
             // As we're adding days to a date in Week 1,
             // we need to subtract 1 in order to get the right date for week #1
-            if (firstWeek == 1)
+            if (firstWeek == 1 || firstWeek == 52)
             {
                 weekNum -= 1;
             }

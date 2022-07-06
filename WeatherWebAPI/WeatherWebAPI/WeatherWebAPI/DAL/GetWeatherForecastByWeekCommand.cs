@@ -15,7 +15,8 @@ namespace WeatherWebAPI.DAL
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string? cityName = query.CityQuery?.City;
+            string? citySearchedFor = query.CityQuery?.City;
+            string? cityName = "";
             DateTime monday = FirstDateOfWeekISO8601(DateTime.UtcNow.Year, query.Week);
             DateTime sunday = monday.AddDays(6);
 
@@ -31,7 +32,7 @@ namespace WeatherWebAPI.DAL
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-                cityName = textInfo.ToTitleCase(cityName!);
+                citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
                 // Getting the all the dates between the from and to datequeries
                 foreach (DateTime day in EachDay(monday, sunday))
@@ -39,16 +40,26 @@ namespace WeatherWebAPI.DAL
                     datesInWeek.Add(day);
                 }
 
-                // Checking if the city is in our database, if not it's getting added.
-                if (!CityExists(cityName))
+                if (!CityExists(citySearchedFor!))
                 {
-                    await GetCityAndAddToDatabase(cityName);
-                    _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
-                    //cityName = _citiesDatabase.Last().Name; <- Tror dette fikser navn skrevet inn på flere språk.
-                    // Fikser kun ved adding første gang. Trengs nok api for translation..?
+                    var cityData = await GetCityData(citySearchedFor);
+                    cityName = cityData[0].Name;
+
+                    if (cityName != "")
+                    {
+                        if (!CityExists(cityName!))
+                        {
+                            await AddCityToDatabase(cityData);
+                            _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                        }
+                    }
+                }
+                else
+                {
+                    cityName = citySearchedFor;
                 }
 
-                var city = GetCityDtoBy(cityName);
+                var city = GetCityDtoBy(cityName!);
 
                 foreach (DateTime date in datesInWeek)
                 {
@@ -76,10 +87,10 @@ namespace WeatherWebAPI.DAL
                 Console.WriteLine(e.Message);
             }
 
-            return GetWeatherForecastFromDatabase(query);
+            return GetWeatherForecastFromDatabase(query, cityName);
         }
 
-        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(WeekQueryAndCity query)
+        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(WeekQueryAndCity query, string? cityName)
         {
             string queryString = $"SET DATEFIRST 1 " +
                                   $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
@@ -87,7 +98,7 @@ namespace WeatherWebAPI.DAL
                                             $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                                 $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                     $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                        $"WHERE DATEPART(week, [Date]) = {query.Week} AND City.Name = '{query.CityQuery?.City}'";
+                                                        $"WHERE DATEPART(week, [Date]) = {query.Week} AND City.Name = '{cityName}'";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 

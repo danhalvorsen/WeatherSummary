@@ -42,7 +42,6 @@ namespace WeatherWebAPI.Query
         public CityQueryValidator()
         {
             //RuleFor(p => p.City).NotNull().WithMessage("{PropertyName} can't be null");
-
             RuleFor(p => p.City).NotEmpty().WithMessage("{PropertyName} can't be empty, null or whitespace");
         }
     }
@@ -67,7 +66,6 @@ namespace WeatherWebAPI.Query
         public BetweenDateQueryAndCityValidator()
         {
             RuleFor(p => p.CityQuery).SetValidator(new CityQueryValidator()!);
-
             RuleFor(p => p.BetweenDateQuery).SetValidator(new BetweenDateQueryValidator()!);
         }
     }
