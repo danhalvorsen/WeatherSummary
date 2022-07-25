@@ -33,4 +33,11 @@ namespace WeatherWebAPI.Query
         public BetweenDateQuery? BetweenDateQuery { get; set; }
         public CityQuery? CityQuery { get; set; }
     }
+
+    public class WeekQueryAndCity
+    {
+        [Required]
+        public int Week { get; set; }
+        public CityQuery? CityQuery { get; set; }
+    }
 }

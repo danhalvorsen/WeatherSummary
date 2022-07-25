@@ -17,6 +17,8 @@ namespace Tests.OpenWeather
         private MapperConfiguration? _config;
         private MapperConfiguration CreateConfig(DateTime queryDate)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
             var config = new MapperConfiguration(
 
                     cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
@@ -61,6 +63,8 @@ namespace Tests.OpenWeather
                   .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
                   .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
                  );
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             return config;
         }
 

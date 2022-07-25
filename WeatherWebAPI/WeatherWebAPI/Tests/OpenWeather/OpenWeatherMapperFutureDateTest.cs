@@ -20,6 +20,8 @@ namespace Tests.OpenWeather
             //queryDate = queryDate.Date + new TimeSpan(11, 0, 0);
             // Daily has datetime set to 11:00 GMT and 13:00 Localtime <- add this to the strategy config.
 
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var config = new MapperConfiguration(
 
                     cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
@@ -69,6 +71,8 @@ namespace Tests.OpenWeather
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))).clouds))
                   .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
                  );
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
             return config;
         }
 

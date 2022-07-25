@@ -28,6 +28,6 @@ After that you should be able to run
 
      docker-compose up -d --build
 
-from the root project folder and if everything builds fine, your api should be available at `https://localhost:5060/swagger`
+from the root project folder and if everything builds fine, your api should be available at `https://localhost:5000/swagger`
 
 **!! There are more docker-compose examples under the deployments folder !!**

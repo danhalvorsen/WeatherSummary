@@ -9,7 +9,7 @@ using Tests.Fakes;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 
-namespace Tests.Endpoints
+namespace Tests.Endpoints.Logic
 {
     public class EndpointBetweenDatesLogicTest
     {
@@ -50,7 +50,7 @@ namespace Tests.Endpoints
             _weatherAdded = 0;
             _weatherUpdated = 0;
 
-            _factory = new StrategyBuilderFactory(null);
+            _factory = new StrategyBuilderFactory(null!);
             _weatherDataStrategies = new();
 
             _weatherDataStrategies.Add(new FakeYrStrategy());
@@ -116,7 +116,7 @@ namespace Tests.Endpoints
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -130,13 +130,13 @@ namespace Tests.Endpoints
                     _weatherDatabase++;
             }
 
-            if (_weatherAdded + _weatherUpdated == datesQuery.Count * _weatherDataStrategies.Count)
+            if (_weatherAdded + _weatherUpdated == datesQuery.Count * _weatherDataStrategies?.Count)
                 result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count);
         }
@@ -201,7 +201,7 @@ namespace Tests.Endpoints
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -221,7 +221,7 @@ namespace Tests.Endpoints
                 result = _weatherDatabase;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(_weatherDatabase);
         }
@@ -285,7 +285,7 @@ namespace Tests.Endpoints
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -299,13 +299,13 @@ namespace Tests.Endpoints
             }
 
 
-            if (_weatherAdded + (_weatherDatabase * _weatherDataStrategies.Count) == datesQuery.Count * _weatherDataStrategies.Count())
+            if (_weatherAdded + _weatherDatabase * _weatherDataStrategies?.Count == datesQuery.Count * _weatherDataStrategies?.Count())
                 result = datesQuery.Count;
             else
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count);
         }
@@ -370,7 +370,7 @@ namespace Tests.Endpoints
                             var weatherData = strategy.GetWeatherDataFrom(city, date).Result;
 
                             var fakeUpdateWeatherDataToDatabaseStrategy = new FakeUpdateWeatherToDatabaseStrategy();
-                            var fakeUpdateWeather = await fakeUpdateWeatherDataToDatabaseStrategy.Update(weatherData, city, date);
+                            var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, date);
 
 
                             // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
@@ -390,7 +390,7 @@ namespace Tests.Endpoints
                 result = -1;
 
             Console.WriteLine($"\nAdded {_weatherAdded} and updated {_weatherUpdated} forecasts. Now fetching forecasts from database. " +
-                $"\n{_weatherDatabase * _weatherDataStrategies.Count}/{datesQuery.Count * _weatherDataStrategies.Count} forecasts in database that were asked for.");
+                $"\n{_weatherDatabase * _weatherDataStrategies?.Count}/{datesQuery.Count * _weatherDataStrategies?.Count} forecasts in database that were asked for.");
 
             result.Should().Be(datesQuery.Count());
         }
