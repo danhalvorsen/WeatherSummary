@@ -24,7 +24,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
-            //var httpClient = _yrConfig.HttpClientFactory.CreateClient("Yr");
+            //var httpClient = _httpClientFactory.CreateClient("Yr");
             var response = await httpClient.GetAsync($"locationforecast/2.0/complete?lat={city.Latitude}&lon={city.Longitude}");
 
             if (response.IsSuccessStatusCode)

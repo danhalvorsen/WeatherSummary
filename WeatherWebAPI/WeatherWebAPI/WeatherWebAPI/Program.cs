@@ -3,6 +3,7 @@ using Microsoft.Net.Http.Headers;
 using System.Reflection;
 using WeatherWebAPI;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Query;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 //builder.Services.AddTransient( typeof(IFactory), typeof(StrategyBuilderFactory) );
 builder.Services.AddConfig(builder.Configuration);
-builder.Services.AddHostedService<MyBackgroundService>();
+//builder.Services.AddHostedService<MyBackgroundService>();
 builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient("OpenWeather", httpClient =>
+builder.Services.AddHttpClient<OpenWeatherStrategy>(httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://api.openweathermap.org/");
 
