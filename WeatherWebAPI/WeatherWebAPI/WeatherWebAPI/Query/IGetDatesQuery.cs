@@ -3,7 +3,7 @@ using WeatherWebAPI.Factory;
 
 namespace WeatherWebAPI.Query
 {
-    public interface IGetDatesQuery
+    public interface IGetDatesForCityQuery
     {
         Task<List<WeatherForecastDto>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecastDto> strategy);
     }

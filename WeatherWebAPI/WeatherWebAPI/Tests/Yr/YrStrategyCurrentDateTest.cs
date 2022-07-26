@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
@@ -10,7 +11,9 @@ namespace Tests.Yr
 {
     public class YrStrategyCurrentDateTest
     {
-        private CityDto _city = new CityDto
+        private DateTime _date;
+        private IGetWeatherDataStrategy<WeatherForecastDto>? _strategy;
+        private readonly CityDto _city = new()
         {
             Name = "Stavanger",
             Country = "Norway",
@@ -19,10 +22,12 @@ namespace Tests.Yr
             Longitude = 5.712611357275702,
         };
 
-        private IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new YrStrategy(new YrConfig());
-        //private double _latitude = 59.1020129; // Coordinates from OpenWeather for Stavanger
-        //private double _longitude = 5.712611357275702;
-        private DateTime _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+        [SetUp]
+        public void Setup()
+        {
+            _strategy = new YrStrategy(new YrConfig());
+            _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+        }
 
         [Test]
         public async Task ShouldGetDate()

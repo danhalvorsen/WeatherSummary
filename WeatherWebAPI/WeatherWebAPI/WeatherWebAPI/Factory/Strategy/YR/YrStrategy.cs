@@ -10,9 +10,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 
         public YrStrategy(YrConfig config)
         {
-
             _yrConfig = config;
-
         }
 
         public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
@@ -26,12 +24,8 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
 
-            var response = await httpClient.GetAsync($"complete?lat={city.Latitude}&lon={city.Longitude}");
-            //var response = await httpClient.GetAsync(strategy.MakeUriWeatherCall(lat, lon));
-            //var response = await httpClient.SendAsync(new HttpRequestMessage
-            //{
-            //    Method = HttpMethod.Get
-            //});
+            //var httpClient = _yrConfig.HttpClientFactory.CreateClient("Yr");
+            var response = await httpClient.GetAsync($"locationforecast/2.0/complete?lat={city.Latitude}&lon={city.Longitude}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -39,8 +33,6 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 // Mapper
-                //TimeSpan ts = new(queryDate.Hour + 1, 0, 0); // Setting the query date to get the closest weatherforecast from when the call were made.
-                //queryDate = queryDate.Date + ts;
                 _yrConfig.Get(queryDate);
 
 

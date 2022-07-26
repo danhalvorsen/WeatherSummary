@@ -5,25 +5,23 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class YrConfig : IHttpConfig
     {
+
         private MapperConfiguration _mapperConfig;
+        private readonly IHttpClientFactory _httpClientFactory;
         public string? DataSource { get; }
-        //public string? Uri { get; set; }
-        //public string? GeoUri { get; set; }
         public Uri? BaseUrl { get; }
-        //public Uri? BaseGeoUrl { get; }
         public Uri? HomePage { get; set; }
 
         public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
+        public IHttpClientFactory HttpClientFactory { get => _httpClientFactory; }
 
         public YrConfig()
         {
             DataSource = "Yr";
-            //Uri = "";
-            BaseUrl = new Uri("https://api.met.no/weatherapi/locationforecast/2.0/");
+            BaseUrl = new Uri("https://api.met.no/weatherapi/");
             HomePage = new Uri("https://www.yr.no/");
-            //BaseGeoUrl = null;
-            //GeoUri = "";
             _mapperConfig = MapperConfig;
+            _httpClientFactory = HttpClientFactory;
         }
 
         public MapperConfiguration Get(DateTime queryDate)
