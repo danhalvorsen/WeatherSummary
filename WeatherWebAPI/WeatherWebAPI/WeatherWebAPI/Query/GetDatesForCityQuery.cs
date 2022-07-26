@@ -4,7 +4,7 @@ using WeatherWebAPI.Factory;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetDatesForCityQuery : IGetDatesForCityQuery
+    public class GetDatesForCityQuery : IGetDatesQuery
     {
         private readonly IConfiguration config;
 
