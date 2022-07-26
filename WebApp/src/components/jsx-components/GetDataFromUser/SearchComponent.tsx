@@ -22,7 +22,7 @@ export default function SearchComponent() {
     const [todayDate , setTodayDate] = useState(date);
     const [betweenDates , setBetweenDates]= useState(['2022-06-10' , '2022-06-16']);
     const [isRequestForOneDay , setIsRequestForOneDay ]= useState(true);
-    const [flag , setFlag] = useState(false);
+    const [flag , setFlag] = useState(true);
 
 
     //date.toISOString()

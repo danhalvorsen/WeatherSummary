@@ -36,13 +36,16 @@ export const  SingleRequest: FC<Iprops> =  ({date , cityName})=>{
    
     return(
     <>
-      <div>City is: {cityName}</div>
-      <div>Date is: {date.toISOString()}</div>
+    <div className="container bg-light rounded-3">
+    <br/><br/>
+    <div>the city we are searching for is: <b>{cityName}</b> and the date is: <b>{date.toISOString()}</b> </div>
+      {/* <div>City is: {cityName}</div>
+      <div>Date is: {date.toISOString()}</div> */}
         
         {/* {component} */}
         <Table data={result} city={cityName}/>
 
-   
+        </div>
     </>
 )
 
