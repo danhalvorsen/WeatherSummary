@@ -31,7 +31,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         WeatherForecastDtos.Add(new WeatherForecastDto
                         {
                             City = reader["CityName"].ToString(),
-                            Date = Convert.ToDateTime(reader["Date"]),
+                            Date = Convert.ToDateTime(reader["Date"]).ToUniversalTime(),
                             WeatherType = reader["WeatherType"].ToString(),
                             Temperature = (float)Convert.ToDouble(reader["Temperature"]),
                             Windspeed = (float)Convert.ToDouble(reader["Windspeed"]),

@@ -11,7 +11,7 @@ namespace WeatherWebAPI
         private readonly IFactory _factory;
         private readonly IConfiguration _config;
         private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _weatherDataStrategies = new();
-        private const int HOUR_DELAY = 6;
+        private const int HOUR_DELAY = 24;
 
         public MyBackgroundService(IConfiguration config, IFactory factory)
         {

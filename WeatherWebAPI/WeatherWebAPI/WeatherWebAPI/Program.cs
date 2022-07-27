@@ -4,6 +4,7 @@ using System.Reflection;
 using WeatherWebAPI;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,24 +21,27 @@ builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembl
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient<OpenWeatherStrategy>(httpClient =>
-{
-    httpClient.BaseAddress = new Uri("https://api.openweathermap.org/");
+builder.Services.AddHttpClient<YrHttpClient>();
+builder.Services.AddHttpClient<OpenWeatherHttpClient>();
 
-    httpClient.DefaultRequestHeaders.Add(
-        HeaderNames.Accept, "application/json");
-    httpClient.DefaultRequestHeaders.Add(
-        HeaderNames.UserAgent, "Mozilla / 5.0(Windows 10, Win64; x64; rv: 100.0) Gecko / 20100101 FireFox / 100.0");
-});
-builder.Services.AddHttpClient("Yr", httpClient =>
-{
-    httpClient.BaseAddress = new Uri("https://api.met.no/weatherapi/");
+//builder.Services.AddHttpClient<OpenWeatherStrategy>(httpClient =>
+//{
+//    httpClient.BaseAddress = new Uri("https://api.openweathermap.org/");
 
-    httpClient.DefaultRequestHeaders.Add(
-        HeaderNames.Accept, "application/json");
-    httpClient.DefaultRequestHeaders.Add(
-        HeaderNames.UserAgent, "Mozilla / 5.0(Windows 10, Win64; x64; rv: 100.0) Gecko / 20100101 FireFox / 100.0");
-});
+//    httpClient.DefaultRequestHeaders.Add(
+//        HeaderNames.Accept, "application/json");
+//    httpClient.DefaultRequestHeaders.Add(
+//        HeaderNames.UserAgent, "Mozilla / 5.0(Windows 10, Win64; x64; rv: 100.0) Gecko / 20100101 FireFox / 100.0");
+//});
+//builder.Services.AddHttpClient("Yr", httpClient =>
+//{
+//    httpClient.BaseAddress = new Uri("https://api.met.no/weatherapi/");
+
+//    httpClient.DefaultRequestHeaders.Add(
+//        HeaderNames.Accept, "application/json");
+//    httpClient.DefaultRequestHeaders.Add(
+//        HeaderNames.UserAgent, "Mozilla / 5.0(Windows 10, Win64; x64; rv: 100.0) Gecko / 20100101 FireFox / 100.0");
+//});
 
 var app = builder.Build();
 

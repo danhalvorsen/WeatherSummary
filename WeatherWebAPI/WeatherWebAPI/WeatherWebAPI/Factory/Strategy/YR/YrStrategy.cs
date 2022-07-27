@@ -7,11 +7,15 @@ namespace WeatherWebAPI.Factory.Strategy.YR
     public class YrStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IYrStrategy
     {
         private readonly YrConfig _yrConfig;
+        //private readonly YrHttpClient _httpClient;
 
-        public YrStrategy(YrConfig config)
+        public YrStrategy(YrConfig config/*, YrHttpClient httpClient*/)
         {
             _yrConfig = config;
+            //_httpClient = httpClient;
         }
+
+        public IEnumerable<YrHttpClient>? Response { get; set; }
 
         public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
