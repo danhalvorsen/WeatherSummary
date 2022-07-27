@@ -4,14 +4,31 @@ services:
   weatherwebapi:
     container_name: WeatherWebAPI
     image: ${DOCKER_REGISTRY-}weatherwebapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - 80:80
+      - 5000:443
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
     networks: 
         - default
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    #environment:
+    #    - ASPNETCORE_ENVIRONMENT=Development
+    #    - ASPNETCORE_URLS=https://+:443;http://+:80
+    #    - ASPNETCORE_Kestrel__Certificates__Default__Password=123456a@
+    #    - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/WeatherWebAPI.pfx
+    #volumes:
+    #    - ~\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https/WeatherWebAPI
   db:
     container_name: SqlServer
-    image: mcr.microsoft.com/mssql/server 
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
     ports:
         - 1433:1433
     volumes:

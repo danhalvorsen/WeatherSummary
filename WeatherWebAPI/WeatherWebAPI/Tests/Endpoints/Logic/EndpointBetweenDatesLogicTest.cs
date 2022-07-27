@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Tests.Fakes;
 using WeatherWebAPI.Controllers;
@@ -19,7 +20,6 @@ namespace Tests.Endpoints.Logic
         private int _weatherAdded;
         private int _weatherUpdated;
         private int _weatherDatabase;
-        private IFactory? _factory;
 
         private List<CityDto>? _cities;
         private List<WeatherForecastDto>? _dates;
@@ -50,7 +50,6 @@ namespace Tests.Endpoints.Logic
             _weatherAdded = 0;
             _weatherUpdated = 0;
 
-            _factory = new StrategyBuilderFactory(null!);
             _weatherDataStrategies = new();
 
             _weatherDataStrategies.Add(new FakeYrStrategy());

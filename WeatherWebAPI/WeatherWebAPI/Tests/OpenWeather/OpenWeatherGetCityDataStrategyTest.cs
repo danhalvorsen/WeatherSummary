@@ -12,8 +12,8 @@ namespace Tests.OpenWeather
     public class OpenWeatherGetCityDataStrategyTest
     {
         //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
-        private IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
-        private string _city = "Oslo";
+        private readonly IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+        private readonly string _city = "Oslo";
 
 
         [Test]

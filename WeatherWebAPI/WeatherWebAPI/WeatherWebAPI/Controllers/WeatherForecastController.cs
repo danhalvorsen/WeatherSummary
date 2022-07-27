@@ -72,7 +72,8 @@ public class WeatherforecastController : ControllerBase
     }
 
     [Route("api/weatherforecast/between/")]
-    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Between(BetweenDateQueryAndCity query)
     {
@@ -99,11 +100,4 @@ public class WeatherforecastController : ControllerBase
         
         return await command.GetWeatherForecastByWeek(query, _strategies);
     }
-
-    //[HttpPost("InsertWeatherData")]
-    //public ActionResult<WeatherForecastDto> Create(WeatherForecastDto addWeatherData)
-    //{
-    //    var command = new Commands(config);
-    //    return command.AddWeatherDataToDatabase(addWeatherData);
-    //}
 }
