@@ -18,13 +18,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    #environment:
-    #    - ASPNETCORE_ENVIRONMENT=Development
-    #    - ASPNETCORE_URLS=https://+:443;http://+:80
-    #    - ASPNETCORE_Kestrel__Certificates__Default__Password=123456a@
-    #    - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/WeatherWebAPI.pfx
-    #volumes:
-    #    - ~\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https/WeatherWebAPI
   db:
     container_name: SqlServer
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -35,7 +28,7 @@ services:
         - Sql-server-storage:/var/opt/mssql
     environment:
         - ACCEPT_EULA=Y
-        - SA_PASSWORD=123456a@
+        - SA_PASSWORD=SqlServerAdmin
     networks:
         - default
 networks:
