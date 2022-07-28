@@ -7,9 +7,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5000
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
     ports:
-      - 80:80
-      - 5000:443
+      - "80:80"
+      - "5000:443"
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
@@ -17,18 +20,21 @@ services:
         - default
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro #<- cant find file
+      #- ./docker.cert/https/:/root/.aspnet/https/ <- cant create container for service weatherapi: Duplicate mount point: /root/.aspnet/https
+      #- ./docker.cert/https/:/root/.aspnet/https:ro <- Doesnt add asdf.pfx to destination but the APPDATA/Roaming/ASP.NET/https/ certificates are both there..?
+      - ./docker.cert/https/:/https
   db:
     container_name: SqlServer
     image: mcr.microsoft.com/mssql/server:2019-latest
     user: root
     ports:
-        - 1433:1433
+        - "1433:1433"
     volumes:
         - Sql-server-storage:/var/opt/mssql
     environment:
         - ACCEPT_EULA=Y
-        - SA_PASSWORD=SqlServerAdmin
+        - SA_PASSWORD=SqlServerAdminPassword
     networks:
         - default
 networks:
