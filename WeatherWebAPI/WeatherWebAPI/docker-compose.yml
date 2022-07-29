@@ -13,10 +13,12 @@ services:
     ports:
       - "80:80"
       - "5000:443"
+
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
     networks: 
+
         - default
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
@@ -24,6 +26,7 @@ services:
       #- ./docker.cert/https/:/root/.aspnet/https/ <- cant create container for service weatherapi: Duplicate mount point: /root/.aspnet/https
       #- ./docker.cert/https/:/root/.aspnet/https:ro <- Doesnt add asdf.pfx to destination but the APPDATA/Roaming/ASP.NET/https/ certificates are both there..?
       - ./docker.cert/https/:/https
+
   db:
     container_name: SqlServer
     image: mcr.microsoft.com/mssql/server:2019-latest

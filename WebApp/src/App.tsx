@@ -5,6 +5,7 @@ import Navbar from './components/jsx-components/Navbar';
 import Showcase from './components/jsx-components/Showcase';
 import WeatherData from './components/jsx-components/WeatherData';
 import { MakeHttpRequest } from './components/jsx-components/httpRequests';
+import SearchComponent from './components/jsx-components/GetDataFromUser/SearchComponent';
 
 
 
@@ -21,8 +22,11 @@ function App() {
       <Navbar/>
       <Showcase/>
       <br/>
-      <SearchBar onSubmit = 'test' fn = {callback} />
-      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/>
+      <SearchComponent/>
+      <br/><br/>
+      {/* <a>--------------</a> */}
+      {/* <SearchBar onSubmit = 'test' fn = {callback} />
+      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/> */}
       </div>
   );
 }
