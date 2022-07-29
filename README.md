@@ -62,23 +62,33 @@ services:
   weatherwebapi:
     container_name: WeatherWebAPI
     image: ${DOCKER_REGISTRY-}weatherwebapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80:80"
+      - "5000:443"
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
     networks: 
-            - default   
+        - default
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   db:
     container_name: SqlServer
-    image: mcr.microsoft.com/mssql/server 
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
     ports:
-      - 1433:1433
+        - "1433:1433"
     volumes:
-      - Sql-server-storage:/var/opt/mssql
+        - Sql-server-storage:/var/opt/mssql
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=123456a@
-    networks: 
-            - default
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=SqlServerAdmin
+    networks:
+        - default
 networks:
   default:
     external:
@@ -87,10 +97,10 @@ networks:
 volumes:
   Sql-server-storage:
     external: true
-    
+
 ```
 #### **docker-compose.override.yml**
-***Remember*** to set the port for your swagger API in the override file. If you set this in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
+***Remember*** to set the port for your swagger API in the override file. If you set this only in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
 ```yml
 version: '3.4'
 
@@ -139,10 +149,10 @@ sequenceDiagram
 
 [Azure devops](/Backlog/AzDevOps.md)
 
-# API endpoint(s)
-> GET /api/weatherforecast/date?DateQuery.Date=[Date]&CityQuery.City=[cityName]
+## API endpoint(s)
+> GET /api/weatherforecast/date?DateQuery.Date={Date}&CityQuery.City={cityName}
 
-> GET /api/weatherforecast/between?BetweenDateQuery.From=[fromDate]&BetweenDateQuery.To=[toDate]&CityQuery.City=[cityName]
+> GET /api/weatherforecast/between?BetweenDateQuery.From={fromDate}&BetweenDateQuery.To={toDate}&CityQuery.City={cityName}
 
-> GET /api/weatherforecast/week?week=[weekNumber]&City=[cityName]
-
+> GET /api/weatherforecast/week?week={weekNumber}&City={cityName}
+ 

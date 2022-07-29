@@ -50,6 +50,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    Console.WriteLine("Environment (Swagger): OK");
 }
 
 app.UseHttpsRedirection();
@@ -73,6 +74,8 @@ public static class MyConfigServiceCollectionExtensions
             options.RegisterValidatorsFromAssemblyContaining<BetweenDateQueryAndCityValidator>();
             options.RegisterValidatorsFromAssemblyContaining<WeekQueryAndCity>();
         });
+
+        Console.WriteLine("Fluent Validation: OK");
 
         return services;
     }
