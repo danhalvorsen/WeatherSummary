@@ -6,24 +6,21 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
     public class OpenWeatherConfig : IHttpConfig
     {
         private MapperConfiguration _mapperConfig;
+        private IHttpClientFactory _httpClientFactory;
         public string? DataSource { get; }
-        //public string? Uri { get; set; }
-        //public string? GeoUri { get; set; }
         public Uri? BaseUrl { get; }
-        public Uri? BaseGeoUrl { get; }
         public Uri? HomePage { get; set; }
 
         public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
+        public IHttpClientFactory HttpClientFactory { get => _httpClientFactory; set => _httpClientFactory = value; }
 
         public OpenWeatherConfig()
         {
             DataSource = "OpenWeather";
-            //Uri = "";
-            BaseUrl = new Uri("http://api.openweathermap.org/data/2.5/");
+            BaseUrl = new Uri("https://api.openweathermap.org/");
             HomePage = new Uri("https://openweathermap.org/");
-            BaseGeoUrl = new Uri("http://api.openweathermap.org/geo/1.0/");
-            //GeoUri = "";
             _mapperConfig = MapperConfig;
+            _httpClientFactory = HttpClientFactory;
         }
 
         public MapperConfiguration Get(DateTime queryDate) // ADD DIFFERENT CFG FOR TODAY OR FUTURE??
