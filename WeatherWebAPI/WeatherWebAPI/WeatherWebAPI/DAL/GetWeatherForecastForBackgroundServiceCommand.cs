@@ -30,11 +30,11 @@ namespace WeatherWebAPI.DAL
                         {
                             _datesDatabase = await getDatesQuery.GetDatesForCity(city.Name!, weatherStrategy);
 
-                            if (UpdateWeatherDataBy(date))
+                            if (DateExistsInDatabase(date))
                             {
                                 await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
                             }
-                            if (GetWeatherDataBy(date))
+                            if (DateDoesNotExistInDatabase(date))
                             {
                                 await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
 
