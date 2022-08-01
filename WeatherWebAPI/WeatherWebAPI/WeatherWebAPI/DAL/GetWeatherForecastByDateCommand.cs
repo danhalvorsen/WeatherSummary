@@ -92,7 +92,7 @@ namespace WeatherWebAPI.DAL
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
-            return getWeatherDataFromDatabaseStrategy.Query(queryString);
+            return getWeatherDataFromDatabaseStrategy.Get(queryString);
         }
     }
 

@@ -12,7 +12,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
-        public List<WeatherForecastDto> Query(string queryString)
+        public List<WeatherForecastDto> Get(string queryString)
         {
             using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
             {

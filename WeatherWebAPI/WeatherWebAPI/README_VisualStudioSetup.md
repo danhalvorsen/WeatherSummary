@@ -29,8 +29,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=5000
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=YourSelfMadeCertificatePassword
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/YourSelfMadeCertificate.pfx
     ports:
       - "80:80"
       - "5000:443"
@@ -66,7 +66,7 @@ volumes:
     
 ```
 #### **docker-compose.override.yml**
-The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "asdf.pdx" and password is the name and password of your choosing when creating the certificate (Self Signed). 
+The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "YourSelfMadeCertificate.pdx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed). 
 
 ***Remember*** to set the port for your swagger API in the override file (used by Visual Studio). If you set this **ONLY** in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
 ```yml
@@ -78,8 +78,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=5000
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=YourSelfMadeCertificatePassword
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/YourSelfMadeCertificate.pfx
     ports:
       - "80:80"
       - "5000:443"
@@ -89,4 +89,4 @@ services:
 
 ```
 ---
-[Go back](/README.md/#backend-setup)
+[Go back](/README.md/#Diagrams)
