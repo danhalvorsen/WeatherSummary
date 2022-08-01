@@ -24,7 +24,7 @@ sequenceDiagram
 Example Code snippet:
 
 ```csharp
-    Console.WriteLine("Hello World!);
+    Console.WriteLine("Hello World!");
 ```
 
 # Get the database up and running
