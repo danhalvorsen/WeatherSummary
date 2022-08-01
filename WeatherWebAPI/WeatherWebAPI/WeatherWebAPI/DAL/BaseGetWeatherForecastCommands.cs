@@ -60,12 +60,12 @@ namespace WeatherWebAPI.DAL
             return _citiesDatabase!.Where(c => c.Name!.Equals(cityName)).First();
         }
 
-        protected bool UpdateWeatherDataBy(DateTime date) // DateExist()
+        protected bool DateExistsInDatabase(DateTime date) // DateExist()
         {
             return _datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
-        protected bool GetWeatherDataBy(DateTime date) // !DateExists()
+        protected bool DateDoesNotExistInDatabase(DateTime date) // !DateExists()
         {
             return !_datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
