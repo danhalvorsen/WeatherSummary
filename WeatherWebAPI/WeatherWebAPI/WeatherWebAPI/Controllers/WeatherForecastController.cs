@@ -100,4 +100,14 @@ public class WeatherforecastController : ControllerBase
         
         return await command.GetWeatherForecastByWeek(query, _strategies);
     }
+
+    [Route("api/weatherforecast/getCitiesInDatabase/")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<ActionResult<List<CityDto>>> GetCitiesFromDatabase()
+    {
+        var command = new GetCitiesQuery(_config);
+        return await command.GetAllCities();
+    }
 }
