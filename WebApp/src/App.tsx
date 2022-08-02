@@ -7,27 +7,12 @@ import WeatherData from './components/jsx-components/WeatherData';
 import { MakeHttpRequest } from './components/jsx-components/httpRequests';
 import SearchComponent from './components/jsx-components/GetDataFromUser/SearchComponent';
 
-
-
-
-function App() {
-  
-  const callback = (e : ChangeEvent) => {
-  //  console.log(e +'Hey!');
-  }
-
+function App(): JSX.Element {
+  const callback = (e: ChangeEvent) => { }
   return (
-   
     <div className="App">
-      <Navbar/>
-      <Showcase/>
-      <br/>
-      <SearchComponent/>
-      <br/><br/>
-      {/* <a>--------------</a> */}
-      {/* <SearchBar onSubmit = 'test' fn = {callback} />
-      <WeatherData city = 'Stavanger' date='23/06/2013' fn={MakeHttpRequest}/> */}
-      </div>
+      <Showcase />
+    </div>
   );
 }
 

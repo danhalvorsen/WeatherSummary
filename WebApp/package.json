@@ -2,6 +2,8 @@
   "name": "weather-yr",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
   "dependencies": {
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
@@ -13,7 +15,6 @@
     "react": "^18.0.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.0.0",
-    "react-scripts": "5.0.0",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
   },
@@ -24,7 +25,8 @@
     "eject": "react-scripts eject",
     "json-server": "json-server --config ./src/tests/YrData.json",
     "json-server2": "json-server --config ./src/tests/YrData2.json",
-    "docker": "docker build -t weather-yr:dev . && docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000  -e CHOKIDAR_USEPOLLING=true sample:dev"
+    "docker": "docker build -t weather-yr:dev . && docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000  -e CHOKIDAR_USEPOLLING=true sample:dev",
+    "pp": "plop"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +49,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@types/react-datepicker": "^4.4.1",
-    "jest": "^28.1.0"
+    "jest": "^28.1.0",
+    "plop": "^3.1.1",
+    "react-scripts": "^5.0.1"
   }
 }
