@@ -27,12 +27,13 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         $"AmountRain = {weatherData.AmountRain}, " +
                         $"CloudAreaFraction = {weatherData.CloudAreaFraction}, " +
                         $"FogAreaFraction = {weatherData.FogAreaFraction}, " +
-                        $"ProbOfThunder = {weatherData.ProbOfThunder} " +
+                        $"ProbOfThunder = {weatherData.ProbOfThunder}, " +
+                        $"DateForecast = {weatherData.DateForecast} " + 
                             $"FROM WeatherData " +
                                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                         $"INNER JOIN [Source] ON [Source].Id = SourceWeatherData.FK_SourceId " +
-                                            $"WHERE CAST([Date] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source.DataProvider}'" + 
+                                            $"WHERE CAST([DateForecast] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source.DataProvider}'" + 
                                             
                                  $"UPDATE SourceWeatherData " +
                                     $"SET ConnectionDate = '{weatherData.Date}' " +

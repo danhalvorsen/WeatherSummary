@@ -102,7 +102,7 @@ namespace Tests.OpenWeather
         }
 
         [Test]
-        public void ShouldMapDate()
+        public void ShouldMapDateForecast()
         {
             // Arrange
             var application = new ApplicationOpenWeather

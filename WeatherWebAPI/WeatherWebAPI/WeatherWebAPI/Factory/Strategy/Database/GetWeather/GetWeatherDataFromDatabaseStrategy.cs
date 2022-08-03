@@ -44,6 +44,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                             CloudAreaFraction = (float)Convert.ToDouble(reader["CloudAreaFraction"]),
                             FogAreaFraction = (float)Convert.ToDouble(reader["FogAreaFraction"]),
                             ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
+                            DateForecast = Convert.ToDateTime(reader["DateForecast"]).ToUniversalTime(),
                             Source = weatherSource,
                         });
                     }

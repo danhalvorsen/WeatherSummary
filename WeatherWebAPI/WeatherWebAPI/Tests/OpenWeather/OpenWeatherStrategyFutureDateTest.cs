@@ -25,6 +25,19 @@ namespace Tests.OpenWeather
         private DateTime _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day + 1, 0, 0, 0, DateTimeKind.Utc);
 
         [Test]
+        public async Task ShouldGetDateForecast()
+        {
+            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            Console.WriteLine(result.DateForecast);
+
+            result.DateForecast.Date
+                .Should()
+                    .Be(_date);
+        }
+
+        [Test]
         public async Task ShouldGetDate()
         {
             var result = await _strategy.GetWeatherDataFrom(_city, _date);
@@ -34,7 +47,7 @@ namespace Tests.OpenWeather
 
             result.Date.Date
                 .Should()
-                    .Be(_date.Date);
+                    .Be(DateTime.UtcNow.Date);
         }
 
         [Test]

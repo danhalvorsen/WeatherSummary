@@ -47,30 +47,31 @@ namespace WeatherWebAPI.DAL
                             _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                         }
                     }
+                    return new List<WeatherForecastDto>();
                 }
-                else
-                {
-                    cityName = citySearchedFor;
-                }
+                //else
+                //{
+                //    cityName = citySearchedFor;
+                //}
 
-                if (date >= DateTime.UtcNow.Date)
-                {
-                    var city = GetCityDtoBy(cityName!);
+                //if (date >= DateTime.UtcNow.Date)
+                //{
+                //    var city = GetCityDtoBy(cityName!);
 
-                    foreach (var weatherStrategy in weatherDataStrategies)
-                    {
-                        _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
+                //    foreach (var weatherStrategy in weatherDataStrategies)
+                //    {
+                //        _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
 
-                        if (DateDoesNotExistInDatabase(date))
-                        {
-                            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-                        }
-                        if (DateExistsInDatabase(date))
-                        {
-                            await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
-                        }
-                    }
-                }
+                //        if (DateDoesNotExistInDatabase(date))
+                //        {
+                //            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
+                //        }
+                //        if (DateExistsInDatabase(date))
+                //        {
+                //            await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
+                //        }
+                //    }
+                //}
             }
             catch (Exception e)
             {
@@ -82,12 +83,12 @@ namespace WeatherWebAPI.DAL
 
         private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string queryString = $"SELECT TOP {weatherDataStrategies.Count} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, " +
+            string queryString = $"SELECT TOP {weatherDataStrategies.Count * 7} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast" +
             $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                         $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                            $"WHERE CAST([Date] as Date) >= '{date}' AND City.Name = '{cityName}' " +
+                            $"WHERE CAST([DateForecast] as Date) >= '{date}' AND City.Name = '{cityName}' " +
                                 $"ORDER BY [Date]";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
