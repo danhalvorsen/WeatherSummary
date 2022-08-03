@@ -26,18 +26,18 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 
         public MapperConfiguration Get(DateTime queryDate)
         {
-            if (queryDate.Date > DateTime.UtcNow.Date)
+            if (queryDate.Date >= DateTime.UtcNow.Date)
                 queryDate = queryDate.Date + new TimeSpan(12, 0, 0);
 
-            if (queryDate.Date == DateTime.UtcNow.Date)     // Date could be set to just date and no hour for DateTime.Now -> aka Date today.
-                queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 1, 0, 0);
+            //if (queryDate.Date == DateTime.UtcNow.Date)
+            //    queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 1, 0, 0);
 
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
             MapperConfig = new MapperConfiguration(
             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
-            .ForPath(dest => dest.Date, opt => opt         // date
+            .ForPath(dest => dest.DateForecast, opt => opt         // dateforecast
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                         .Single(i => i.time.Equals(queryDate)).time))
@@ -102,6 +102,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 .Single(i => i.time.Equals(queryDate))
                     .data.next_1_hours.details.probability_of_thunder))
             .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
+            .AfterMap((s, d) => d.Date = DateTime.UtcNow.Date)
             );
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

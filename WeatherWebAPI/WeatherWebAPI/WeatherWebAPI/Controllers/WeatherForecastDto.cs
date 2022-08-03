@@ -21,6 +21,7 @@
         public float CloudAreaFraction { get; set; }
         public float FogAreaFraction { get; set; }
         public float ProbOfThunder { get; set; }
+        public DateTime DateForecast { get; set; }
         public WeatherSourceDto Source { get; set; }
 
     }

@@ -25,7 +25,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 
         public MapperConfiguration Get(DateTime queryDate) // ADD DIFFERENT CFG FOR TODAY OR FUTURE??
         {
-            if (queryDate.Date > DateTime.UtcNow.Date) // Future Dates Config
+            if (queryDate.Date >= DateTime.UtcNow.Date) // Future Dates Config
             {
                 queryDate = queryDate.Date + new TimeSpan(11, 0, 0);
 
@@ -35,7 +35,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 MapperConfig = new MapperConfiguration(
 
                 cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
-                .ForPath(dest => dest.Date, opt => opt
+                .ForPath(dest => dest.DateForecast, opt => opt
                 .MapFrom(src => UnixTimeStampToDateTime(src.daily
                     .ToList()
                     .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))).dt))) // date <- this is an UNIX int type
@@ -80,20 +80,21 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                     .ToList()
                     .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))).clouds))
                 .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
-                 ); ;
+                .AfterMap((s, d) => d.Date = DateTime.UtcNow.Date)
+                );
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8604 // Possible null reference argument.
             }
             else
             {
-                queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 3, 0, 0);
+                queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour + 3, 0, 0); // !!!! OBS Pass på daylightSAVE TIME ? !!!!!!!!!!!!
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
                 MapperConfig = new MapperConfiguration(
 
                 cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
-             .ForPath(dest => dest.Date, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
+             .ForPath(dest => dest.DateForecast, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
              .ForPath(dest => dest.WeatherType, opt => opt // weathertype
                  .MapFrom(src => src.current.weather[0].description)) // <-- Got a mapper exception once, because the city of stockholm had 2 descriptions. This should work                                                   
              .ForPath(dest => dest.Temperature, opt => opt  // temperature
@@ -124,6 +125,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 .MapFrom(src => src.current.visibility))
               .AfterMap((s, d) => d.Source.DataProvider = DataSource) // Adding the datasource name to weatherforceastdto
               .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
+              .AfterMap((s,d) => d.Date = DateTime.UtcNow.Date)
                  );
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

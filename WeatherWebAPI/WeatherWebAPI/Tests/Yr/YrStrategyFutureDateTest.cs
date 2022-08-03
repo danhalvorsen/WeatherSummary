@@ -28,20 +28,31 @@ namespace Tests.Yr
         public void Setup()
         {
             _strategy = new YrStrategy(new YrConfig());
-            _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+            _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day + 1, 12, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+        }
+
+        [Test]
+        public async Task ShouldGetDateForecast()
+        {
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            Console.WriteLine(result.DateForecast);
+
+            result.DateForecast
+                    .Should()
+                        .Be(_date);
         }
 
         [Test]
         public async Task ShouldGetDate()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
             //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
             Console.WriteLine(result.Date);
 
             result.Date
-                .Date
                     .Should()
-                        .Be(_date.Date);
+                        .Be(DateTime.UtcNow.Date);
         }
 
         [Test]

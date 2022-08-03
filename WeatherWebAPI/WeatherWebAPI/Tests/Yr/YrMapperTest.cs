@@ -101,7 +101,7 @@ namespace Tests.Yr
         }
 
         [Test]
-        public void ShouldMapDate()
+        public void ShouldMapDateForecast()
         {
             var application = new ApplicationYr
             {
