@@ -3,33 +3,44 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Header } from './components/Hurray/Header';
-
-
-
+import { Form } from './components/newComponents/Form';
+import { WeatherForcastSearchState } from './components/newComponents/searchBox/WeatherForcastSearchState';
+import { RadioButton } from './components/newComponents/searchBox/RadioButton';
+//import { Header } from './components/Hurray/Header';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Header>
+    <App />  
+  
+  
+    
+
+    {/* <Header>
       <Nav></Nav>
     </Header>
     <App>
+    <Form>
       <WeatherForcastSearchState>
         <WeatherForcastSearch>
+
           <InputCity></InputCity><SearchButton></SearchButton>
           <SelectSearchOptionState>
+            <RadioButton>
             <SelectSearchOption>
               <DayPicker></DayPicker>
+            </RadioButton>
             </SelectSearchOption>
           </SelectSearchOptionState>
 
           <SelectSearchOptionState>
             <SelectSearchOption>
+             <RadioButton>
               <WeekPick></WeekPick>
+              </RadioButton>
             </SelectSearchOption>
           </SelectSearchOptionState>
           <SelectSearchOptionState>
-          </WeatherForcastSearchState>
+          
 
           <SelectSearchOptionState>
             <SelectSearchOption>
@@ -39,17 +50,20 @@ ReactDOM.render(
               </RadioButton>
             </SelectSearchOption>
           </SelectSearchOptionState>
+
         </WeatherForcastSearch>
         <ListState>
           <List>
-            <ListItem>
-
-            </ListItem>
+            <ListItem></ListItem>
+            <ListItem></ListItem>
+            <ListItem></ListItem>
+            <ListItem></ListItem>
           </List>
         </ListState>
       </WeatherForcastSearchState>
+      </Form>
     </App>
-    <Footer></Footer>
+    <Footer></Footer> */}
 
   </React.StrictMode>,
   document.getElementById('root')

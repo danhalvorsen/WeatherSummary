@@ -3,10 +3,6 @@ interface IinputType {
 }
 
 export default function InputCity(props: IinputType){
-
-    
-
-
    var cityName: string;
 
    const getText = (e: any)=>{
