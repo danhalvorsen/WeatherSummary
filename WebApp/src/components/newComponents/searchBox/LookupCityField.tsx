@@ -8,7 +8,10 @@ type lookupCityFieldhProps = {
 export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
     return (
         <>
-        <h2>HH</h2>
+
+      <label>Search:</label> <input type="text" placeholder="City Name..."/>
+     
+   
         {props?.children}
         </>)
 }

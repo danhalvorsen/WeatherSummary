@@ -1,5 +1,4 @@
-import { FooProps } from "./FooProps"
-import { Foo } from "./searchBox/Foo"
+
 import { LookupCityField } from "./searchBox/LookupCityField"
 import { RadioButton } from "./searchBox/RadioButton"
 import { SelectSearchOptionState } from "./searchBox/SelectSearchOptionState"

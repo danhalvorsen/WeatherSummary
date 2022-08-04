@@ -1,11 +1,17 @@
-export const ToDate = ()=>{
+export const ToDate: React.FC = (props) => {
 
-           
-  
+  return (
+    <>
 
-    return(
-        <>
-            <input type="date" placeholder="To" />
-        </>
-    )
-}
+<label>To:</label> <input type="text" placeholder="Insert Date"/>
+      {props?.children}
+
+    </>
+  );
+};
+
+
+
+
+
+

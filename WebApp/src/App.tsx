@@ -12,9 +12,17 @@ import { RadioButton } from './components/newComponents/searchBox/RadioButton';
 import { WeatherForcastSearch as WeatherForcastSearchComponent } from './components/newComponents/searchBox/WeatherForcastSearch';
 import InputCity from './components/jsx-components/GetDataFromUser/InputCity';
 import { LookupCityField } from './components/newComponents/searchBox/LookupCityField';
-import { Foo } from './components/newComponents/searchBox/Foo'
-import { FooProps } from './components/newComponents/FooProps';
-
+import {WeatherForcastSearch} from './components/newComponents/searchBox/WeatherForcastSearch';
+import {SearchButton} from './components/newComponents/searchBox/SearchButton';
+import { SelectSearchOptionState } from './components/newComponents/searchBox/SelectSearchOptionState';
+import { SelectSearchOption } from "./components/newComponents/searchBox/SelectSearchOptionProps";
+import { DayPicker } from './components/newComponents/searchBox/DayPicker';
+import { WeekPicker } from './components/newComponents/searchBox/WeekPicker';
+import { FromDate } from './components/newComponents/searchBox/FromDate';
+import { ToDate } from './components/newComponents/searchBox/ToDate';
+import { ListState } from './components/newComponents/searchBox/ListState';
+import { List } from './components/newComponents/searchBox/List';
+import { ListItem } from './components/newComponents/searchBox/ListItem';
 
 function App(): JSX.Element {
   const callback = (e: ChangeEvent) => { }
@@ -22,11 +30,51 @@ function App(): JSX.Element {
     <div className="App">
       <>
         <Form>
-          <WeatherForcastSearchState >
-            <LookupCityField state={true}>
-              <RadioButton state={false}></RadioButton>
-            </LookupCityField>
-          </WeatherForcastSearchState>
+<WeatherForcastSearchState >
+  <WeatherForcastSearch checked={true}>
+
+                 <LookupCityField state={true}>
+                    
+                </LookupCityField><SearchButton></SearchButton>
+                <br/><br/><br/><br/>
+    <SelectSearchOptionState>
+        <SelectSearchOption>
+          <RadioButton>
+            <DayPicker></DayPicker>
+          </RadioButton>
+        </SelectSearchOption>
+    </SelectSearchOptionState>
+    <br/><br/><br/><br/>
+    <SelectSearchOptionState>
+        <SelectSearchOption>
+          <RadioButton>
+            <WeekPicker></WeekPicker>
+          </RadioButton>
+        </SelectSearchOption>
+    </SelectSearchOptionState>
+<br/><br/><br/><br/>
+    <SelectSearchOptionState>
+        <SelectSearchOption>
+          <RadioButton>
+            <FromDate></FromDate>
+            <ToDate></ToDate>
+          </RadioButton>
+        </SelectSearchOption>
+    </SelectSearchOptionState>
+
+  </WeatherForcastSearch>
+  <br/><br/><br/><br/>
+    <ListState>
+      <List>
+        <ListItem></ListItem>
+        <ListItem></ListItem>
+        <ListItem></ListItem>
+        <ListItem></ListItem>
+      </List>
+    </ListState>
+
+</WeatherForcastSearchState>
+
 
         </Form>
       </>

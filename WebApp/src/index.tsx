@@ -23,7 +23,7 @@ ReactDOM.render(
       <WeatherForcastSearchState>
         <WeatherForcastSearch>
 
-          <InputCity></InputCity><SearchButton></SearchButton>
+          <LookupCityField></LookupCityField><SearchButton></SearchButton>
           <SelectSearchOptionState>
             <RadioButton>
             <SelectSearchOption>

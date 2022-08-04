@@ -1,14 +1,19 @@
-import { SelectSearchOption } from "./SelectSearchOption"
+import { Children } from "../compTypes";
 
 
-export const SelectSearchOptionState = () => {
+
+type SelectSearchOptionStateProps = {
+  children?: Children
+};
+
+export const SelectSearchOptionState: React.FC<SelectSearchOptionStateProps>
+  = (props: SelectSearchOptionStateProps) => {
     return (
-        <> 
-              
-          <SelectSearchOption/>
-
-        </>
+      <div>
+        <h3>SelectSearchOptionState</h3>
+        {props?.children}
+      </div>
     )
-}
+  }
 
-         
+
