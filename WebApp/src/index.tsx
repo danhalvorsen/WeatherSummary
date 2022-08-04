@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Form } from './components/newComponents/Form';
-import { WeatherForcastSearchState } from './components/newComponents/searchBox/WeatherForcastSearchState';
+import { Form } from './components/newComponents/searchBox/Form/Form';
+import { WeatherForcastSearchState } from './components/newComponents/searchBox/Form/WeatherForcastSearchState';
 import { RadioButton } from './components/newComponents/searchBox/RadioButton';
 //import { Header } from './components/Hurray/Header';
 

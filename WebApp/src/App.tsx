@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, Children, useState } from 'react';
 import './App.css';
 import SearchBar from './components/jsx-components/SearchBar';
 import Navbar from './components/jsx-components/Navbar';
@@ -6,8 +6,8 @@ import Showcase from './components/jsx-components/Showcase';
 import WeatherData from './components/jsx-components/WeatherData';
 import { MakeHttpRequest } from './components/jsx-components/httpRequests';
 import SearchComponent from './components/jsx-components/GetDataFromUser/SearchComponent';
-import { Form } from './components/newComponents/Form';
-import { WeatherForcastSearchState } from './components/newComponents/searchBox/WeatherForcastSearchState';
+import { Form } from './components/newComponents/searchBox/Form/Form';
+import { WeatherForcastSearchState } from './components/newComponents/searchBox/Form/WeatherForcastSearchState';
 import { RadioButton } from './components/newComponents/searchBox/RadioButton';
 import { WeatherForcastSearch as WeatherForcastSearchComponent } from './components/newComponents/searchBox/WeatherForcastSearch';
 import InputCity from './components/jsx-components/GetDataFromUser/InputCity';
@@ -23,15 +23,22 @@ import { ToDate } from './components/newComponents/searchBox/ToDate';
 import { ListState } from './components/newComponents/searchBox/ListState';
 import { List } from './components/newComponents/searchBox/List';
 import { ListItem } from './components/newComponents/searchBox/ListItem';
+import { isPropertySignature } from 'typescript';
+
+
 
 function App(): JSX.Element {
   const callback = (e: ChangeEvent) => { }
+
+   const [cityName , setCityName] = useState('Stavanger')
   return (
     <div className="App">
       <>
         <Form>
-<WeatherForcastSearchState >
-  <WeatherForcastSearch checked={true}>
+<WeatherForcastSearchState cityName="NAME" >
+
+
+  <WeatherForcastSearch checked={true} cityName={cityName} > 
 
                  <LookupCityField state={true}>
                     

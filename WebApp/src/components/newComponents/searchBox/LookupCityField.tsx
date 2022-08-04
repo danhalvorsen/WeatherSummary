@@ -11,7 +11,7 @@ export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
 
       <label>Search:</label> <input type="text" placeholder="City Name..."/>
      
-   
+        
         {props?.children}
         </>)
 }
