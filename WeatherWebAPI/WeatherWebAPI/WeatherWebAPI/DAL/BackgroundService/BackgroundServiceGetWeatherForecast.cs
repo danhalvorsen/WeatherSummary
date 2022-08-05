@@ -2,11 +2,11 @@
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
-namespace WeatherWebAPI.DAL
+namespace WeatherWebAPI.DAL.BackgroundService
 {
-    public class GetWeatherForecastForBackgroundServiceCommand : BaseGetWeatherForecastCommands
+    public class BackgroundServiceGetWeatherForecast : BaseGetWeatherForecastCommands
     {
-        public GetWeatherForecastForBackgroundServiceCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public BackgroundServiceGetWeatherForecast(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
@@ -14,7 +14,7 @@ namespace WeatherWebAPI.DAL
         public async Task Get1WeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             DateTime fromDate = DateTime.UtcNow;
-            DateTime toDate = fromDate.AddDays(6);
+            DateTime toDate = fromDate.AddDays(7);
             var datesQuery = new List<DateTime>();
 
             var getCitiesQuery = new GetCitiesQuery(_config);
@@ -36,17 +36,17 @@ namespace WeatherWebAPI.DAL
                     //{
                     _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, weatherStrategy);
 
-                        if (DateDoesNotExistInDatabase(fromDate))
+                    if (DateDoesNotExistInDatabase(fromDate))
+                    {
+                        foreach (DateTime date in datesQuery)
                         {
-                            foreach (DateTime date in datesQuery)
-                            {
-                                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
-                            }
+                            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
                         }
-                        if (DateExistsInDatabase(fromDate))
-                        {
-                            Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
-                        }
+                    }
+                    if (DateExistsInDatabase(fromDate))
+                    {
+                        Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
+                    }
                     //}
                 }
             }

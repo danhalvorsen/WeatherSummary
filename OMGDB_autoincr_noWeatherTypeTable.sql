@@ -72,6 +72,16 @@ CREATE TABLE [Admin] (
 );
 GO
 
+CREATE TABLE Score (
+    Id INT IDENTITY(1, 1),
+    PRIMARY KEY (Id),
+
+	Score FLOAT,
+	FK_WeatherDataId INT NOT NULL,
+    FOREIGN KEY (FK_WeatherDataId) REFERENCES WeatherData(Id)
+);
+GO
+
 INSERT INTO [Source] 
 	([Name], [URL], [Authentication])
 VALUES

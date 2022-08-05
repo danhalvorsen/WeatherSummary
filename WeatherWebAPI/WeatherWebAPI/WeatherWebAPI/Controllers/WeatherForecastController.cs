@@ -96,7 +96,7 @@ public class WeatherforecastController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
         
-        var command = new GetWeatherForecastByWeekCommand(_config, _factory);
+        var command = new GetWeatherForecastByWeekNumberCommand(_config, _factory);
         
         return await command.GetWeatherForecastByWeek(query, _strategies);
     }

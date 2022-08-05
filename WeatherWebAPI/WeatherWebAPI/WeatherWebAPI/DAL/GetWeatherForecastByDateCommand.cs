@@ -22,11 +22,11 @@ namespace WeatherWebAPI.DAL
             DateTime date = query!.DateQuery!.Date.ToUniversalTime();
 
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
-            var getDatesQueryDatabase = new GetDatesForCityQuery(_config);
+            //var getDatesQueryDatabase = new GetDatesForCityQuery(_config);
 
             try
             {
-                // Itterating through all the cities and dates in the database   
+ 
                 _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
@@ -49,10 +49,10 @@ namespace WeatherWebAPI.DAL
                     }
                     return new List<WeatherForecastDto>();
                 }
-                //else
-                //{
-                //    cityName = citySearchedFor;
-                //}
+                else
+                {
+                    cityName = citySearchedFor;
+                }
 
                 //if (date >= DateTime.UtcNow.Date)
                 //{
@@ -83,13 +83,13 @@ namespace WeatherWebAPI.DAL
 
         private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            string queryString = $"SELECT TOP {weatherDataStrategies.Count * 7} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast" +
+            string queryString = $"SELECT TOP {weatherDataStrategies.Count} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
             $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                         $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                             $"WHERE CAST([DateForecast] as Date) >= '{date}' AND City.Name = '{cityName}' " +
-                                $"ORDER BY [Date]";
+                                $"ORDER BY [Date] desc, DateForecast";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
