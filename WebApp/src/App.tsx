@@ -12,8 +12,8 @@ import { RadioButton } from './components/newComponents/searchBox/RadioButton';
 import { WeatherForcastSearch as WeatherForcastSearchComponent } from './components/newComponents/searchBox/WeatherForcastSearch';
 import InputCity from './components/jsx-components/GetDataFromUser/InputCity';
 import { LookupCityField } from './components/newComponents/searchBox/LookupCityField';
-import {WeatherForcastSearch} from './components/newComponents/searchBox/WeatherForcastSearch';
-import {SearchButton} from './components/newComponents/searchBox/SearchButton';
+import { WeatherForcastSearch } from './components/newComponents/searchBox/WeatherForcastSearch';
+import { SearchButton } from './components/newComponents/searchBox/SearchButton';
 import { SelectSearchOptionState } from './components/newComponents/searchBox/SelectSearchOptionState';
 import { SelectSearchOption } from "./components/newComponents/searchBox/SelectSearchOptionProps";
 import { DayPicker } from './components/newComponents/searchBox/DayPicker';
@@ -24,19 +24,72 @@ import { ListState } from './components/newComponents/searchBox/ListState';
 import { List } from './components/newComponents/searchBox/List';
 import { ListItem } from './components/newComponents/searchBox/ListItem';
 import { isPropertySignature } from 'typescript';
+import { stringify } from 'querystring';
 
+
+class SearchProp {
+  constructor() {
+    this.name1 = "Name1";
+    this.name2 = "Name2";
+  }
+  name1: string = "Name1";
+  name2: string = "Name2";
+}
+
+class GlobalState {
+  name: string = "Bergen";
+  search = new SearchProp()
+}
+
+class GlobalState1 {
+  name: string = "Oslo";
+  search = new SearchProp()
+}
+
+
+export interface State {
+  name1: string;
+  name2: string;
+  child: {
+    name1: string;
+    name2: string;
+  }
+};
+const FuncState = (nn1:string , nn2: string) : State => {
+
+  let s : State = {name1:nn1, name2:nn2, child:{name1: nn1, name2:nn2}};
+  return s;
+
+}
 
 
 function App(): JSX.Element {
   const callback = (e: ChangeEvent) => { }
 
-   const [cityName , setCityName] = useState('Stavanger')
+  const [global, setGlobal] = useState(FuncState("Oslo", "Bergen"))
+
+
+  function X(e: any) {
+    const s = global;
+      setGlobal(FuncState("Iran", "Norway"))
+      // setGlobal(new GlobalState1())
+      // setGlobal(new GlobalState())
+  };
+
   return (
     <div className="App">
       <>
-        <Form>
+        <WeatherForcastSearchState name={global.child.name1} />
+        <button onClick={e => X(e)}>Button</button>
+
+
+
+
+
+        {/* <Form>
 <WeatherForcastSearchState cityName="NAME" >
 
+<WeatherForcastSearch>
 
   <WeatherForcastSearch checked={true} cityName={cityName} > 
 
@@ -83,7 +136,7 @@ function App(): JSX.Element {
 </WeatherForcastSearchState>
 
 
-        </Form>
+        </Form> */}
       </>
     </div>
   );
