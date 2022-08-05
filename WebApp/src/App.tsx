@@ -55,89 +55,84 @@ export interface State {
     name2: string;
   }
 };
-const FuncState = (nn1:string , nn2: string) : State => {
+const FuncState = (nn1: string, nn2: string): State => {
 
-  let s : State = {name1:nn1, name2:nn2, child:{name1: nn1, name2:nn2}};
+  let s: State = { name1: nn1, name2: nn2, child: { name1: nn1, name2: nn2 } };
   return s;
 
 }
 
 
-function App(): JSX.Element {
-  const callback = (e: ChangeEvent) => { }
-
-  const [global, setGlobal] = useState(FuncState("Oslo", "Bergen"))
+function App() {
 
 
-  function X(e: any) {
-    const s = global;
-      setGlobal(FuncState("Iran", "Norway"))
-      // setGlobal(new GlobalState1())
-      // setGlobal(new GlobalState())
-  };
+  // const [global, setGlobal] = useState(FuncState("Oslo", "Bergen"))
+
+  // function X(e: any) {
+  //   const s = global;
+  //     setGlobal(FuncState("Iran", "Norway"))
+  //     // setGlobal(new GlobalState1())
+  //     // setGlobal(new GlobalState())
+  // };
 
   return (
     <div className="App">
-      <>
-        <WeatherForcastSearchState name={global.child.name1} />
-        <button onClick={e => X(e)}>Button</button>
+
+      {/* <WeatherForcastSearchState name={global.child.name1} /> */}
+      <Form>
+        <WeatherForcastSearchState>
+
+          <WeatherForcastSearch>
 
 
 
+            <LookupCityField state={true}>
+              
+            </LookupCityField><SearchButton></SearchButton>
 
 
-        {/* <Form>
-<WeatherForcastSearchState cityName="NAME" >
+            {/* <br /><br /><br /><br />
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <DayPicker></DayPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+            <br /><br /><br /><br />
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <WeekPicker></WeekPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+            <br /><br /><br /><br />
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <FromDate></FromDate>
+                  <ToDate></ToDate>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState> */}
 
-<WeatherForcastSearch>
+          </WeatherForcastSearch>
+          {/* <br /><br /><br /><br />
+          <ListState>
+            <List>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+            </List>
+          </ListState> */}
 
-  <WeatherForcastSearch checked={true} cityName={cityName} > 
-
-                 <LookupCityField state={true}>
-                    
-                </LookupCityField><SearchButton></SearchButton>
-                <br/><br/><br/><br/>
-    <SelectSearchOptionState>
-        <SelectSearchOption>
-          <RadioButton>
-            <DayPicker></DayPicker>
-          </RadioButton>
-        </SelectSearchOption>
-    </SelectSearchOptionState>
-    <br/><br/><br/><br/>
-    <SelectSearchOptionState>
-        <SelectSearchOption>
-          <RadioButton>
-            <WeekPicker></WeekPicker>
-          </RadioButton>
-        </SelectSearchOption>
-    </SelectSearchOptionState>
-<br/><br/><br/><br/>
-    <SelectSearchOptionState>
-        <SelectSearchOption>
-          <RadioButton>
-            <FromDate></FromDate>
-            <ToDate></ToDate>
-          </RadioButton>
-        </SelectSearchOption>
-    </SelectSearchOptionState>
-
-  </WeatherForcastSearch>
-  <br/><br/><br/><br/>
-    <ListState>
-      <List>
-        <ListItem></ListItem>
-        <ListItem></ListItem>
-        <ListItem></ListItem>
-        <ListItem></ListItem>
-      </List>
-    </ListState>
-
-</WeatherForcastSearchState>
+        </WeatherForcastSearchState>
 
 
-        </Form> */}
-      </>
+      </Form>
+
     </div>
   );
 }
