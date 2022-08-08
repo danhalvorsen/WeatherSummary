@@ -25,6 +25,7 @@ import { List } from './components/newComponents/searchBox/List';
 import { ListItem } from './components/newComponents/searchBox/ListItem';
 import { isPropertySignature } from 'typescript';
 import { stringify } from 'querystring';
+import FooDate from './components/types';
 
 
 class SearchProp {
@@ -75,62 +76,15 @@ function App() {
   //     // setGlobal(new GlobalState())
   // };
 
+  
   return (
     <div className="App">
 
       {/* <WeatherForcastSearchState name={global.child.name1} /> */}
       <Form>
-        <WeatherForcastSearchState>
-
-          <WeatherForcastSearch>
-
-
-
-            <LookupCityField state={true}>
-              
-            </LookupCityField><SearchButton></SearchButton>
-
-
-            {/* <br /><br /><br /><br />
-            <SelectSearchOptionState>
-              <SelectSearchOption>
-                <RadioButton>
-                  <DayPicker></DayPicker>
-                </RadioButton>
-              </SelectSearchOption>
-            </SelectSearchOptionState>
-            <br /><br /><br /><br />
-            <SelectSearchOptionState>
-              <SelectSearchOption>
-                <RadioButton>
-                  <WeekPicker></WeekPicker>
-                </RadioButton>
-              </SelectSearchOption>
-            </SelectSearchOptionState>
-            <br /><br /><br /><br />
-            <SelectSearchOptionState>
-              <SelectSearchOption>
-                <RadioButton>
-                  <FromDate></FromDate>
-                  <ToDate></ToDate>
-                </RadioButton>
-              </SelectSearchOption>
-            </SelectSearchOptionState> */}
-
-          </WeatherForcastSearch>
-          {/* <br /><br /><br /><br />
-          <ListState>
-            <List>
-              <ListItem></ListItem>
-              <ListItem></ListItem>
-              <ListItem></ListItem>
-              <ListItem></ListItem>
-            </List>
-          </ListState> */}
-
-        </WeatherForcastSearchState>
-
-
+        <WeatherForcastSearchState />
+       
+  
       </Form>
 
     </div>

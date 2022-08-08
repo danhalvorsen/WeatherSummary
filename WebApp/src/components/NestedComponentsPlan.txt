@@ -1,0 +1,51 @@
+ <WeatherForecastSearchState name={global.child.name1} />
+      <Form>
+        <WeatherForecastSearchState>
+
+           <WeatherForecastSearch>
+            <LookupCityField state={true}>
+              
+            </LookupCityField><SearchButton></SearchButton>
+
+
+             <br /><br /><br /><br>
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <DayPicker></DayPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+            <br /><br /><br /><br />
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <WeekPicker></WeekPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+            <br /><br /><br /><br />
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <FromDate></FromDate>
+                  <ToDate></ToDate>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+
+          </WeatherForecastSearch>
+          <br /><br /><br /><br />
+          <ListState>
+            <List>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+            </List>
+          </ListState>
+
+        </WeatherForecastSearchState>
+
+
+      </Form>

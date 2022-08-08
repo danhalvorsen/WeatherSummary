@@ -1,5 +1,5 @@
 import { Children, FC, useContext } from "react";
-import { sampleContext } from "./Form/WeatherForcastSearchState";
+import { SearchButton } from "./SearchButton";
 
 type lookupCityFieldhProps = {
   children?: JSX.Element | JSX.Element[],
@@ -12,16 +12,15 @@ type lookupCityFieldhProps = {
 
 export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
 
-  const things = useContext(sampleContext)
   
   
   return (
     <>
 
-          
-      <label>Search:</label> <input type="text" placeholder="City Name..." />
+       <br/>   
+      <label>Search:</label> <input type="text" placeholder="City Name..." value={props?.cityName} />
+      <SearchButton/>
 
-      <h2>{things as string}</h2>
 
       
     </>)
