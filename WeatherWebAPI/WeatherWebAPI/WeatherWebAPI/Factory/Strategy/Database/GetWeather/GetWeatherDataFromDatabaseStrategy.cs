@@ -30,6 +30,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 
                         WeatherForecastDtos.Add(new WeatherForecastDto
                         {
+                            WeatherForecastId = Convert.ToInt32(reader["WeatherData.Id"]),
                             City = reader["CityName"].ToString(),
                             Date = Convert.ToDateTime(reader["Date"]).ToUniversalTime(),
                             WeatherType = reader["WeatherType"].ToString(),

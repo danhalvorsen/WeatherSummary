@@ -59,6 +59,7 @@ Admin {
 Score {
     int Id PK "auto incr."
     float Score "%"
+    float ScoreWeighted "%"
     int WeatheredataId FK "FK_WeatherDataId int not null"
 }
 

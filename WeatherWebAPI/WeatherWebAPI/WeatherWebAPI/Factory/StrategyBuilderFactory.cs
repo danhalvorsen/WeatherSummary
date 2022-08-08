@@ -57,6 +57,14 @@ namespace WeatherWebAPI.Factory
                 });
                 return strategy;
             }
+            if (typeof(S).Name == typeof(IAddScoreToDatabaseStrategy).Name)
+            {
+                var strategy = new AddScoreToDatabaseStrategy(new AddScoreToDatabaseConfig
+                {
+                    ConnectionString = _config.GetConnectionString("WeatherForecastDatabase")
+                });
+                return strategy;
+            }
 
             throw new Exception("Failed building strategy.");
         }

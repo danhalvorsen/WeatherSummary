@@ -26,7 +26,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 
         public MapperConfiguration Get(DateTime queryDate)
         {
-            if (queryDate.Date >= DateTime.UtcNow.Date && DateTime.UtcNow.Hour < 12)
+            if (queryDate.Date >= DateTime.UtcNow.Date && DateTime.UtcNow.Hour <= 12)
                 queryDate = queryDate.Date + new TimeSpan(12, 0, 0);
             else queryDate = queryDate.Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0);
 

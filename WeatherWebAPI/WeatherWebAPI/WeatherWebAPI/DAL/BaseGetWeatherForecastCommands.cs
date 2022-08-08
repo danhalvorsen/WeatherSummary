@@ -50,6 +50,12 @@ namespace WeatherWebAPI.DAL
             await addToDatabaseStrategy.Add(weatherData, city);
         }
 
+        protected async Task AddScoreToDatabase(double score, double  weightedScore, int weatherDataId)
+        {
+            IAddScoreToDatabaseStrategy addScoreToDatabaseStrategy = _factory.Build<IAddScoreToDatabaseStrategy>();
+            await addScoreToDatabaseStrategy.Add(score, weightedScore, weatherDataId);
+        }
+
         protected bool CityExists(string cityName)
         {
             return _citiesDatabase!.ToList().Any(c => c.Name!.Equals(cityName));

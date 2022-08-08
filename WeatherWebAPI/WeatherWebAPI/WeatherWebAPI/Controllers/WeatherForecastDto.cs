@@ -6,7 +6,7 @@
         {
             Source = new WeatherSourceDto();
         }
-
+        public int WeatherForecastId { get; set; }
         public string? City { get; set; }
         public DateTime Date { get; set; }
         public string? WeatherType { get; set; }

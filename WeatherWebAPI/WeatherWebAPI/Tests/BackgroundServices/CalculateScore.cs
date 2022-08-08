@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,7 +95,7 @@ namespace Tests.BackgroundServices
             {
                 foreach (var predicted in _predicted!)
                 {
-                    if ((actual.Date.Date == predicted.DateForecast.Date) && (actual.Source.DataProvider == predicted.Source.DataProvider))
+                    if ((actual.Date.Date == predicted.DateForecast.Date) && (actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City))
                     {
                         tempDiff = Math.Abs(actual.Temperature - predicted.Temperature);
                         windSpdDiff = Math.Abs(actual.Windspeed - predicted.Windspeed);
@@ -111,19 +112,20 @@ namespace Tests.BackgroundServices
                         Console.WriteLine($"Actual Weather Sum: {sumActual}");
                         Console.WriteLine($"Predicted Weather Sum: {sumPredicted}");
 
+
                         var difference = Math.Abs(sumActual - sumPredicted);
                         Console.WriteLine($"Difference: {difference}");
-
 
                         var score = Math.Round((sumActual - difference) / sumActual * 100, 2);
                         Console.WriteLine("Score: " + score);
 
                         var sumDiff = tempDiff + pressureDiff + humidityDiff + cloudAFDiff + amountRainDiff + probOfRainDiff + windSpdDiff + windDirDiff;
                         Console.WriteLine($"All value differences added together: {sumDiff}");
-
-                        var scoreWeight = (tempDiff * 0.3) + (pressureDiff * 0.2) + (humidityDiff * 0.15) + (cloudAFDiff * 0.05)
-                            + (amountRainDiff * 0.1) + (probOfRainDiff * 0.05) + (windSpdDiff * 0.1) + (windDirDiff * 0.05);
-                        Console.WriteLine($"{scoreWeight}");
+                        var sumConst = (0.3 + 0.2 + 0.15 + 0.05 + 0.1 + 0.05 + 0.1 + 0.05);
+                        Debug.Assert(sumConst <= 100, "Should be between 0-100");
+                        var scoreWeight = ((tempDiff * 0.3) + (pressureDiff * 0.2) + (humidityDiff * 0.15) + (cloudAFDiff * 0.05)
+                            + (amountRainDiff * 0.1) + (probOfRainDiff * 0.05) + (windSpdDiff * 0.1) + (windDirDiff * 0.05)) / sumConst;
+                        Console.WriteLine($"Weight: {100-scoreWeight}%");
 
                         score.Should().BeGreaterThanOrEqualTo(0).And.BeLessThanOrEqualTo(100);
                     }
@@ -296,7 +298,6 @@ namespace Tests.BackgroundServices
                 }
             }
         }
-
 
         // METHODS
         public static double CalculateDifference(double actual, double predicted)
