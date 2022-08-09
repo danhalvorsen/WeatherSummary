@@ -6,7 +6,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackGroundServiceCalculateScore : BaseGetWeatherForecastCommands
+    public class BackgroundServiceCalculateScoreCommand : BaseGetWeatherForecastCommands
     {
         private const double WEIGHT_TEMPERATURE = 0.3;
         private const double WEIGHT_PRESSURE = 0.2;
@@ -20,7 +20,7 @@ namespace WeatherWebAPI.DAL
             WEIGHT_WIND_SPEED + WEIGHT_WIND_DIRECTION + WEIGHT_CLOUD_AREA_FRACTION;
 
 
-        public BackGroundServiceCalculateScore(IConfiguration config, IFactory factory) : base(config, factory)
+        public BackgroundServiceCalculateScoreCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
@@ -45,7 +45,7 @@ namespace WeatherWebAPI.DAL
                         {
                             if (WeatherIdNotRated(scores, predicted))
                             {
-                                if (actual.Date.Date == predicted.DateForecast.Date && actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City)
+                                if (actual.Date.Date == predicted.DateForecast.Date && actual.Source?.DataProvider == predicted.Source?.DataProvider && actual.City == predicted.City)
                                 {
                                     var temperatureDifference = Math.Abs(actual.Temperature - predicted.Temperature);
                                     var pressureDifference = Math.Abs(actual.Pressure - predicted.Pressure);

@@ -35,7 +35,7 @@ namespace WeatherWebAPI
                 {
                     Console.WriteLine($"{this.GetType().Name}: DOING WORK");
                     
-                    var command = new BackgroundServiceGetWeatherForecast(_config, _factory);
+                    var command = new BackgroundServiceGetWeatherDataCommand(_config, _factory);
                     await command.Get1WeekWeatherForecastForAllCities(_weatherDataStrategies);
 
                     Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");

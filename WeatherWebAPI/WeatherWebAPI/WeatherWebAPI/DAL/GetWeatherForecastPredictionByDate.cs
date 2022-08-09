@@ -6,16 +6,14 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-
-
-    public class GetWeatherForecastByDateCommand : BaseGetWeatherForecastCommands
+    public class GetWeatherForecastPredictionByDate : BaseGetWeatherForecastCommands
     {
-        public GetWeatherForecastByDateCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public GetWeatherForecastPredictionByDate(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastPredictionByDateForOneWeek(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             string? citySearchedFor = query?.CityQuery?.City;
             string? cityName = "";
@@ -26,7 +24,7 @@ namespace WeatherWebAPI.DAL
 
             try
             {
- 
+
                 _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
@@ -39,7 +37,7 @@ namespace WeatherWebAPI.DAL
                     var cityData = await GetCityData(citySearchedFor);
                     cityName = cityData[0].Name;
 
-                    if(cityName != "")
+                    if (cityName != "")
                     {
                         if (!CityExists(cityName!))
                         {
@@ -53,25 +51,6 @@ namespace WeatherWebAPI.DAL
                 {
                     cityName = citySearchedFor;
                 }
-
-                //if (date >= DateTime.UtcNow.Date)
-                //{
-                //    var city = GetCityDtoBy(cityName!);
-
-                //    foreach (var weatherStrategy in weatherDataStrategies)
-                //    {
-                //        _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
-
-                //        if (DateDoesNotExistInDatabase(date))
-                //        {
-                //            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-                //        }
-                //        if (DateExistsInDatabase(date))
-                //        {
-                //            await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
-                //        }
-                //    }
-                //}
             }
             catch (Exception e)
             {
@@ -83,21 +62,14 @@ namespace WeatherWebAPI.DAL
 
         private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
-            DateTime now;
-            
-            if (DateTime.UtcNow.Date > date.Date)
-                now = date;
-            else
-                now = DateTime.UtcNow;
-                
 
-            string queryString = $"SELECT TOP {weatherDataStrategies.Count} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+            string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
             $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                         $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                             $"FULL OUTER JOIN Score ON Score.FK_WeatherDataId = WeatherData.Id " +
-                                $"WHERE CAST([DateForecast] as Date) = '{date}' AND CAST([Date] as date) = '{now}'  AND City.Name = '{cityName}' " +
+                                $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}' " +
                                     $"ORDER BY DateForecast";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
@@ -105,5 +77,4 @@ namespace WeatherWebAPI.DAL
             return getWeatherDataFromDatabaseStrategy.Get(queryString);
         }
     }
-
 }

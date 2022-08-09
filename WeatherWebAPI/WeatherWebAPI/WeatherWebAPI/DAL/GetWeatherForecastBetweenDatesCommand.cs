@@ -91,12 +91,13 @@ namespace WeatherWebAPI.DAL
         private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime fromDate, DateTime toDate)
         {
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                    $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
+                    $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                         $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                             $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                 $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                    $"WHERE CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
-                                        $"ORDER BY [DateForecast], [Date]";
+                                    $"FULL OUTER JOIN Score ON Score.FK_WeatherDataId = WeatherData.Id " +
+                                        $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
+                                            $"ORDER BY [DateForecast], [Date]";
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 

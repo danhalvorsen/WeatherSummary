@@ -4,9 +4,9 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackgroundServiceGetWeatherForecast : BaseGetWeatherForecastCommands
+    public class BackgroundServiceGetWeatherDataCommand : BaseGetWeatherForecastCommands
     {
-        public BackgroundServiceGetWeatherForecast(IConfiguration config, IFactory factory) : base(config, factory)
+        public BackgroundServiceGetWeatherDataCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }

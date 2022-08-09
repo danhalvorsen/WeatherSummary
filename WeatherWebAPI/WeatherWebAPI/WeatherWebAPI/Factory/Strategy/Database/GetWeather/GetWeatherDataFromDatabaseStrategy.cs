@@ -29,8 +29,17 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 
                     foreach (object o in reader)
                     {
-                        var weatherSource = new WeatherSourceDto();
-                        weatherSource.DataProvider = reader["SourceName"].ToString();
+                        var weatherSource = new WeatherSourceDto
+                        {
+                            DataProvider = reader["SourceName"].ToString()
+                        };
+
+                        var score = new ScoreDto
+                        {
+                            FK_WeatherDataId = reader["FK_WeatherDataId"] != System.DBNull.Value ? Convert.ToInt32(reader["FK_WeatherDataId"]) : 0,
+                            Score = reader["Score"] != System.DBNull.Value ? Math.Round((float)Convert.ToDouble(reader["Score"]), 2) : 0,
+                            ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? Math.Round((float)Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
+                        };
 
                         WeatherForecastDtos.Add(new WeatherForecastDto
                         {
@@ -51,6 +60,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                             ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
                             DateForecast = Convert.ToDateTime(reader["DateForecast"]).ToUniversalTime(),
                             Source = weatherSource,
+                            Score = score
                         });
                     }
                 }

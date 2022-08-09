@@ -89,9 +89,13 @@ docker network create YourNetworkName
 # API endpoint(s)
 
 ```
-GET /api/weatherforecast/date?DateQuery.Date={Date}&CityQuery.City={cityName}
+GET /api/weatherforecast/predictionByDate?DateQuery.Date={date}&CityQuery.City={cityName}
+
+GET /api/weatherforecast/date?DateQuery.Date={date}&CityQuery.City={cityName}
 
 GET /api/weatherforecast/between?BetweenDateQuery.From={fromDate}&BetweenDateQuery.To={toDate}&CityQuery.City={cityName}
 
 GET /api/weatherforecast/week?week={weekNumber}&City={cityName}
+
+GET api/weatherforecast/getCitiesInDatabase
 ```

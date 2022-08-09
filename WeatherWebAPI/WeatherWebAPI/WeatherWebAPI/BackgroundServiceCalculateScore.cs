@@ -29,9 +29,9 @@ namespace WeatherWebAPI
 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    Console.WriteLine($"{this.GetType().Name}: DOING WORK");
+                    Console.WriteLine($"{this.GetType().Name} DOING WORK");
 
-                    var command = new BackGroundServiceCalculateScore(_config, _factory);
+                    var command = new BackgroundServiceCalculateScoreCommand(_config, _factory);
                     await command.CalculateScore();
 
                     Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");

@@ -55,6 +55,22 @@ public class WeatherforecastController : ControllerBase
         _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
     }
 
+    [Route("api/weatherforecast/predictionByDate/")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<ActionResult<List<WeatherForecastDto>>> PredictionByDate(DateQueryAndCity query)
+    {
+        var validationResult = _dateQueryAndCityValidator.Validate(query);
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+
+        var command = new GetWeatherForecastPredictionByDate(_config, _factory);
+
+        return await command.GetWeatherForecastPredictionByDateForOneWeek(query, _strategies);
+    }
+
     [Route("api/weatherforecast/date/")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
