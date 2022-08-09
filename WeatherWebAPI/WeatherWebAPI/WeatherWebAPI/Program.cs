@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 //builder.Services.AddTransient( typeof(IFactory), typeof(StrategyBuilderFactory) );
 builder.Services.AddConfig(builder.Configuration);
 builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
+builder.Services.AddHostedService<BackgroundServiceGetScore>();
 builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

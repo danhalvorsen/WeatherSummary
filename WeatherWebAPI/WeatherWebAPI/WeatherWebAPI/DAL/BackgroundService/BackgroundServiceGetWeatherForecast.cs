@@ -2,7 +2,7 @@
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
-namespace WeatherWebAPI.DAL.BackgroundService
+namespace WeatherWebAPI.DAL
 {
     public class BackgroundServiceGetWeatherForecast : BaseGetWeatherForecastCommands
     {

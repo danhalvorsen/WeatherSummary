@@ -23,6 +23,7 @@
         public float ProbOfThunder { get; set; }
         public DateTime DateForecast { get; set; }
         public WeatherSourceDto Source { get; set; }
+        public ScoreDto Score { get; set; }
 
     }
 }

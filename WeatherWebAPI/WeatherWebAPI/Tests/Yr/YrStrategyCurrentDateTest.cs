@@ -22,11 +22,14 @@ namespace Tests.Yr
             Longitude = 5.712611357275702,
         };
 
-        [SetUp] // If test doesn't work it's because you can't get the weatherdata for 12:00 (aka updated_at > 12:00 in the yr.json)
+        [SetUp]
         public void Setup()
         {
             _strategy = new YrStrategy(new YrConfig());
-            _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+            if (DateTime.UtcNow.Hour > 12)
+                _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, DateTime.UtcNow.Hour, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+            else
+                _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 12, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
         }
 
         [Test]
@@ -45,7 +48,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetTemperature()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Temperature);
 
@@ -59,7 +62,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetWindspeed()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Windspeed);
 
@@ -71,7 +74,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetWindDirection()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WindDirection);
 
@@ -85,7 +88,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetWindspeedGust()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WindspeedGust);
 
@@ -97,7 +100,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetPressure()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Pressure);
 
@@ -109,7 +112,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetHumidity()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.Humidity);
 
@@ -123,7 +126,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetProbabilityOfRain()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.ProbOfRain);
 
@@ -137,7 +140,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetAmountOfRain()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.AmountRain);
 
@@ -149,7 +152,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetCloudAreaFraction()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.CloudAreaFraction);
 
@@ -163,7 +166,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetFogAreaFraction()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.FogAreaFraction);
 
@@ -177,7 +180,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetProbabilityOfThunder()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.ProbOfRain);
 
@@ -191,7 +194,7 @@ namespace Tests.Yr
         [Test]
         public async Task ShouldGetWeatherType()
         {
-            var result = await _strategy.GetWeatherDataFrom(_city, _date);
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
             Console.WriteLine(result.WeatherType);
 

@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Diagnostics;
 using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
@@ -22,6 +23,9 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                 var WeatherForecastDtos = new List<WeatherForecastDto>();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
+                    //Debug.Assert(reader != null, "Reader should not be null");
+                    //Debug.Assert(reader.HasRows != false, "Reader should have rows");
+
 
                     foreach (object o in reader)
                     {
@@ -30,7 +34,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 
                         WeatherForecastDtos.Add(new WeatherForecastDto
                         {
-                            WeatherForecastId = Convert.ToInt32(reader["WeatherData.Id"]),
+                            WeatherForecastId = Convert.ToInt32(reader["Id"]),
                             City = reader["CityName"].ToString(),
                             Date = Convert.ToDateTime(reader["Date"]).ToUniversalTime(),
                             WeatherType = reader["WeatherType"].ToString(),

@@ -1,12 +1,15 @@
-﻿using FluentAssertions;
+﻿using Castle.Core.Configuration;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
+using WeatherWebAPI.DAL;
+using WeatherWebAPI.Factory;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace Tests.BackgroundServices
 {
@@ -21,10 +24,25 @@ namespace Tests.BackgroundServices
         private double amountRainDiff;
         private double cloudAFDiff;
 
-        private readonly List<WeatherForecastDto>? _actual = new()
+        private const double WEIGHT_TEMPERATURE = 0.3;
+        private const double WEIGHT_PRESSURE = 0.2;
+        private const double WEIGHT_HUMIDITY = 0.15;
+        private const double WEIGHT_AMOUNT_RAIN = 0.1;
+        private const double WEIGHT_PROB_OF_RAIN = 0.05;
+        private const double WEIGHT_WIND_SPEED = 0.1;
+        private const double WEIGHT_WIND_DIRECTION = 0.05;
+        private const double WEIGHT_CLOUD_AREA_FRACTION = 0.05;
+        private const double WEIGHT_SUM = WEIGHT_TEMPERATURE + WEIGHT_PRESSURE + WEIGHT_HUMIDITY + WEIGHT_AMOUNT_RAIN + WEIGHT_PROB_OF_RAIN +
+            WEIGHT_WIND_SPEED + WEIGHT_WIND_DIRECTION + WEIGHT_CLOUD_AREA_FRACTION;
+
+        private readonly Microsoft.Extensions.Configuration.IConfiguration? _config;
+        private readonly IFactory? _factory;
+
+        private readonly List<WeatherForecastDto> _actual = new()
         {
             new WeatherForecastDto
             {
+                WeatherForecastId = 5,
                 Date = DateTime.UtcNow.AddDays(1),
                 DateForecast = DateTime.UtcNow.AddDays(1),
                 City = "Stavanger",
@@ -50,6 +68,7 @@ namespace Tests.BackgroundServices
         {
             new WeatherForecastDto
             {
+                WeatherForecastId = 3,
                 Date = DateTime.UtcNow,
                 DateForecast = DateTime.UtcNow.AddDays(1),
                 City = "Stavanger",
@@ -69,15 +88,57 @@ namespace Tests.BackgroundServices
                 {
                     DataProvider = "Yr"
                 }
+            },
+            new WeatherForecastDto
+            {
+                WeatherForecastId = 2,
+                Date = DateTime.UtcNow,
+                DateForecast = DateTime.UtcNow.AddDays(2),
+                City = "Stavanger",
+                WeatherType = "cloudy",
+                Temperature = 10,
+                WindDirection = 240,
+                Windspeed = 15,
+                WindspeedGust = 5,
+                Pressure = 1003,
+                Humidity = 60,
+                ProbOfRain = 50,
+                AmountRain = 10,
+                CloudAreaFraction = 11,
+                FogAreaFraction = 5,
+                ProbOfThunder = 1,
+                Source = new WeatherSourceDto
+                {
+                    DataProvider = "Yr"
+                }
             }
         };
+        private readonly List<ScoreDto> _scores = new()
+        {
+            new ScoreDto
+            {
+                Score = 50,
+                ScoreWeighted = 49,
+                FK_WeatherDataId = 0
+            },
+            new ScoreDto
+            {
+                Score = 30,
+                ScoreWeighted = 29,
+                FK_WeatherDataId = 1
+            },
+            new ScoreDto
+            {
+                Score = 40,
+                ScoreWeighted = 39,
+                FK_WeatherDataId = 2
+            }
+        };
+
 
         [SetUp]
         public void SetUp()
         {
-            //  Originalt tall -nytt tall = differanse
-            //  (Differanse / originalt tall) * 100 = Prosentnedgang(%)
-
             tempDiff = 0;
             windSpdDiff = 0;
             windDirDiff = 0;
@@ -91,46 +152,47 @@ namespace Tests.BackgroundServices
         [Test]
         public void CalculateWeatherScore()
         {
-            foreach (var actual in _actual!)
+            foreach (var actual in _actual)
             {
-                foreach (var predicted in _predicted!)
+                foreach (var predicted in _predicted)
                 {
-                    if ((actual.Date.Date == predicted.DateForecast.Date) && (actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City))
+                    if (WeatherIdNotRated(_scores, predicted))
                     {
-                        tempDiff = Math.Abs(actual.Temperature - predicted.Temperature);
-                        windSpdDiff = Math.Abs(actual.Windspeed - predicted.Windspeed);
-                        windDirDiff = Math.Abs(actual.WindDirection - predicted.WindDirection);
-                        pressureDiff = Math.Abs(actual.Pressure - predicted.Pressure);
-                        humidityDiff = Math.Abs(actual.Humidity - predicted.Humidity);
-                        probOfRainDiff = Math.Abs(actual.ProbOfRain - predicted.ProbOfRain);
-                        amountRainDiff = Math.Abs(actual.AmountRain - predicted.AmountRain);
-                        cloudAFDiff = Math.Abs(actual.CloudAreaFraction - predicted.CloudAreaFraction);
+                        if (actual.Date.Date == predicted.DateForecast.Date && actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City)
+                        {
+                            var temperatureDifference = Math.Abs(actual.Temperature - predicted.Temperature);
+                            var pressureDifference = Math.Abs(actual.Pressure - predicted.Pressure);
+                            var humidityDifference = Math.Abs(actual.Humidity - predicted.Humidity);
+                            var amountRainDifference = Math.Abs(actual.AmountRain - predicted.AmountRain);
+                            var probOfRainDifference = Math.Abs(actual.ProbOfRain - predicted.ProbOfRain);
+                            var windSpeedDifference = Math.Abs(actual.Windspeed - predicted.Windspeed);
+                            var windDirectionDifference = Math.Abs(actual.WindDirection - predicted.WindDirection);
+                            var cloudAreaFractionDifference = Math.Abs(actual.CloudAreaFraction - predicted.CloudAreaFraction);
 
-                        var sumActual = SumWeatherScoreVariables(actual);
-                        var sumPredicted = SumWeatherScoreVariables(predicted);
+                            var sumActual = SumWeatherScoreVariables(actual);
+                            var sumPredicted = SumWeatherScoreVariables(predicted);
+                            var difference = Math.Abs(sumActual - sumPredicted);
 
-                        Console.WriteLine($"Actual Weather Sum: {sumActual}");
-                        Console.WriteLine($"Predicted Weather Sum: {sumPredicted}");
+                            var score = Math.Round(CalculatePercentage(sumActual, difference), 2);
+                            Console.WriteLine($"Score: {score}");
 
+                            var weightedDifferenceProcentage = Math.Round(CalculateWeightedScore(temperatureDifference, pressureDifference, humidityDifference, amountRainDifference,
+                                probOfRainDifference, windSpeedDifference, windDirectionDifference, cloudAreaFractionDifference), 2);
 
-                        var difference = Math.Abs(sumActual - sumPredicted);
-                        Console.WriteLine($"Difference: {difference}");
+                            var weightedScore = 100 - weightedDifferenceProcentage;
+                            Console.WriteLine($"Weighted Score: {weightedScore}");
 
-                        var score = Math.Round((sumActual - difference) / sumActual * 100, 2);
-                        Console.WriteLine("Score: " + score);
-
-                        var sumDiff = tempDiff + pressureDiff + humidityDiff + cloudAFDiff + amountRainDiff + probOfRainDiff + windSpdDiff + windDirDiff;
-                        Console.WriteLine($"All value differences added together: {sumDiff}");
-                        var sumConst = (0.3 + 0.2 + 0.15 + 0.05 + 0.1 + 0.05 + 0.1 + 0.05);
-                        Debug.Assert(sumConst <= 100, "Should be between 0-100");
-                        var scoreWeight = ((tempDiff * 0.3) + (pressureDiff * 0.2) + (humidityDiff * 0.15) + (cloudAFDiff * 0.05)
-                            + (amountRainDiff * 0.1) + (probOfRainDiff * 0.05) + (windSpdDiff * 0.1) + (windDirDiff * 0.05)) / sumConst;
-                        Console.WriteLine($"Weight: {100-scoreWeight}%");
-
-                        score.Should().BeGreaterThanOrEqualTo(0).And.BeLessThanOrEqualTo(100);
+                        }
                     }
                 }
             }
+        }
+        [Test]
+        public async Task CalculateWeatherScoreWithObject()
+        {
+            //var sut = new BackGroundServiceCalculateScore(_config, _factory);
+            //await sut.CalculateScore();
+            Console.WriteLine("asdf");
         }
 
         [Test]
@@ -309,7 +371,7 @@ namespace Tests.BackgroundServices
         {
             var dividedBy = (actual > predicted) ? actual : predicted;
 
-            return (Math.Abs(actual - predicted) / actual) * 100;
+            return (Math.Abs(actual - predicted) / dividedBy) * 100; /*return (Math.Abs(actual - predicted) / actual) * 100;*/
         }
 
         private static double CalculatePercentage(double sumActualWeather, double difference)
@@ -322,6 +384,24 @@ namespace Tests.BackgroundServices
             return Math.Abs(forecast.Temperature + forecast.Windspeed + forecast.WindDirection +
                                 forecast.Pressure + forecast.Humidity + forecast.ProbOfRain + forecast.AmountRain +
                                     forecast.CloudAreaFraction);
+        }
+
+        private static double CalculateWeightedScore(double tempDiff, double pressureDiff,
+    double humidityDiff, double amountRainDiff, double probOfRainDiff,
+        double windSpdDiff, double windDirDiff, double cloudAFDiff)
+        {
+            Debug.Assert(WEIGHT_SUM <= 100 && WEIGHT_SUM >= 0);
+            var weightedScore = ((tempDiff * WEIGHT_TEMPERATURE) + (pressureDiff * WEIGHT_PRESSURE) + (humidityDiff * WEIGHT_HUMIDITY) +
+                        (amountRainDiff * WEIGHT_AMOUNT_RAIN) + (probOfRainDiff * WEIGHT_PROB_OF_RAIN) + (windSpdDiff * WEIGHT_WIND_SPEED) +
+                            (windDirDiff * WEIGHT_WIND_DIRECTION) + (cloudAFDiff * WEIGHT_CLOUD_AREA_FRACTION))
+                                / (WEIGHT_SUM);
+
+            return weightedScore;
+        }
+
+        private static bool WeatherIdNotRated(List<ScoreDto> scores, WeatherForecastDto predicted)
+        {
+            return !scores.ToList().Any(i => i.FK_WeatherDataId.Equals(predicted.WeatherForecastId));
         }
     }
 }

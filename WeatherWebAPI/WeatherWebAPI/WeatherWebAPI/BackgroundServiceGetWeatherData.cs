@@ -1,5 +1,5 @@
 ﻿using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL.BackgroundService;
+using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
@@ -26,6 +26,11 @@ namespace WeatherWebAPI
         {
             try
             {
+                if(DateTime.UtcNow.Hour <= 12)
+                { 
+
+                }
+
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     Console.WriteLine($"{this.GetType().Name}: DOING WORK");

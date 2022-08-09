@@ -14,7 +14,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
         public async Task Add(double score, double weightedScore, int weatherDataId)
         {
             string queryString = $"INSERT INTO Score(Score, ScoreWeighted, FK_WeatherDataId) " +
-                                    $"VALUES({score}, {weightedScore}, {weatherDataId}";
+                                    $"VALUES({score}, {weightedScore}, {weatherDataId})";
 
             using SqlConnection connection = new(_config.ConnectionString);
             SqlCommand command = new(queryString, connection);

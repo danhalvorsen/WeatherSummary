@@ -4,7 +4,7 @@ using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
-namespace WeatherWebAPI.DAL.BackgroundService
+namespace WeatherWebAPI.DAL
 {
     public class BackGroundServiceCalculateScore : BaseGetWeatherForecastCommands
     {
@@ -34,63 +34,43 @@ namespace WeatherWebAPI.DAL.BackgroundService
 
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
 
-                string getActualWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                                $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
-                                                    $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                        $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                            $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                                $"AND CAST(DateForecast as date) = CAST([Date] as date) AND City.Name = '{_citiesDatabase[0].Name}' " +
-                                                                    $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
-                                                                        $"ORDER BY[Date], SourceName";
-
-                string getPredictedWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                                $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
-                                                    $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                        $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                            $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                                $"AND CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{_citiesDatabase[0].Name}' " +
-                                                                    $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
-                                                                        $"ORDER BY[Date], SourceName";
-
-                IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
-                var ActualWeather = getWeatherDataFromDatabaseStrategy.Get(getActualWeather);
-                var PredictedWeather = getWeatherDataFromDatabaseStrategy.Get(getPredictedWeather);
-                
-                //var subResult = ActualWeather
-                //    .Where(i => PredictedWeather.Any(p => p.DateForecast == i.Date) && i.Source.DataProvider == "Yr")
-                //    .ToList();
-
-                //subResult.Sum(i => i.Pressure);
-
-                foreach (var actual in ActualWeather)
+                foreach (var city in _citiesDatabase)
                 {
-                    foreach (var predicted in PredictedWeather)
+                    GetActualAndPredictedWeatherForCity(city, out List<WeatherForecastDto> actualWeather, out List<WeatherForecastDto> predictedWeather);
+                    List<ScoreDto> scores = GetScores();
+
+                    foreach (var actual in actualWeather)
                     {
-                        if(actual.Date == predicted.DateForecast && actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City)
+                        foreach (var predicted in predictedWeather)
                         {
-                            var temperatureDifference = Math.Abs(actual.Temperature - predicted.Temperature);
-                            var pressureDifference = Math.Abs(actual.Pressure - predicted.Pressure);
-                            var humidityDifference = Math.Abs(actual.Humidity - predicted.Humidity);
-                            var amountRainDifference = Math.Abs(actual.AmountRain - predicted.AmountRain);
-                            var probOfRainDifference = Math.Abs(actual.ProbOfRain - predicted.ProbOfRain);
-                            var windSpeedDifference = Math.Abs(actual.Windspeed - predicted.Windspeed);
-                            var windDirectionDifference = Math.Abs(actual.WindDirection - predicted.WindDirection);
-                            var cloudAreaFractionDifference = Math.Abs(actual.CloudAreaFraction - predicted.CloudAreaFraction);
-
-                            var sumActual = SumWeatherScoreVariables(actual);
-                            var sumPredicted = SumWeatherScoreVariables(predicted);
-                            var difference = Math.Abs(sumActual - sumPredicted);
-
-                            var score = Math.Round(CalculatePercentage(sumActual, difference), 2);
-                            Console.WriteLine($"Score: {score}");
-
-                            var weightedScore = CalculateWeightedScore(temperatureDifference, pressureDifference, humidityDifference, amountRainDifference,
-                                probOfRainDifference, windSpeedDifference, windDirectionDifference, cloudAreaFractionDifference);
-                            Console.WriteLine($"Weighted Score: {weightedScore}");
-
-                            if(actual.WeatherForecastId == predicted.WeatherForecastId) // Unødvendig??
+                            if (WeatherIdNotRated(scores, predicted))
                             {
-                                await AddScoreToDatabase(score, weightedScore, actual.WeatherForecastId);
+                                if (actual.Date.Date == predicted.DateForecast.Date && actual.Source.DataProvider == predicted.Source.DataProvider && actual.City == predicted.City)
+                                {
+                                    var temperatureDifference = Math.Abs(actual.Temperature - predicted.Temperature);
+                                    var pressureDifference = Math.Abs(actual.Pressure - predicted.Pressure);
+                                    var humidityDifference = Math.Abs(actual.Humidity - predicted.Humidity);
+                                    var amountRainDifference = Math.Abs(actual.AmountRain - predicted.AmountRain);
+                                    var probOfRainDifference = Math.Abs(actual.ProbOfRain - predicted.ProbOfRain);
+                                    var windSpeedDifference = Math.Abs(actual.Windspeed - predicted.Windspeed);
+                                    var windDirectionDifference = Math.Abs(actual.WindDirection - predicted.WindDirection);
+                                    var cloudAreaFractionDifference = Math.Abs(actual.CloudAreaFraction - predicted.CloudAreaFraction);
+
+                                    var sumActual = SumWeatherScoreVariables(actual);
+                                    var sumPredicted = SumWeatherScoreVariables(predicted);
+                                    var difference = Math.Abs(sumActual - sumPredicted);
+
+                                    var score = Math.Round(CalculatePercentage(sumActual, difference), 2);
+                                    Console.WriteLine($"Score: {score}");
+
+                                    var weightedDifferenceProcentage = Math.Round(CalculateWeightedScore(temperatureDifference, pressureDifference, humidityDifference, amountRainDifference,
+                                        probOfRainDifference, windSpeedDifference, windDirectionDifference, cloudAreaFractionDifference), 2);
+
+                                    var weightedScore = 100 - weightedDifferenceProcentage;
+                                    Console.WriteLine($"Weighted Score: {weightedScore}");
+
+                                    await AddScoreToDatabase(score, weightedScore, predicted.WeatherForecastId);
+                                }
                             }
                         }
                     }
@@ -100,6 +80,46 @@ namespace WeatherWebAPI.DAL.BackgroundService
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        private List<ScoreDto> GetScores()
+        {
+            IGetScoreFromDatabaseStrategy getScoreFromDatabaseStrategy = _factory.Build<IGetScoreFromDatabaseStrategy>();
+            string getScores = "SELECT * FROM Score";
+            var scores = getScoreFromDatabaseStrategy.Get(getScores);
+            return scores;
+        }
+
+        private void GetActualAndPredictedWeatherForCity(CityDto city, out List<WeatherForecastDto> actualWeather, out List<WeatherForecastDto> predictedWeather)
+        {
+            string getActualWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+                                                    $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
+                                                        $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+                                                            $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                                                                $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                                                                    $"AND CAST(DateForecast as date) = CAST([Date] as date) AND City.Name = '{city.Name}' " +
+                                                                        $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
+                                                                            $"ORDER BY[Date], SourceName";
+
+            string getPredictedWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+                                            $"City.[Name] as CityName, [Source].[Name] as SourceName FROM WeatherData " +
+                                                $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+                                                    $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                                                        $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                                                            $"AND CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{city.Name}' " +
+                                                                $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
+                                                                    $"ORDER BY[Date], SourceName";
+
+
+
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+            actualWeather = getWeatherDataFromDatabaseStrategy.Get(getActualWeather);
+            predictedWeather = getWeatherDataFromDatabaseStrategy.Get(getPredictedWeather);
+        }
+
+        private static bool WeatherIdNotRated(List<ScoreDto> scores, WeatherForecastDto predicted)
+        {
+            return !scores.ToList().Any(i => i.FK_WeatherDataId.Equals(predicted.WeatherForecastId));
         }
 
         private static double CalculatePercentage(double sumActualWeather, double difference)
@@ -114,13 +134,13 @@ namespace WeatherWebAPI.DAL.BackgroundService
                                     forecast.CloudAreaFraction);
         }
 
-        private static double CalculateWeightedScore(double tempDiff, double pressureDiff, 
+        private static double CalculateWeightedScore(double tempDiff, double pressureDiff,
             double humidityDiff, double amountRainDiff, double probOfRainDiff,
                 double windSpdDiff, double windDirDiff, double cloudAFDiff)
         {
-            Debug.Assert(WEIGHT_SUM == 1000);
-            var weightedScore = ((tempDiff * WEIGHT_TEMPERATURE) + (pressureDiff * WEIGHT_PRESSURE) + (humidityDiff * WEIGHT_HUMIDITY) + 
-                        (amountRainDiff * WEIGHT_AMOUNT_RAIN) + (probOfRainDiff * WEIGHT_PROB_OF_RAIN) + (windSpdDiff * WEIGHT_WIND_SPEED) + 
+            Debug.Assert(WEIGHT_SUM <= 100 && WEIGHT_SUM >= 0);
+            var weightedScore = ((tempDiff * WEIGHT_TEMPERATURE) + (pressureDiff * WEIGHT_PRESSURE) + (humidityDiff * WEIGHT_HUMIDITY) +
+                        (amountRainDiff * WEIGHT_AMOUNT_RAIN) + (probOfRainDiff * WEIGHT_PROB_OF_RAIN) + (windSpdDiff * WEIGHT_WIND_SPEED) +
                             (windDirDiff * WEIGHT_WIND_DIRECTION) + (cloudAFDiff * WEIGHT_CLOUD_AREA_FRACTION))
                                 / (WEIGHT_SUM);
 

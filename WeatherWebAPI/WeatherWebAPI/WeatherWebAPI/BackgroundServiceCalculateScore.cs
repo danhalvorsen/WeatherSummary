@@ -1,5 +1,5 @@
 ﻿using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL.BackgroundService;
+using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
