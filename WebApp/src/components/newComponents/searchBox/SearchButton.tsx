@@ -1,5 +1,5 @@
 import { FC } from "react"
-import { Children } from "../compTypes"
+import { Children } from "../Form/compTypes"
 
 
 type SearchButtonProps = {

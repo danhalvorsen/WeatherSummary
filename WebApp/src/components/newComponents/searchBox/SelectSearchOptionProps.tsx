@@ -1,4 +1,4 @@
-import { Children } from "../compTypes";
+import { Children } from "../Form/compTypes";
 
 type SelectSearchOptionProps = {
   children?: Children;

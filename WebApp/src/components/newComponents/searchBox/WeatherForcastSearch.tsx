@@ -1,36 +1,27 @@
-import { Children } from "../compTypes";
+import { Children } from "../Form/compTypes";
+import { LookupCityField } from './LookupCityField';
+import { SelectSearchOptionState } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
+import { propsType } from '../Form/compTypes';
 
-import {LookupCityField} from './LookupCityField';
 
+export const WeatherForcastSearch: React.FC<propsType> = (props) => {
 
-type weatherForcastSearchtype = {
-        cityName?: string,
-        choiceDate?: Date,
-        isChecked?: Boolean,
-        weekNo?: Number,
-        fromDate?: Date,
-        ToDate?: Date,
-        todayDate: string
-        };
-
-export const WeatherForcastSearch: React.FC<weatherForcastSearchtype> = (props) => {
-
+    
 
     return (
-        <div>
+        <div className='border border-danger mt-5 m-3'>
+
             <h3>WeatherForcastSearch</h3>
+
+            <LookupCityField cityName={props.cityName} />
+
+            <SelectSearchOptionState date={props.date}/>
+            <SelectSearchOptionState weekNo={props.weekNo}/>
+            <SelectSearchOptionState />
             
 
-            {props.cityName} <br/>
-            {props.todayDate}
 
-            <LookupCityField cityName={props.cityName}/>
-            
-            
-
-
-
-        </div>
+        </div >
 
     )
 }

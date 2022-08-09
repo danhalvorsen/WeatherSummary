@@ -1,33 +1,17 @@
 import { FC } from "react";
-import { FromDate } from "./FromDate"
-import { ToDate } from "./ToDate"
-
+import { Children, propsType } from "../Form/compTypes";
 
 
 type RadioButtonProps = {
-    state?: boolean
-    children?: JSX.Element|JSX.Element[]
-};
+    children?: Children;
+    enabled: boolean;
+  };
 
-export const RadioButton = (props?: RadioButtonProps) : JSX.Element  => {
-
-
-    if(props?.state) 
-    return ( <><h2>RadioButton T</h2>{props?.children}</>) 
-    else
+export const RadioButton = (props?: RadioButtonProps): JSX.Element => {
     return (
-         <>
-            
-            <label>RadioButton</label>
-            <input type="radio"/>
-            {props?.children}
-         </>
-         ) 
-
-  
-    
-    
-  
-
+        <>
+         <input type="radio" checked={props?.enabled} />
+        </>
+    )
 }
 
