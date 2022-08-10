@@ -11,7 +11,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task Get1WeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task GetOneWeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             DateTime fromDate = DateTime.UtcNow;
             DateTime toDate = fromDate.AddDays(7);
