@@ -33,7 +33,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                         $"INNER JOIN [Source] ON [Source].Id = SourceWeatherData.FK_SourceId " +
-                                            $"WHERE CAST([DateForecast] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source.DataProvider}'" + 
+                                            $"WHERE CAST([DateForecast] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source?.DataProvider}'" + 
                                             
                                  $"UPDATE SourceWeatherData " +
                                     $"SET ConnectionDate = '{weatherData.Date}' " +
@@ -41,7 +41,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                                             $"INNER JOIN WeatherData ON WeatherData.Id = SourceWeatherData.FK_WeatherDataId " + 
                                                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " + 
                                                     $"INNER JOIN [Source] ON [Source].Id = SourceWeatherData.FK_SourceId " +
-                                                        $"WHERE CAST([ConnectionDate] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source.DataProvider}'";
+                                                        $"WHERE CAST([ConnectionDate] as Date) = '{dateToBeUpdated.Date}' AND City.Name = '{city.Name}' AND [Source].Name = '{weatherData.Source?.DataProvider}'";
 
             using (SqlConnection connection = new(_config.ConnectionString))
             {

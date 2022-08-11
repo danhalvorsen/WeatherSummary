@@ -34,19 +34,19 @@ namespace WeatherWebAPI.DAL
                 {
                     //foreach (var city in _citiesDatabase)
                     //{
-                    _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, weatherStrategy);
+                        _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, weatherStrategy);
 
-                    if (DateDoesNotExistInDatabase(fromDate))
-                    {
-                        foreach (DateTime date in datesQuery)
+                        if (DateDoesNotExistInDatabase(fromDate))
                         {
-                            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
+                            foreach (DateTime date in datesQuery)
+                            {
+                                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
+                            }
                         }
-                    }
-                    if (DateExistsInDatabase(fromDate))
-                    {
-                        Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
-                    }
+                        if (DateExistsInDatabase(fromDate))
+                        {
+                            Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
+                        }
                     //}
                 }
             }

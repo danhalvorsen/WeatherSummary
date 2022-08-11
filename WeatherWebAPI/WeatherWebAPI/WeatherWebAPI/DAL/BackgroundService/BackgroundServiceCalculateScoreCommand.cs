@@ -31,20 +31,39 @@ namespace WeatherWebAPI.DAL
 
             try
             {
-
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
 
                 foreach (var city in _citiesDatabase)
                 {
-                    GetActualAndPredictedWeatherForCity(city, out List<WeatherForecastDto> actualWeather, out List<WeatherForecastDto> predictedWeather);
-                    List<ScoreDto> scores = GetScores();
+                    string getActualWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+                                                $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                                                    $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+                                                        $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                                                            $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                                                                $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
+                                                                    $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND City.Name = '{city.Name}' AND Score.FK_WeatherDataId IS null " +
+                                                                        $"ORDER BY[Date], SourceName";
+
+                    string getPredictedWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+                                                    $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                                                        $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
+                                                            $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
+                                                                $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
+                                                                    $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
+                                                                        $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = 'Stavanger' AND Score.FK_WeatherDataId IS null " +
+                                                                            $"ORDER BY [Date], SourceName";
+
+
+
+                    IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+                    var actualWeather = await getWeatherDataFromDatabaseStrategy.Get(getActualWeather);
+                    var predictedWeather = await getWeatherDataFromDatabaseStrategy.Get(getPredictedWeather);
+
 
                     foreach (var actual in actualWeather)
                     {
                         foreach (var predicted in predictedWeather)
                         {
-                            if (WeatherNotRated(scores, predicted))
-                            {
                                 if (actual.Date.Date == predicted.DateForecast.Date && actual.Source?.DataProvider == predicted.Source?.DataProvider && actual.City == predicted.City)
                                 {
                                     var temperatureDifference = Math.Abs(actual.Temperature - predicted.Temperature);
@@ -71,7 +90,6 @@ namespace WeatherWebAPI.DAL
 
                                     await AddScoreToDatabase(score, weightedScore, predicted.WeatherForecastId);
                                 }
-                            }
                         }
                     }
                 }
@@ -80,48 +98,6 @@ namespace WeatherWebAPI.DAL
             {
                 Console.WriteLine(e.Message);
             }
-        }
-
-        private List<ScoreDto> GetScores()
-        {
-            IGetScoreFromDatabaseStrategy getScoreFromDatabaseStrategy = _factory.Build<IGetScoreFromDatabaseStrategy>();
-            string getScores = "SELECT * FROM Score";
-            var scores = getScoreFromDatabaseStrategy.Get(getScores);
-            return scores;
-        }
-
-        private void GetActualAndPredictedWeatherForCity(CityDto city, out List<WeatherForecastDto> actualWeather, out List<WeatherForecastDto> predictedWeather)
-        {
-            string getActualWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                                    $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
-                                                        $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                            $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                                $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                                    $"FULL OUTER JOIN Score ON Score.FK_WeatherDataId = WeatherData.Id " +
-                                                                        $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND City.Name = '{city.Name}' " +
-                                                                            $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
-                                                                                $"ORDER BY[Date], SourceName";
-
-            string getPredictedWeather = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                            $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
-                                                $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-                                                    $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-                                                        $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-                                                            $"FULL OUTER JOIN Score ON Score.FK_WeatherDataId = WeatherData.Id " +
-                                                                $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{city.Name}' " +
-                                                                    $"AND[Date] BETWEEN DATEADD(day,-7, GETDATE()) AND GETDATE() " +
-                                                                        $"ORDER BY[Date], SourceName";
-
-
-
-            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
-            actualWeather = getWeatherDataFromDatabaseStrategy.Get(getActualWeather);
-            predictedWeather = getWeatherDataFromDatabaseStrategy.Get(getPredictedWeather);
-        }
-
-        private static bool WeatherNotRated(List<ScoreDto> scores, WeatherForecastDto predicted)
-        {
-            return !scores.ToList().Any(i => i.FK_WeatherDataId.Equals(predicted.WeatherForecastId));
         }
 
         private static double CalculatePercentage(double sumActualWeather, double difference)

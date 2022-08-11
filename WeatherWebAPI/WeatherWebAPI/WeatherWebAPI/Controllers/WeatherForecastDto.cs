@@ -10,6 +10,7 @@
         public int WeatherForecastId { get; set; }
         public string? City { get; set; }
         public DateTime Date { get; set; }
+        public DateTime DateForecast { get; set; }
         public string? WeatherType { get; set; }
         public float Temperature { get; set; }
         public float Windspeed { get; set; }
@@ -22,7 +23,6 @@
         public float CloudAreaFraction { get; set; }
         public float FogAreaFraction { get; set; }
         public float ProbOfThunder { get; set; }
-        public DateTime DateForecast { get; set; }
         public WeatherSourceDto? Source { get; set; }
         public ScoreDto? Score { get; set; }
 

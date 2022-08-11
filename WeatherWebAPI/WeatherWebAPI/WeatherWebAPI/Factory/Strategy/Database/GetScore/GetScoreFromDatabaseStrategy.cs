@@ -12,8 +12,10 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             _config = config;
         }
 
-        public List<ScoreDto> Get(string queryString)
+        public async Task<List<ScoreDto>> Get()
         {
+            string queryString = "SELECT * FROM Score";
+
             using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
@@ -32,7 +34,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         });
                     }
                 }
-                command.ExecuteNonQuery();
+                await command.ExecuteNonQueryAsync();
                 return scoreDtos;
             }
         }

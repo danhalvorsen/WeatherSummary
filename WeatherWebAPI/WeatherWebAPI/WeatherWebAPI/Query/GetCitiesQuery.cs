@@ -22,6 +22,7 @@ namespace WeatherWebAPI.Query
                 connection.Open();
 
                 var list = new List<CityDto>();
+                
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)

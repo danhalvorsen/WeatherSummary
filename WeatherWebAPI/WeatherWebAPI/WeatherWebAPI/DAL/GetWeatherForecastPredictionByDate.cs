@@ -57,10 +57,10 @@ namespace WeatherWebAPI.DAL
                 Console.WriteLine(e.Message);
             }
 
-            return GetWeatherForecastFromDatabase(cityName, date, weatherDataStrategies);
+            return await GetWeatherForecastFromDatabase(cityName, date, weatherDataStrategies);
         }
 
-        private List<WeatherForecastDto> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        private async Task<List<WeatherForecastDto>> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
 
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
@@ -74,7 +74,7 @@ namespace WeatherWebAPI.DAL
 
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
-            return getWeatherDataFromDatabaseStrategy.Get(queryString);
+            return await getWeatherDataFromDatabaseStrategy.Get(queryString);
         }
     }
 }

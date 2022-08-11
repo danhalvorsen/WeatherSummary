@@ -13,19 +13,19 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
-        public List<WeatherForecastDto> Get(string queryString)
+        public async Task<List<WeatherForecastDto>> Get(string queryString)
         {
             using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
 
-                var WeatherForecastDtos = new List<WeatherForecastDto>();
+                var weatherForecastDtos = new List<WeatherForecastDto>();
+
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     //Debug.Assert(reader != null, "Reader should not be null");
                     //Debug.Assert(reader.HasRows != false, "Reader should have rows");
-
 
                     foreach (object o in reader)
                     {
@@ -41,7 +41,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                             ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? Math.Round((float)Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
                         };
 
-                        WeatherForecastDtos.Add(new WeatherForecastDto
+                        weatherForecastDtos.Add(new WeatherForecastDto
                         {
                             WeatherForecastId = Convert.ToInt32(reader["Id"]),
                             City = reader["CityName"].ToString(),
@@ -64,8 +64,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         });
                     }
                 }
-                command.ExecuteNonQuery();
-                return WeatherForecastDtos;
+                await command.ExecuteNonQueryAsync();
+                return weatherForecastDtos;
             }
         }
     }

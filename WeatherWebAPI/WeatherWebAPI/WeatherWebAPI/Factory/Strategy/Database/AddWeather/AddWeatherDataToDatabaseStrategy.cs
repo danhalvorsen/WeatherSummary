@@ -19,7 +19,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                                         $"DECLARE @fk_weatherdata_id INT " +
                                             $"SELECT @fk_weatherdata_id = Id From WeatherData " +
                                                 $"SELECT @city_id = Id FROM City WHERE City.Name = '{city.Name}' " +
-                                                    $"SELECT @source_id = id FROM [Source] WHERE [Source].[Name] = '{weatherData.Source.DataProvider}' " +
+                                                    $"SELECT @source_id = id FROM [Source] WHERE [Source].[Name] = '{weatherData.Source?.DataProvider}' " +
                                                         $"INSERT INTO WeatherData([Date], WeatherType, Temperature, Windspeed, WindDirection, WindspeedGust, Pressure, Humidity, " +
                                                             $"ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, FK_CityId, DateForecast) " +
                                     $"VALUES('{weatherData.Date}', '{weatherData.WeatherType}', {weatherData.Temperature}, {weatherData.Windspeed}, " +
