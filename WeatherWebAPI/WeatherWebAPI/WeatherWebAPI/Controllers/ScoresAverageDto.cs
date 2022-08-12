@@ -2,8 +2,8 @@
 {
     public class ScoresAverageDto
     {
-        public double? AverageScore { get; set; }
-        public double? AveragecoreWeighted { get; set; }
+        public float AverageScore { get; set; }
+        public float AveragecoreWeighted { get; set; }
         public string? DataProvider { get; set; }
     }
 }

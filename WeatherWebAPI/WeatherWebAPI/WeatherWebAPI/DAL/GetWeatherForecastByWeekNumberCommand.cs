@@ -33,7 +33,6 @@ namespace WeatherWebAPI.DAL
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
                 citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
-                // Getting the all the dates between the from and to datequeries
                 foreach (DateTime day in EachDay(monday, sunday))
                 {
                     datesInWeek.Add(day);

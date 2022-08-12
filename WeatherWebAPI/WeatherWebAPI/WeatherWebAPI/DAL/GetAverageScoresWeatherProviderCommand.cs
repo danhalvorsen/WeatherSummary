@@ -4,9 +4,9 @@ using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetAverageScoresCommand : BaseGetWeatherForecastCommands
+    public class GetAverageScoresWeatherProviderCommand : BaseGetWeatherForecastCommands
     {
-        public GetAverageScoresCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public GetAverageScoresWeatherProviderCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
@@ -14,7 +14,6 @@ namespace WeatherWebAPI.DAL
         public async Task<List<ScoresAverageDto>> CalculateAverageScores(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             var avgScoreList = new List<ScoresAverageDto>();
-
             try
             {
                 foreach (var strategy in weatherDataStrategies)
@@ -32,17 +31,17 @@ namespace WeatherWebAPI.DAL
 
                     var scoreData = await getWeatherDataFromDatabaseStrategy.Get(queryString);
 
-                    double? sumScore = 0.0;
-                    double? sumScoreWeighted = 0.0;
+                    float sumScore = 0;
+                    float sumScoreWeighted = 0;
 
                     foreach (var score in scoreData)
                     {
-                        sumScore += score.Score?.Score;
-                        sumScoreWeighted += score.Score?.ScoreWeighted;
+                        sumScore += score.Score.Score;
+                        sumScoreWeighted += score.Score.ScoreWeighted;
                     }
 
-                    var avgScore = CalculateAverage(sumScore, scoreData);
-                    var avgScoreWeighted = CalculateAverage(sumScoreWeighted, scoreData);
+                    float avgScore = (float)CalculateAverageScore(sumScore, scoreData);
+                    float avgScoreWeighted = (float)CalculateAverageScore(sumScoreWeighted, scoreData);
 
                     avgScoreList.Add(new ScoresAverageDto
                     {
@@ -60,33 +59,6 @@ namespace WeatherWebAPI.DAL
             }
             
             return avgScoreList;
-        }
-
-        //public async Task CalculateAverageScoresFor(CityDto city, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
-        //{
-        //    try
-        //    {
-        //        foreach (var strategy in weatherDataStrategies)
-        //        {
-        //            string queryString = $"SELECT WeatherData.Id, City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
-        //                $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
-        //                    $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
-        //                        $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
-        //                            $"FULL OUTER JOIN Score ON Score.FK_WeatherDataId = WeatherData.Id " +
-        //                                $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND City.Name = '{city.Name}' " +
-        //                                $"AND Score.Score = ISNULL(Score.Score, 0) AND Score.ScoreWeighted = ISNULL(Score.ScoreWeighted, 0)";
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //        Console.WriteLine(e.Message);
-        //    }
-        //}
-
-        public static double? CalculateAverage(double? sum, List<WeatherForecastDto> data)
-        {
-            return sum / data.Count;
         }
     }
 }

@@ -38,7 +38,7 @@ public class WeatherforecastController : ControllerBase
     private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _strategies = new();
 
 
-    public WeatherforecastController(IConfiguration config, IFactory factory, 
+    public WeatherforecastController(IConfiguration config, IFactory factory,
        DateQueryAndCityValidator dateQueryAndCityValidator,
        CityQueryValidator cityQueryValidator,
        BetweenDateQueryAndCityValidator beetweenDateQueryAndCityValidator,
@@ -80,10 +80,10 @@ public class WeatherforecastController : ControllerBase
         var validationResult = _dateQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
-        
+
 
         var command = new GetWeatherForecastByDateCommand(_config, _factory);
-        
+
         return await command.GetWeatherForecastByDate(query, _strategies);
     }
 
@@ -111,9 +111,9 @@ public class WeatherforecastController : ControllerBase
         var validationResult = _weekQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
-        
+
         var command = new GetWeatherForecastByWeekNumberCommand(_config, _factory);
-        
+
         return await command.GetWeatherForecastByWeek(query, _strategies);
     }
 
@@ -123,8 +123,24 @@ public class WeatherforecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ScoresAverageDto>>> GetAverageScoreForWeatherProvider()
     {
-        var command = new GetAverageScoresCommand(_config, _factory);
+        var command = new GetAverageScoresWeatherProviderCommand(_config, _factory);
+        
         return await command.CalculateAverageScores(_strategies);
+    }
+
+    [Route("api/weatherforecast/avgScoreWeatherProviderForCity/")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<ActionResult<List<ScoresAverageForCityDto>>> GetAverageScoreCity(CityQuery query)
+    {
+        var validationResult = _cityQueryValidator.Validate(query);
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var command = new GetAverageScoresWeatherProviderForCityCommand(_config, _factory);
+        
+        return await command.CalculateAverageScoresFor(query, _strategies);
     }
 
     [Route("api/weatherforecast/getCitiesInDatabase/")]
@@ -133,16 +149,8 @@ public class WeatherforecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<CityDto>>> GetCitiesFromDatabase()
     {
-        try
-        {
-            var command = new GetCitiesQuery(_config);
-            var result = await command.GetAllCities();
-            
-            return new OkObjectResult(result);
-        }
-        catch (Exception e)
-        {
-            return new BadRequestObjectResult(e);
-        }
+        var command = new GetCitiesQuery(_config);
+        
+        return await command.GetAllCities();
     }
 }

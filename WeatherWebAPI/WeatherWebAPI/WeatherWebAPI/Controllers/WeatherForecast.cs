@@ -1,8 +1,8 @@
 ﻿namespace WeatherWebAPI.Controllers
 {
-    public class WeatherForecastDto
+    public class WeatherForecast
     {
-        public WeatherForecastDto()
+        public WeatherForecast()
         {
             Source = new WeatherSourceDto();
             Score = new ScoreDto();

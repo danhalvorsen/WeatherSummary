@@ -37,8 +37,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         var score = new ScoreDto
                         {
                             FK_WeatherDataId = reader["FK_WeatherDataId"] != System.DBNull.Value ? Convert.ToInt32(reader["FK_WeatherDataId"]) : 0,
-                            Score = reader["Score"] != System.DBNull.Value ? Math.Round((float)Convert.ToDouble(reader["Score"]), 2) : 0,
-                            ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? Math.Round((float)Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
+                            Score = reader["Score"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Score"]), 2) : 0,
+                            ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
                         };
 
                         weatherForecastDtos.Add(new WeatherForecastDto

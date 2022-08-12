@@ -31,7 +31,6 @@ namespace WeatherWebAPI.DAL
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
                 citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
-                // Checking if the city is in our database, if not it's getting added.
                 if (!CityExists(citySearchedFor!))
                 {
                     var cityData = await GetCityData(citySearchedFor);

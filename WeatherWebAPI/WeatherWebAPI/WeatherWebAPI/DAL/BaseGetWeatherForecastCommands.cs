@@ -109,11 +109,17 @@ namespace WeatherWebAPI.DAL
             return result.AddDays(-3);
         }
 
-        private static void GetCountryFromAbbreviation(List<CityDto> city)
+        protected static void GetCountryFromAbbreviation(List<CityDto> city)
         {
             var twoLetterCountryAbbreviation = new CultureInfo(city[0].Country!);
             var countryName = new RegionInfo(twoLetterCountryAbbreviation.Name);
             city[0].Country = countryName.EnglishName;
+        }
+
+        protected static double CalculateAverageScore(double sum, List<WeatherForecastDto> data)
+        {
+            var average = !double.IsNaN(sum / data.Count) ? Math.Round((sum / data.Count), 2) : 0;
+            return average;
         }
     }
 }
