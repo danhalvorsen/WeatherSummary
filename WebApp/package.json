@@ -26,7 +26,8 @@
     "json-server": "json-server --config ./src/tests/YrData.json",
     "json-server2": "json-server --config ./src/tests/YrData2.json",
     "docker": "docker build -t weather-yr:dev . && docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000  -e CHOKIDAR_USEPOLLING=true sample:dev",
-    "pp": "plop"
+    "pp": "plop",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
   },
   "eslintConfig": {
     "extends": [

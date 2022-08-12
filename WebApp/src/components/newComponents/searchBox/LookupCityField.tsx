@@ -9,33 +9,34 @@ type lookupCityFieldhProps = {
 };
 
 
-export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
+export const 
+LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
 
   let  buffer: string = '';
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(e.key == 'Enter')
     {
-      props?.cityName(buffer)
+      props?.cityName(buffer);
       buffer = "";
-    }
-      
-    else
+      return;
+    } 
+    if(e.key == 'Backspace')
     {
-
-      if( e.key !== undefined &&
-          (e.key == 'A' || e.key == 'a') || 
-          (e.key == 'B' || e.key == 'b'))
-      buffer += e.key;
+      buffer = buffer.substring(0, buffer.length-1);
     }
-      
+
+    if( e.key !== undefined && alphabet.includes(e.key))
+      buffer += e.key;
+    
   }
 
   
   return (
     <>
       <div className='border border-success mx-5 mb-2'>
-        <br />
+        <br/>
         <label>Search:</label> <input type="text" placeholder="City Name..." onKeyDown={handleChange}  />
         <SearchButton />
       </div>
