@@ -9,20 +9,25 @@ type RadioButtonProps = {
 };
 
 export const RadioButton = (props: RadioButtonProps): JSX.Element => {
+    const missingMotherNameConstant = "____Missing_Mother_Name____";
 
-    const missingMotherNameConstant = '____Missing_Mother_Name____';
-
-    const motherNameVerified = props.motherName !== undefined ? missingMotherNameConstant : props.motherName;
-    const renderIt = (motherName: string): JSX.Element =>  {
+    const motherNameVerified =
+        props.motherName !== undefined
+            ? missingMotherNameConstant
+            : props.motherName;
+    const renderIt = (motherName: string): JSX.Element => {
         return (
             <>
-                <input type="radio" checked={props?.enabled} onClick={e => props.onChange(props.motherName)} />
+                <input
+                    type="radio"
+                    checked={props?.enabled}
+                    onClick={(e) => props.onChange(props.motherName)}
+                />
             </>
-        )
-    }
+        );
+    };
 
-    return motherNameVerified === missingMotherNameConstant ?
-    renderIt(missingMotherNameConstant) :
-    renderIt(motherNameVerified);   
-}
-
+    return motherNameVerified === missingMotherNameConstant
+        ? renderIt(missingMotherNameConstant)
+        : renderIt(motherNameVerified);
+};

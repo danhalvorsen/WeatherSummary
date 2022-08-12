@@ -27,9 +27,7 @@ export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
 
     const onInputChange = (
         textInput: React.ChangeEventHandler<HTMLInputElement>
-    ): void => {
-        props?.cityName(textInput);
-    };
+    ): void => {};
     const onFormSubmit = (event: React.FormEvent<HTMLInputElement>): void => {
         event.preventDefault();
     };
