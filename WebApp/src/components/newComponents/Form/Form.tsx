@@ -10,10 +10,10 @@ interface  FormProps  {
 
 export const Form = (props: FormProps) => {
     return (
-       <>
-       <h1>Form</h1>
-       {props?.children}
-       </>
+       <div className="border border-primary m-2"> 
+          <h1>Form</h1>
+       {props?.children}</div>
+  
     )
 }
 

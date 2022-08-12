@@ -15,7 +15,7 @@ type SelectSearchOptionStateProps = {
 };
 export const SelectSearchOptionState: FC<propsType> = (props) => {
 
-  const [stateOneDate, setStateOneDate] = useState<boolean>(false);
+  const [stateOneDate, setStateOneDate] = useState<boolean>(true);
   const [stateWeekNo, setStateWeekNo] = useState<boolean>(false);
   const [stateBetweenDates, setStateBetweenDates] = useState<boolean>(false);
 

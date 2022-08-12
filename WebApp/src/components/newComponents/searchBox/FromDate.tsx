@@ -1,18 +1,10 @@
-import { Children } from "../Form/compTypes";
 
-type SelectSearchOptionProps = {
-  children?: Children;
-};
+export const FromDate: React.FC = () => {
 
-
-export const FromDate: React.FC = (props) => {
-
-  return (
+  return(
     <>
-<div></div>
-<label>From:</label> <input type="text" placeholder="Insert Date"/>
-      {props?.children}
-
+      <label>From:</label>  <input type="text" placeholder=""/>
     </>
-  );
-};
+)
+}
+

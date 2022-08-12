@@ -4,27 +4,20 @@ import { SelectSearchOptionState } from '../Form/WeatherForcastSearchState/Weath
 import { propsType } from '../Form/compTypes';
 
 
+type props = {
 
 
+    cityName: (newCityName: string) => void}
 
-export const WeatherForcastSearch: React.FC<propsType> = (props) => {
+export const WeatherForcastSearch: React.FC<props> = (props) => {
 
+    
     return (
         <div className='border border-danger mt-5 m-3'>
 
             <h3>WeatherForcastSearch</h3>
+            <LookupCityField cityName={props.cityName}/>
             <SelectSearchOptionState />
-
-            {/* <SelectSearchOptionState date={props.date}/> */}
-            
-
-            {/* <LookupCityField cityName={props.cityName} />
-
-            <SelectSearchOptionState date={props.date}/>
-            <SelectSearchOptionState weekNo={props.weekNo}/>
-            <SelectSearchOptionState />
-             */}
-
 
         </div >
 
