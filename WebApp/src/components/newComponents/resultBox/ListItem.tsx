@@ -3,5 +3,5 @@ export const ListItem = ({ Number }: { Number: Number }) => {
         <>
             <p>Provider NO[{Number}]</p>
         </>
-    );
-};
+    )
+}

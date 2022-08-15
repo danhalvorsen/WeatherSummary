@@ -1,5 +1,5 @@
-import { RadioButton } from "./RadioButton";
-import { propsType } from "../Form/compTypes";
+import { RadioButton } from './RadioButton'
+import { propsType } from '../Form/compTypes'
 
 export const SelectSearchOption = (props: propsType) => {
     return (
@@ -10,5 +10,5 @@ export const SelectSearchOption = (props: propsType) => {
                 {/* <RadioButton weekNo={props.weekNo} /> */}
             </div>
         </>
-    );
-};
+    )
+}

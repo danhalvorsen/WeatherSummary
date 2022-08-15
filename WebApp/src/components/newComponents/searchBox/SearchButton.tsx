@@ -1,9 +1,9 @@
-import { FC } from "react";
-import { Children } from "../Form/compTypes";
+import { FC } from 'react'
+import { Children } from '../Form/compTypes'
 
 type SearchButtonProps = {
-    children?: Children;
-};
+    children?: Children
+}
 
 export const SearchButton: FC<SearchButtonProps> = (props): JSX.Element => {
     return (
@@ -11,5 +11,5 @@ export const SearchButton: FC<SearchButtonProps> = (props): JSX.Element => {
             <button>Search</button>
             {props?.children}
         </>
-    );
-};
+    )
+}

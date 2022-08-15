@@ -1,20 +1,20 @@
-import { Children, propsType } from "../Form/compTypes";
-import { WeatherForcastEnumType } from "../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState";
+import { Children, propsType } from '../Form/compTypes'
+import { WeatherForcastEnumType } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState'
 
 type RadioButtonProps = {
-    children?: Children;
-    enabled: boolean;
-    motherName: WeatherForcastEnumType;
-    onChange: (typeName: WeatherForcastEnumType) => void;
-};
+    children?: Children
+    enabled: boolean
+    motherName: WeatherForcastEnumType
+    onChange: (typeName: WeatherForcastEnumType) => void
+}
 
 export const RadioButton = (props: RadioButtonProps): JSX.Element => {
-    const missingMotherNameConstant = "____Missing_Mother_Name____";
+    const missingMotherNameConstant = '____Missing_Mother_Name____'
 
     const motherNameVerified =
         props.motherName !== undefined
             ? missingMotherNameConstant
-            : props.motherName;
+            : props.motherName
     const renderIt = (motherName: string): JSX.Element => {
         return (
             <>
@@ -24,10 +24,10 @@ export const RadioButton = (props: RadioButtonProps): JSX.Element => {
                     onClick={(e) => props.onChange(props.motherName)}
                 />
             </>
-        );
-    };
+        )
+    }
 
     return motherNameVerified === missingMotherNameConstant
         ? renderIt(missingMotherNameConstant)
-        : renderIt(motherNameVerified);
-};
+        : renderIt(motherNameVerified)
+}

@@ -1,4 +1,4 @@
-import { List } from "./List";
+import { List } from './List'
 
 export const ListState: React.FC = (props) => {
     return (
@@ -9,5 +9,5 @@ export const ListState: React.FC = (props) => {
                 <List />
             </div>
         </>
-    );
-};
+    )
+}

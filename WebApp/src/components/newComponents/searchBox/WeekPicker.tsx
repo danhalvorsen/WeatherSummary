@@ -3,5 +3,5 @@ export const WeekPicker = () => {
         <>
             <input type="text" placeholder="Week Number" />
         </>
-    );
-};
+    )
+}

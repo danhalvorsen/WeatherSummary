@@ -1,12 +1,10 @@
-import { ProviderItem } from "./ProviderItem"
+import { ProviderItem } from './ProviderItem'
 
-export const ProviderItemState = ()=>{
-
+export const ProviderItemState = () => {
     return (
         <>
-            <ProviderItem Number={1}/>
-            <ProviderItem Number={2}/>
-
+            <ProviderItem Number={1} />
+            <ProviderItem Number={2} />
         </>
     )
-    }
+}

@@ -3,5 +3,5 @@ export const ToDate: React.FC = () => {
         <>
             <label>To:</label> <input type="text" placeholder="" />
         </>
-    );
-};
+    )
+}

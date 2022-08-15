@@ -6,5 +6,5 @@ export const ListItem: React.FC = (props) => {
                 {props?.children}
             </div>
         </>
-    );
-};
+    )
+}

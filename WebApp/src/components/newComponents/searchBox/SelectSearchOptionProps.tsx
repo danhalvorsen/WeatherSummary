@@ -1,8 +1,8 @@
-import { Children } from "../Form/compTypes";
+import { Children } from '../Form/compTypes'
 
 type SelectSearchOptionProps = {
-    children?: Children;
-};
+    children?: Children
+}
 
 export const SelectSearchOption: React.FC<SelectSearchOptionProps> = (
     props: SelectSearchOptionProps
@@ -12,5 +12,5 @@ export const SelectSearchOption: React.FC<SelectSearchOptionProps> = (
             <h3>SelectSearchOption</h3>
             {props?.children}
         </div>
-    );
-};
+    )
+}

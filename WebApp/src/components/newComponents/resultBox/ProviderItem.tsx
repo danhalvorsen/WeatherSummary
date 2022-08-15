@@ -3,5 +3,5 @@ export const ProviderItem = ({ Number }: { Number: Number }) => {
         <>
             <p>Provider NO[{Number}]</p>
         </>
-    );
-};
+    )
+}

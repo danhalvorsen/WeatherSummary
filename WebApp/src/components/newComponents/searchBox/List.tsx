@@ -1,4 +1,4 @@
-import { ListItem } from "./ListItem";
+import { ListItem } from './ListItem'
 
 export const List: React.FC = (props) => {
     return (
@@ -12,5 +12,5 @@ export const List: React.FC = (props) => {
                 <ListItem />
             </div>
         </>
-    );
-};
+    )
+}

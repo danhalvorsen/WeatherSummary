@@ -3,5 +3,5 @@ export const FromDate: React.FC = () => {
         <>
             <label>From:</label> <input type="text" placeholder="" />
         </>
-    );
-};
+    )
+}
