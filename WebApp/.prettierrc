@@ -1,8 +1,5 @@
 {
     "tabWidth": 4,
     "semi": false,
-    "singleQuote": true,
-    "error": {
-        "endOfLine": "auto"
-    }
+    "singleQuote": true
 }
