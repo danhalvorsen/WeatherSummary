@@ -5,7 +5,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetAvgScoresForSelectedPredictionLength : BaseGetWeatherForecastCommands
+    public class GetAvgScoresForSelectedPredictionLength : BaseCommands
     {
         public GetAvgScoresForSelectedPredictionLength(IConfiguration config, IFactory factory) : base(config, factory)
         {

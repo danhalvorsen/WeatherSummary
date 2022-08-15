@@ -6,7 +6,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetAvgScoresWeatherProviderForCityCommand : BaseGetWeatherForecastCommands
+    public class GetAvgScoresWeatherProviderForCityCommand : BaseCommands
     {
 
         public GetAvgScoresWeatherProviderForCityCommand(IConfiguration config, IFactory factory) : base(config, factory)

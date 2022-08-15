@@ -6,7 +6,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastBetweenDatesCommand : BaseGetWeatherForecastCommands
+    public class GetWeatherForecastBetweenDatesCommand : BaseCommands
     {
         public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {

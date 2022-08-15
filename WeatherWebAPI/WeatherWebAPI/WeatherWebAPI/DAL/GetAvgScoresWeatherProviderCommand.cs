@@ -4,7 +4,7 @@ using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetAvgScoresWeatherProviderCommand : BaseGetWeatherForecastCommands
+    public class GetAvgScoresWeatherProviderCommand : BaseCommands
     {
         public GetAvgScoresWeatherProviderCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {

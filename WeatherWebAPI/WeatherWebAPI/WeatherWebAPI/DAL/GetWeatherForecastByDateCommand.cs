@@ -8,7 +8,7 @@ namespace WeatherWebAPI.DAL
 {
 
 
-    public class GetWeatherForecastByDateCommand : BaseGetWeatherForecastCommands
+    public class GetWeatherForecastByDateCommand : BaseCommands
     {
         public GetWeatherForecastByDateCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
