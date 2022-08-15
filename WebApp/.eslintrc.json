@@ -34,7 +34,8 @@
             "files": ["*.ts", "*.mts", "*.cts", "*.tsx"],
             "rules": {
                 "no-undef": "off",
-                "indent": "off"
+                "indent": "off",
+                "semi": "off"
             }
         }
     ],
