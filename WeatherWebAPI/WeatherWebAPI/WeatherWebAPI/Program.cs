@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-//builder.Services.AddTransient( typeof(IFactory), typeof(StrategyBuilderFactory) );
 builder.Services.AddConfig(builder.Configuration);
 builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
 builder.Services.AddHostedService<BackgroundServiceGetScore>();
