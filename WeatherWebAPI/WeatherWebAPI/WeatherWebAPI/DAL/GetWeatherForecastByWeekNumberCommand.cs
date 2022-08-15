@@ -13,7 +13,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query)
         {
             string? citySearchedFor = query.CityQuery?.City;
             string? cityName = "";
@@ -22,7 +22,6 @@ namespace WeatherWebAPI.DAL
 
 
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
-            //var getDatesQueryDatabase = new GetDatesForCityQuery(_config);
             var datesInWeek = new List<DateTime>();
 
             try

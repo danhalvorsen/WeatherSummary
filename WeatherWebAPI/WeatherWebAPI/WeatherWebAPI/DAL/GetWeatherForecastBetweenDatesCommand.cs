@@ -13,7 +13,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity)
         {
             string? citySearchedFor = betweenDateQueryAndCity?.CityQuery?.City;
             string? cityName = "";
@@ -22,7 +22,6 @@ namespace WeatherWebAPI.DAL
 
             var datesQuery = new List<DateTime>();
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
-            //var getDatesQueryDatabase = new GetDatesForCityQuery(_config);
 
             try
             {
@@ -32,7 +31,6 @@ namespace WeatherWebAPI.DAL
                 TextInfo? textInfo = new CultureInfo("no", true).TextInfo;
                 citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
-                // Getting the all the dates between the from and to datequeries
                 foreach (DateTime day in EachDay(fromDate, toDate))
                 {
                     datesQuery.Add(day);
@@ -56,28 +54,6 @@ namespace WeatherWebAPI.DAL
                 {
                     cityName = citySearchedFor;
                 }
-
-                //var city = GetCityDtoBy(cityName!);
-
-                //foreach (DateTime date in datesQuery)
-                //{
-                //    if (date >= DateTime.UtcNow.Date)
-                //    {
-                //        foreach (var weatherStrategy in weatherDataStrategies)
-                //        {
-                //            _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
-
-                //            if (DateDoesNotExistInDatabase(date))
-                //            {  
-                //                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-                //            }
-                //            if (DateExistsInDatabase(date))
-                //            {
-                //                await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
-                //            }
-                //        }
-                //    }
-                //}
             }
             catch (Exception e)
             {

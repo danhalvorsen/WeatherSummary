@@ -6,14 +6,14 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastPredictionByDate : BaseGetWeatherForecastCommands
+    public class GetWeatherForecastPredictionByDate : BaseCommands
     {
         public GetWeatherForecastPredictionByDate(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastPredictionByDateForOneWeek(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastPredictionByDateForOneWeek(DateQueryAndCity query)
         {
             string? citySearchedFor = query?.CityQuery?.City;
             string? cityName = "";
@@ -56,10 +56,10 @@ namespace WeatherWebAPI.DAL
                 Console.WriteLine(e.Message);
             }
 
-            return await GetWeatherForecastFromDatabase(cityName, date, weatherDataStrategies);
+            return await GetWeatherForecastFromDatabase(cityName, date);
         }
 
-        private async Task<List<WeatherForecastDto>> GetWeatherForecastFromDatabase(string? cityName, DateTime date, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        private async Task<List<WeatherForecastDto>> GetWeatherForecastFromDatabase(string? cityName, DateTime date)
         {
 
             string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
