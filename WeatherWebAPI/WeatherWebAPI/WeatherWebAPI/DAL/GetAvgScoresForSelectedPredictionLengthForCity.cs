@@ -69,7 +69,7 @@ namespace WeatherWebAPI.DAL
                     {
                         City = cityName,
                         AverageScore = avgScore,
-                        AveragecoreWeighted = avgScoreWeighted,
+                        AverageScoreWeighted = avgScoreWeighted,
                         DataProvider = strategy.GetDataSource()
                     });
                 }

@@ -35,8 +35,8 @@ namespace Tests.BackgroundServices
         private const double WEIGHT_SUM = WEIGHT_TEMPERATURE + WEIGHT_PRESSURE + WEIGHT_HUMIDITY + WEIGHT_AMOUNT_RAIN + WEIGHT_PROB_OF_RAIN +
             WEIGHT_WIND_SPEED + WEIGHT_WIND_DIRECTION + WEIGHT_CLOUD_AREA_FRACTION;
 
-        private readonly Microsoft.Extensions.Configuration.IConfiguration? _config;
-        private readonly IFactory? _factory;
+        //private readonly Microsoft.Extensions.Configuration.IConfiguration? _config;
+        //private readonly IFactory? _factory;
 
         private readonly List<WeatherForecastDto> _actual = new()
         {
@@ -187,13 +187,12 @@ namespace Tests.BackgroundServices
                 }
             }
         }
-        [Test]
-        public async Task CalculateWeatherScoreWithObject()
-        {
-            //var sut = new BackGroundServiceCalculateScore(_config, _factory);
-            //await sut.CalculateScore();
-            Console.WriteLine("asdf");
-        }
+        //[Test]
+        //public async Task CalculateWeatherScoreWithObject()
+        //{
+        //    //var sut = new BackGroundServiceCalculateScore(_config, _factory);
+        //    //await sut.CalculateScore();
+        //}
 
         [Test]
         public void GetTemperatureDifference()

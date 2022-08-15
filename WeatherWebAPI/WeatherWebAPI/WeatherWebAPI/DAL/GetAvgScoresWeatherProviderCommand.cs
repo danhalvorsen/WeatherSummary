@@ -46,7 +46,7 @@ namespace WeatherWebAPI.DAL
                     avgScoreList.Add(new ScoresAverageDto
                     {
                         AverageScore = avgScore,
-                        AveragecoreWeighted = avgScoreWeighted,
+                        AverageScoreWeighted = avgScoreWeighted,
                         DataProvider = strategy.GetDataSource()
                     });
                     
