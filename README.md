@@ -88,14 +88,29 @@ docker network create YourNetworkName
 
 # API endpoint(s)
 
+**Cities**
 ```
-GET /api/weatherforecast/predictionByDate?DateQuery.Date={date}&CityQuery.City={cityName}
+GET /api/Cities/getCitiesInDatabase
+```
+**CompanyRating**
+```
+GET /api/CompanyRating/avgScoreWeatherProvider
 
-GET /api/weatherforecast/date?DateQuery.Date={date}&CityQuery.City={cityName}
+GET /api/CompanyRating/avgScorePredictionLength?Days={days}
 
-GET /api/weatherforecast/between?BetweenDateQuery.From={fromDate}&BetweenDateQuery.To={toDate}&CityQuery.City={cityName}
+GET /api/CompanyRating/avgScoreWeatherProviderForCity?City={cityName}
 
-GET /api/weatherforecast/week?week={weekNumber}&City={cityName}
+GET /api/CompanyRating/avgScorePredictionLengthAndCity?DaysQuery.Days={days}&CityQuery.City={cityName}
+```
+**WeatherForecast**
+```
+GET /api/WeatherForecast/predictionByDate?DateQuery.Date={date}&CityQuery.City={cityName}
 
-GET api/weatherforecast/getCitiesInDatabase
+GET /api/WeatherForecast/date?DateQuery.Date={date}&CityQuery.City={cityName}
+
+GET /api/WeatherForecast/between?BetweenDateQuery.From={fromDate}&BetweenDateQuery.To={toDate}&CityQuery.City={cityName}
+
+GET /api/WeatherForecast/week?week={weekNumber}&City={cityName}
+
+GET /api/WeatherForecast/getCitiesInDatabase
 ```

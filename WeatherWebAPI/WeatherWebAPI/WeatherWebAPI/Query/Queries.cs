@@ -8,6 +8,12 @@ namespace WeatherWebAPI.Query
         public DateTime Date { get; set; }
     }
 
+    public class DaysQuery
+    {
+        [Required]
+        public int? Days { get; set; }
+    }
+
     public class CityQuery
     {
         [Required]
@@ -38,6 +44,13 @@ namespace WeatherWebAPI.Query
     {
         [Required]
         public int Week { get; set; }
+        public CityQuery? CityQuery { get; set; }
+    }
+
+    public class DaysQueryAndCity
+    {
+        [Required]
+        public DaysQuery? DaysQuery { get; set; }
         public CityQuery? CityQuery { get; set; }
     }
 }

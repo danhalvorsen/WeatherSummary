@@ -33,6 +33,15 @@ namespace WeatherWebAPI.Query
         }
     }
 
+    public class DaysQueryValidator : AbstractValidator<DaysQuery>
+    {
+        public DaysQueryValidator()
+        {
+            RuleFor(p => p.Days).NotEmpty().WithMessage("{PropertyName} can't be empty, null or whitespace");
+            RuleFor(p => p.Days).InclusiveBetween(1, 7).WithMessage("{PropertyName} has to have a value between {From}-{To}");
+        }
+    }
+
     public class BetweenDateQueryValidator : AbstractValidator<BetweenDateQuery>
     {
         public BetweenDateQueryValidator()
@@ -64,6 +73,16 @@ namespace WeatherWebAPI.Query
 
             RuleFor(p => p.Week).NotEmpty().WithMessage("{PropertyName} can't be empty, null or whitespace");
             RuleFor(p => p.Week).InclusiveBetween(1, 52).WithMessage("{PropertyName} has to have a value between {From}-{To}");
+        }
+    }
+
+    public class DaysQueryAndCityValidator : AbstractValidator<DaysQueryAndCity>
+    {
+        public DaysQueryAndCityValidator()
+        {
+            RuleFor(p => p.CityQuery).SetValidator(new CityQueryValidator()!);
+
+            RuleFor(p => p.DaysQuery).SetValidator(new DaysQueryValidator()!);
         }
     }
 }
