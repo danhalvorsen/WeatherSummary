@@ -6,18 +6,18 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetAverageScoresWeatherProviderForCityCommand : BaseGetWeatherForecastCommands
+    public class GetAvgScoresForSelectedPredictionLengthForCity : BaseCommands
     {
-
-        public GetAverageScoresWeatherProviderForCityCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public GetAvgScoresForSelectedPredictionLengthForCity(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
 
-        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresFor(CityQuery query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresForSelectedPredictionLengthAndCity(DaysQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
         {
             var avgScoreForCityList = new List<ScoresAverageForCityDto>();
-            string? citySearchedFor = query?.City;
+            string? citySearchedFor = query.CityQuery?.City;
+            int? days = query.DaysQuery?.Days;
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
 
             try
@@ -48,7 +48,7 @@ namespace WeatherWebAPI.DAL
                                                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                         $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                             $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
-                                                                $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND City.[Name] = '{cityName}' AND Score.FK_WeatherDataId IS NOT null";
+                                                                $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND City.[Name] = '{cityName}' AND Score.FK_WeatherDataId IS NOT null AND CAST([DateForecast] as Date) = [Date] + {days}";
 
                     IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
                     var scoreData = await getWeatherDataFromDatabaseStrategy.Get(queryString);

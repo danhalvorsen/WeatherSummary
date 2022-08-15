@@ -6,14 +6,14 @@ using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace WeatherWebAPI.DAL
 {
-    public abstract class BaseGetWeatherForecastCommands
+    public abstract class BaseCommands
     {
         protected readonly IConfiguration _config;
         protected readonly IFactory _factory;
         protected List<CityDto>? _citiesDatabase;
         protected List<WeatherForecastDto>? _datesDatabase;
 
-        public BaseGetWeatherForecastCommands(IConfiguration config, IFactory factory)
+        public BaseCommands(IConfiguration config, IFactory factory)
         {
             this._config = config;
             this._factory = factory;

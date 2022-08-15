@@ -113,25 +113,25 @@ namespace Tests.BackgroundServices
                 }
             }
         };
-        private readonly List<ScoreDto> _scores = new()
+        private readonly List<ScoresDto> _scores = new()
         {
-            new ScoreDto
+            new ScoresDto
             {
                 Score = 50,
                 ScoreWeighted = 49,
-                FK_WeatherDataId = 0
+                WeatherDataId = 0
             },
-            new ScoreDto
+            new ScoresDto
             {
                 Score = 30,
                 ScoreWeighted = 29,
-                FK_WeatherDataId = 1
+                WeatherDataId = 1
             },
-            new ScoreDto
+            new ScoresDto
             {
                 Score = 40,
                 ScoreWeighted = 39,
-                FK_WeatherDataId = 2
+                WeatherDataId = 2
             }
         };
 
@@ -399,9 +399,9 @@ namespace Tests.BackgroundServices
             return weightedScore;
         }
 
-        private static bool WeatherIdNotRated(List<ScoreDto> scores, WeatherForecastDto predicted)
+        private static bool WeatherIdNotRated(List<ScoresDto> scores, WeatherForecastDto predicted)
         {
-            return !scores.ToList().Any(i => i.FK_WeatherDataId.Equals(predicted.WeatherForecastId));
+            return !scores.ToList().Any(i => i.WeatherDataId.Equals(predicted.WeatherForecastId));
         }
     }
 }

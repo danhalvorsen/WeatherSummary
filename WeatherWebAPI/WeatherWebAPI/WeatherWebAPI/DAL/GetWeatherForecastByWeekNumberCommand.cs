@@ -6,7 +6,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class GetWeatherForecastByWeekNumberCommand : BaseGetWeatherForecastCommands
+    public class GetWeatherForecastByWeekNumberCommand : BaseCommands
     {
         public GetWeatherForecastByWeekNumberCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {
@@ -56,28 +56,6 @@ namespace WeatherWebAPI.DAL
                 {
                     cityName = citySearchedFor;
                 }
-
-                //var city = GetCityDtoBy(cityName!);
-
-                //foreach (DateTime date in datesInWeek)
-                //{
-                //    if (date >= DateTime.UtcNow.Date)
-                //    {
-                //        foreach (var weatherStrategy in weatherDataStrategies)
-                //        {
-                //            _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
-
-                //            if (DateDoesNotExistInDatabase(date))
-                //            {
-                //                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-                //            }
-                //            if (DateExistsInDatabase(date))
-                //            {
-                //                await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
-                //            }
-                //        }
-                //    }
-                //}
             }
             catch (Exception e)
             {

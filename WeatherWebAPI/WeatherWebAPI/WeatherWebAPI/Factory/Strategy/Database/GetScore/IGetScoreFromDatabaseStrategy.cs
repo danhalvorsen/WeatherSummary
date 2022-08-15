@@ -4,6 +4,6 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public interface IGetScoreFromDatabaseStrategy
     {
-        public Task<List<ScoreDto>> Get();
+        public Task<List<ScoresDto>> Get();
     }
 }
