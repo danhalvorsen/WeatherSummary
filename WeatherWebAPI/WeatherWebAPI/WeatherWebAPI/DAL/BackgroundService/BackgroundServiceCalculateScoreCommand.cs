@@ -6,7 +6,7 @@ using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackgroundServiceCalculateScoreCommand : BaseGetWeatherForecastCommands
+    public class BackgroundServiceCalculateScoreCommand : BaseCommands
     {
         private const double WEIGHT_TEMPERATURE = 0.3;
         private const double WEIGHT_PRESSURE = 0.2;

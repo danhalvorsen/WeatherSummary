@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
@@ -32,17 +31,17 @@ public class WeatherForecastController : ControllerBase
        WeekQueryAndCityValidator weekQueryAndCityValidator,
        DaysQueryAndCityValidator daysQueryAndCityValidator)
     {
-        this._config = config;
-        this._factory = factory;
-        this._dateQueryAndCityValidator = dateQueryAndCityValidator;
-        this._cityQueryValidator = cityQueryValidator;
-        this._daysQueryValidator = daysQueryValidator;
-        this._beetweenDateQueryAndCityValidator = beetweenDateQueryAndCityValidator;
-        this._weekQueryAndCityValidator = weekQueryAndCityValidator;
-        this._daysQueryAndCityValidator = daysQueryAndCityValidator;
+        _config = config;
+        _factory = factory;
+        _dateQueryAndCityValidator = dateQueryAndCityValidator;
+        _cityQueryValidator = cityQueryValidator;
+        _daysQueryValidator = daysQueryValidator;
+        _beetweenDateQueryAndCityValidator = beetweenDateQueryAndCityValidator;
+        _weekQueryAndCityValidator = weekQueryAndCityValidator;
+        _daysQueryAndCityValidator = daysQueryAndCityValidator;
 
-        _strategies.Add(this._factory.Build<IYrStrategy>());
-        _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
+        _strategies.Add(_factory.Build<IYrStrategy>());
+        _strategies.Add(_factory.Build<IOpenWeatherStrategy>());
     }
 
 
@@ -60,7 +59,7 @@ public class WeatherForecastController : ControllerBase
 
         var command = new GetWeatherForecastPredictionByDate(_config, _factory);
 
-        return await command.GetWeatherForecastPredictionByDateForOneWeek(query, _strategies);
+        return await command.GetWeatherForecastPredictionByDateForOneWeek(query);
     }
 
     [Route("date/")]
@@ -93,7 +92,7 @@ public class WeatherForecastController : ControllerBase
 
         var command = new GetWeatherForecastBetweenDatesCommand(_config, _factory);
 
-        return await command.GetWeatherForecastBetweenDates(query, _strategies);
+        return await command.GetWeatherForecastBetweenDates(query);
     }
 
     [Route("week/")]
@@ -108,6 +107,6 @@ public class WeatherForecastController : ControllerBase
 
         var command = new GetWeatherForecastByWeekNumberCommand(_config, _factory);
 
-        return await command.GetWeatherForecastByWeek(query, _strategies);
+        return await command.GetWeatherForecastByWeek(query);
     }
 }

@@ -52,25 +52,6 @@ namespace WeatherWebAPI.DAL
                 {
                     cityName = citySearchedFor;
                 }
-
-                //if (date >= DateTime.UtcNow.Date)
-                //{
-                //    var city = GetCityDtoBy(cityName!);
-
-                //    foreach (var weatherStrategy in weatherDataStrategies)
-                //    {
-                //        _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(city.Name!, weatherStrategy);
-
-                //        if (DateDoesNotExistInDatabase(date))
-                //        {
-                //            await GetWeatherDataAndAddToDatabase(date, weatherStrategy, city);
-                //        }
-                //        if (DateExistsInDatabase(date))
-                //        {
-                //            await GetWeatherDataAndUpdateDatabase(date, weatherStrategy, city);
-                //        }
-                //    }
-                //}
             }
             catch (Exception e)
             {
