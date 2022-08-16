@@ -10,23 +10,18 @@ export enum WeatherForcastEnumType {
   WeatherForcastSearchTypeWeekNo = 100,
   WeatherForcastSearchTypeBetweenTwoDates = 200,
 }
-
-type SelectSearchOptionStateProps = {
-  children?: Children;
-  radioButtonCheckedOneDate: boolean;
-  radioButtonCheckedForWeekNo: boolean;
-  radioButtonCheckedForBetweenDates: boolean;
+type props = {
+  choiceDate: (date: string) => void;
+  choiceFromDate: (date: string) => void;
+  choiceToDate: (date: string) => void;
 };
-export const SelectSearchOptionState: React.FC<SelectSearchOptionStateProps> = (
-  props: SelectSearchOptionStateProps,
-) => {
+export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
   const [stateWeekNo, setStateWeekNo] = useState<boolean>(false);
   const [stateBetweenDates, setStateBetweenDates] = useState<boolean>(false);
 
   const setState = (
     oneDate: boolean,
-
     weekNo: boolean,
     betweenDates: boolean,
   ): void => {
@@ -56,6 +51,7 @@ export const SelectSearchOptionState: React.FC<SelectSearchOptionStateProps> = (
         <WeatherForcastSearchOneDate
           onChange={changeState}
           radioButtonChecked={stateOneDate}
+          choiceDate={props.choiceDate}
         />
         <WeatherForcastSearchTypeWeekNo
           onChange={changeState}
@@ -64,9 +60,10 @@ export const SelectSearchOptionState: React.FC<SelectSearchOptionStateProps> = (
         <WeatherForcastSearchTypeBetweenTwoDates
           onChange={changeState}
           radioButtonChecked={stateBetweenDates}
+          choiceFromDate={props.choiceFromDate}
+          choiceToDate={props.choiceToDate}
         />
       </div>
-      {props.children}
     </div>
   );
 };

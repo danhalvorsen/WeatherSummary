@@ -7,7 +7,9 @@ import { WeatherForcastEnumType } from '../SelectSearchOptionState'
 type WeatherForcastSearchTypeBetweenTwoDatesProps = {
     children?: Children
     radioButtonChecked: boolean
-    onChange: (typeName: WeatherForcastEnumType) => void
+    onChange: (typeName: WeatherForcastEnumType) => void,
+    choiceFromDate: (date: string) => void,
+    choiceToDate: (date: string) => void
 }
 
 export const WeatherForcastSearchTypeBetweenTwoDates: React.FC<
@@ -25,9 +27,10 @@ export const WeatherForcastSearchTypeBetweenTwoDates: React.FC<
                         WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates
                     }
                 />
-                <FromDate /> <ToDate />
+                <FromDate choiceFromDate={props.choiceFromDate} /> <ToDate choiceToDate={props.choiceToDate} />
             </div>
-
+            
+          
             {props.children}
         </>
     )
