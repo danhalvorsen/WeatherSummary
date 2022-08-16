@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 
 namespace Tests.Fakes
 {
     public class FakeAddWeatherToDatabaseStrategy /*: IAddWeatherDataToDatabaseStrategy*/
     {
-        public async Task<WeatherForecastDto> Add(WeatherForecastDto weatherData, CityDto city)
+        public async Task<WeatherForecast> Add(WeatherForecast weatherData, CityDto city)
         {
             return await Task.FromResult(CreateTestData(weatherData, city));
         }
 
-        private static WeatherForecastDto CreateTestData(WeatherForecastDto weatherData, CityDto city)
+        private static WeatherForecast CreateTestData(WeatherForecast weatherData, CityDto city)
         {
-            return new WeatherForecastDto
+            return new WeatherForecast
             {
                 Date = weatherData.Date,
                 Temperature = weatherData.Temperature,

@@ -16,12 +16,12 @@ namespace Tests.Endpoints.Logic
         private string? _cityName;
         private DateTime _date;
         private List<CityDto>? _cities;
-        private List<WeatherForecastDto>? _dates;
+        private List<WeatherForecast>? _dates;
         private int _weatherAdded;
         private int _weatherUpdated;
         private int _weatherDatabase;
 
-        private List<IGetWeatherDataStrategy<WeatherForecastDto>>? _weatherDataStrategies;
+        private List<IGetWeatherDataStrategy<WeatherForecast>>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -34,12 +34,12 @@ namespace Tests.Endpoints.Logic
 
             _dates = new()
             {
-                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
-                new WeatherForecastDto { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecastDto { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
-                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecastDto { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
             };
 
             _weatherDatabase = 0;
@@ -90,7 +90,7 @@ namespace Tests.Endpoints.Logic
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
                         var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
 
-                        // Add(WeatherForecastDto weatherData, CityDto city)
+                        // Add(WeatherForecast weatherData, CityDto city)
                         Console.WriteLine($"{weatherData.Source.DataProvider} {weatherData.Date} -> {fakeAddWeather.Source.DataProvider} {fakeAddWeather.Date} -- ADDED");
                         _weatherAdded++;
                     }
@@ -102,7 +102,7 @@ namespace Tests.Endpoints.Logic
                         var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, _date);
 
 
-                        // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                        // Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
                         Console.WriteLine($"{weatherData.Date} -> {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                     }
@@ -167,7 +167,7 @@ namespace Tests.Endpoints.Logic
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
                         var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
 
-                        // Add(WeatherForecastDto weatherData, CityDto city)
+                        // Add(WeatherForecast weatherData, CityDto city)
                         Console.WriteLine($"{weatherData.Date} -> {fakeAddWeather.Date} -- ADDED");
                         _weatherAdded++;
                     }
@@ -179,7 +179,7 @@ namespace Tests.Endpoints.Logic
                         var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, _date);
 
 
-                        // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                        // Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
                         Console.WriteLine($"{weatherData.Date} -> {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                     }
@@ -241,7 +241,7 @@ namespace Tests.Endpoints.Logic
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
                         var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
 
-                        // Add(WeatherForecastDto weatherData, CityDto city)
+                        // Add(WeatherForecast weatherData, CityDto city)
                         Console.WriteLine($"{weatherData.Date} -> {fakeAddWeather.Date} -- ADDED");
                         _weatherAdded++;
                     }
@@ -253,7 +253,7 @@ namespace Tests.Endpoints.Logic
                         var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, _date);
 
 
-                        // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                        // Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
                         Console.WriteLine($"{weatherData.Source.DataProvider} {weatherData.Date} -> {fakeUpdateWeather.Source.DataProvider} {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                         _weatherDatabase++;
@@ -313,7 +313,7 @@ namespace Tests.Endpoints.Logic
                         var fakeAddWeatherDataToDatabaseStrategy = new FakeAddWeatherToDatabaseStrategy();
                         var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
 
-                        // Add(WeatherForecastDto weatherData, CityDto city)
+                        // Add(WeatherForecast weatherData, CityDto city)
                         Console.WriteLine($"{weatherData.Date} -> {fakeAddWeather.Date} -- ADDED");
                         _weatherAdded++;
                     }
@@ -325,7 +325,7 @@ namespace Tests.Endpoints.Logic
                         var fakeUpdateWeather = await FakeUpdateWeatherToDatabaseStrategy.Update(weatherData, city, _date);
 
 
-                        // Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+                        // Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
                         Console.WriteLine($"{weatherData.Date} -> {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                     }
@@ -369,9 +369,9 @@ namespace Tests.Endpoints.Logic
             return !_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
-        public List<WeatherForecastDto>? GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecastDto> strategy)
+        public List<WeatherForecast>? GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
         {
-            return (List<WeatherForecastDto>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source.Equals(strategy.GetDataSource()));
+            return (List<WeatherForecast>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source.Equals(strategy.GetDataSource()));
         }
     }
 }

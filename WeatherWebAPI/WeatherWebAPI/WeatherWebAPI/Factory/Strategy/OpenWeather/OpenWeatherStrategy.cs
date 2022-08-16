@@ -5,7 +5,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
         private readonly OpenWeatherConfig _openWeatherConfig;
 
@@ -14,7 +14,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             _openWeatherConfig = config;
         }
 
-        public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             var httpClient = new HttpClient
             {
@@ -37,11 +37,11 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 _openWeatherConfig.Get(queryDate);
 
 
-                var resultWeatherData = _openWeatherConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                var resultWeatherData = _openWeatherConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
                 return resultWeatherData;
             }
 
-            return new WeatherForecastDto();
+            return new WeatherForecast();
         }
 
         public async Task<List<CityDto>> GetCityDataFor(string city) // Have to use list when using streamasync

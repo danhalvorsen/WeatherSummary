@@ -4,6 +4,6 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public interface IGetWeatherDataFromDatabaseStrategy
     {
-        public Task<List<WeatherForecastDto>> Get(string queryString);
+        public Task<List<WeatherForecast>> Get(string queryString);
     }
 }

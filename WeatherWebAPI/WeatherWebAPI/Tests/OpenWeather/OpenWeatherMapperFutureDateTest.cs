@@ -24,7 +24,7 @@ namespace Tests.OpenWeather
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var config = new MapperConfiguration(
 
-                    cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
+                    cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecast>()
                  .ForPath(dest => dest.Date, opt => opt
                     .MapFrom(src => UnixTimeStampToDateTime(src.daily
                         .ToList()
@@ -95,7 +95,7 @@ namespace Tests.OpenWeather
         [SetUp]
         public void Setup()
         {
-            IGetWeatherDataStrategy<WeatherForecastDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+            IGetWeatherDataStrategy<WeatherForecast> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
             _dateTime = DateTime.Now.AddDays(1); /*new DateTime(2022, 05, 18, 8, 0, 0); */// May 18, 2022 8:00:00
             _unix = DateTimeToUnixTime(_dateTime); //1652853600; Wednesday, May 18, 2022 8:00:00 AM GMT+02:00 DST
             _config = CreateConfig(_dateTime);
@@ -115,7 +115,7 @@ namespace Tests.OpenWeather
             // Act
             IMapper mapper = new Mapper(_config);
 
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.Date);
@@ -142,7 +142,7 @@ namespace Tests.OpenWeather
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.WeatherType);
@@ -169,7 +169,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             //Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             //Assert
             Console.WriteLine(result.Temperature);
@@ -195,7 +195,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.Windspeed);
@@ -220,7 +220,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.WindDirection);
@@ -244,7 +244,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.WindspeedGust);
@@ -269,7 +269,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(pressure);
@@ -294,7 +294,7 @@ namespace Tests.OpenWeather
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(humidity);
@@ -319,7 +319,7 @@ namespace Tests.OpenWeather
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(probOfRain);
@@ -344,7 +344,7 @@ namespace Tests.OpenWeather
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result.AmountRain);
@@ -371,7 +371,7 @@ namespace Tests.OpenWeather
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(cloudAreaFraction);
@@ -395,7 +395,7 @@ namespace Tests.OpenWeather
         //    IMapper mapper = new Mapper(config);
 
         //    // Act
-        //    var result = mapper.Map<WeatherForecastDto>(application);
+        //    var result = mapper.Map<WeatherForecast>(application);
 
         //    // Assert
         //    result.FogAreaFraction.Should().Be((float)VisibilityConvertedToFogAreaFraction(fogAreaFraction));
@@ -417,7 +417,7 @@ namespace Tests.OpenWeather
         //    Mapper mapper = new Mapper(config);
 
         //    // Act
-        //    var result = mapper.Map<WeatherForecastDto>(application);
+        //    var result = mapper.Map<WeatherForecast>(application);
 
         //    // Assert
         //    result.ProbOfThunder.Should().Be(probThunder);
@@ -430,7 +430,7 @@ namespace Tests.OpenWeather
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             Console.WriteLine(result?.Source?.DataProvider);

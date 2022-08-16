@@ -20,7 +20,7 @@ namespace WeatherWebAPI.Controllers
         private readonly DaysQueryValidator _daysQueryValidator;
         private readonly DaysQueryAndCityValidator _daysQueryAndCityValidator;
 
-        private readonly List<IGetWeatherDataStrategy<WeatherForecastDto>> _strategies = new();
+        private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _strategies = new();
 
         public CompanyRatingController(IConfiguration config, IFactory factory, ILogger<CompanyRatingController> logger, 
             CityQueryValidator cityQueryValidator, DaysQueryValidator daysQueryValidator, DaysQueryAndCityValidator daysQueryAndCityValidator)

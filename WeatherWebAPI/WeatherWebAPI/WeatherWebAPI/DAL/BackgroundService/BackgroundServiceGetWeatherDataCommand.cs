@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Controllers;
+﻿using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
@@ -11,7 +12,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task GetOneWeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task GetOneWeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
         {
             DateTime fromDate = DateTime.UtcNow;
             DateTime toDate = fromDate.AddDays(7);

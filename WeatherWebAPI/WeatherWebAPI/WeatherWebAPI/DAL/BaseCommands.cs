@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.Contracts;
+using System.Globalization;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -11,12 +13,12 @@ namespace WeatherWebAPI.DAL
         protected readonly IConfiguration _config;
         protected readonly IFactory _factory;
         protected List<CityDto>? _citiesDatabase;
-        protected List<WeatherForecastDto>? _datesDatabase;
+        protected List<WeatherForecast>? _datesDatabase;
 
         public BaseCommands(IConfiguration config, IFactory factory)
         {
-            this._config = config;
-            this._factory = factory;
+            _config = config;
+            _factory = factory;
         }
 
         protected async Task<List<CityDto>> GetCityData(string? citySearchedFor)
@@ -34,7 +36,7 @@ namespace WeatherWebAPI.DAL
             await addCityToDatabaseStrategy.Add(city);
         }
 
-        protected async Task GetWeatherDataAndUpdateDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
+        protected async Task GetWeatherDataAndUpdateDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecast> weatherStrategy, CityDto city)
         {
             var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
 
@@ -42,7 +44,7 @@ namespace WeatherWebAPI.DAL
             await updateDatabaseStrategy.Update(weatherData, city, date);
         }
 
-        protected async Task GetWeatherDataAndAddToDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecastDto> weatherStrategy, CityDto city)
+        protected async Task GetWeatherDataAndAddToDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecast> weatherStrategy, CityDto city)
         {
             var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
 
@@ -116,10 +118,23 @@ namespace WeatherWebAPI.DAL
             city[0].Country = countryName.EnglishName;
         }
 
-        protected static double CalculateAverageScore(double sum, List<WeatherForecastDto> data)
+        protected static double CalculateAverageScore(double sum, List<WeatherForecast> data)
         {
             var average = !double.IsNaN(sum / data.Count) ? Math.Round((sum / data.Count), 2) : 0;
             return average;
+        }
+
+        protected async Task MakeWeatherForecastDto(List<WeatherForecastDto> dtoList, WeatherForecastContract contract, string queryString)
+        {
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+            var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);
+
+            foreach (var weather in weatherForecasts)
+            {
+                contract.Get();
+                var forecastDto = contract.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weather);
+                dtoList.Add(forecastDto);
+            }
         }
     }
 }

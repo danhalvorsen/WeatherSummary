@@ -12,7 +12,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             _config = config;
         }
 
-        public async Task<List<ScoresDto>> Get()
+        public async Task<List<Scores>> Get()
         {
             string queryString = "SELECT * FROM Score";
 
@@ -21,12 +21,12 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
 
-                var scoreDtos = new List<ScoresDto>();
+                var scores = new List<Scores>();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)
                     {
-                        scoreDtos.Add(new ScoresDto
+                        scores.Add(new Scores
                         {
                             WeatherDataId = Convert.ToInt32(reader["FK_WeatherDataId"]),
                             Score = (float)Convert.ToDouble(reader["Score"]),
@@ -35,7 +35,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                     }
                 }
                 await command.ExecuteNonQueryAsync();
-                return scoreDtos;
+                return scores;
             }
         }
     }

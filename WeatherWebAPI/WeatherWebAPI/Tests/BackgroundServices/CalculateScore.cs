@@ -38,9 +38,9 @@ namespace Tests.BackgroundServices
         //private readonly Microsoft.Extensions.Configuration.IConfiguration? _config;
         //private readonly IFactory? _factory;
 
-        private readonly List<WeatherForecastDto> _actual = new()
+        private readonly List<WeatherForecast> _actual = new()
         {
-            new WeatherForecastDto
+            new WeatherForecast
             {
                 WeatherForecastId = 5,
                 Date = DateTime.UtcNow.AddDays(1),
@@ -64,9 +64,9 @@ namespace Tests.BackgroundServices
                 }
             }
         };
-        private readonly List<WeatherForecastDto> _predicted = new()
+        private readonly List<WeatherForecast> _predicted = new()
         {
-            new WeatherForecastDto
+            new WeatherForecast
             {
                 WeatherForecastId = 3,
                 Date = DateTime.UtcNow,
@@ -89,7 +89,7 @@ namespace Tests.BackgroundServices
                     DataProvider = "Yr"
                 }
             },
-            new WeatherForecastDto
+            new WeatherForecast
             {
                 WeatherForecastId = 2,
                 Date = DateTime.UtcNow,
@@ -113,21 +113,21 @@ namespace Tests.BackgroundServices
                 }
             }
         };
-        private readonly List<ScoresDto> _scores = new()
+        private readonly List<Scores> _scores = new()
         {
-            new ScoresDto
+            new Scores
             {
                 Score = 50,
                 ScoreWeighted = 49,
                 WeatherDataId = 0
             },
-            new ScoresDto
+            new Scores
             {
                 Score = 30,
                 ScoreWeighted = 29,
                 WeatherDataId = 1
             },
-            new ScoresDto
+            new Scores
             {
                 Score = 40,
                 ScoreWeighted = 39,
@@ -378,7 +378,7 @@ namespace Tests.BackgroundServices
             return (sumActualWeather - difference) / sumActualWeather * 100;
         }
 
-        private static double SumWeatherScoreVariables(WeatherForecastDto forecast)
+        private static double SumWeatherScoreVariables(WeatherForecast forecast)
         {
             return Math.Abs(forecast.Temperature + forecast.Windspeed + forecast.WindDirection +
                                 forecast.Pressure + forecast.Humidity + forecast.ProbOfRain + forecast.AmountRain +
@@ -398,7 +398,7 @@ namespace Tests.BackgroundServices
             return weightedScore;
         }
 
-        private static bool WeatherIdNotRated(List<ScoresDto> scores, WeatherForecastDto predicted)
+        private static bool WeatherIdNotRated(List<Scores> scores, WeatherForecast predicted)
         {
             return !scores.ToList().Any(i => i.WeatherDataId.Equals(predicted.WeatherForecastId));
         }

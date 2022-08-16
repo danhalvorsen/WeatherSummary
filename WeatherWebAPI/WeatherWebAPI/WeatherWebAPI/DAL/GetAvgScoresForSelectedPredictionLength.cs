@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Controllers;
+﻿using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
@@ -12,7 +13,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<ScoresAverageDto>> CalculateAverageScoresForSelectedPredictionLength(DaysQuery query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<ScoresAverageDto>> CalculateAverageScoresForSelectedPredictionLength(DaysQuery query, List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
         {
             var days = query.Days;
             var avgScoreList = new List<ScoresAverageDto>();

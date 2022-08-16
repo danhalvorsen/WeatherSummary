@@ -37,7 +37,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
             MapperConfig = new MapperConfiguration(
-            cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
+            cfg => cfg.CreateMap<ApplicationYr, WeatherForecast>()
             .ForPath(dest => dest.DateForecast, opt => opt         // dateforecast
                 .MapFrom(src => src.properties.timeseries
                     .ToList()

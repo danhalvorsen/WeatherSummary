@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.Net.Http.Headers;
 using System.Reflection;
 using WeatherWebAPI;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.YR;
@@ -67,6 +68,7 @@ public static class MyConfigServiceCollectionExtensions
          this IServiceCollection services, IConfiguration config)
     {
         services.AddTransient(typeof(IFactory), typeof(StrategyBuilderFactory));
+        services.AddTransient<WeatherForecastContract>();
         services.AddFluentValidation(options =>
         {
             options.RegisterValidatorsFromAssemblyContaining<DateQueryAndCityValidator>();

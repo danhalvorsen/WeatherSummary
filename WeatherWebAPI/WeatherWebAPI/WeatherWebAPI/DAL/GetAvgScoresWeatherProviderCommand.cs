@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Controllers;
+﻿using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 
@@ -11,7 +12,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<ScoresAverageDto>> CalculateAverageScores(List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<ScoresAverageDto>> CalculateAverageScores(List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
         {
             var avgScoreList = new List<ScoresAverageDto>();
             try

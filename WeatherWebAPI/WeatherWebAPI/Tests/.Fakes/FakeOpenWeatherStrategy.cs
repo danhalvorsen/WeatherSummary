@@ -7,7 +7,7 @@ using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.Fakes
 {
-    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -48,7 +48,7 @@ namespace Tests.Fakes
             };
         }
 
-        public Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             if (city != null && !string.IsNullOrEmpty(city.Name))
             {
@@ -57,11 +57,11 @@ namespace Tests.Fakes
             throw new ArgumentException("Should not have a city without a name");
         }
 
-        private static WeatherForecastDto CreateTestWeatherData(string cityName, DateTime date)
+        private static WeatherForecast CreateTestWeatherData(string cityName, DateTime date)
         {
             if (cityName == STAVANGER || cityName == OSLO)
             {
-                return new WeatherForecastDto
+                return new WeatherForecast
                 {
                     Date = date,
                     Temperature = TEMP,

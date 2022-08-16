@@ -5,7 +5,7 @@
         public WeatherForecast()
         {
             Source = new WeatherSourceDto();
-            Score = new ScoresDto();
+            Score = new Scores();
         }
         public int WeatherForecastId { get; set; }
         public string? City { get; set; }
@@ -24,6 +24,6 @@
         public float FogAreaFraction { get; set; }
         public float ProbOfThunder { get; set; }
         public WeatherSourceDto Source { get; set; }
-        public ScoresDto Score { get; set; }
+        public Scores Score { get; set; }
     }
 }
