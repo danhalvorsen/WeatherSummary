@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using Microsoft.AspNetCore.Http;
+using System.Globalization;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -8,9 +10,11 @@ namespace WeatherWebAPI.DAL
 {
     public class GetWeatherForecastByWeekNumberCommand : BaseCommands
     {
-        public GetWeatherForecastByWeekNumberCommand(IConfiguration config, IFactory factory) : base(config, factory)
-        {
+        private readonly WeatherForecastContract _contract;
 
+        public GetWeatherForecastByWeekNumberCommand(IConfiguration config, IFactory factory, WeatherForecastContract contract) : base(config, factory)
+        {
+            _contract = contract;
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query)
@@ -20,7 +24,7 @@ namespace WeatherWebAPI.DAL
             DateTime monday = FirstDateOfWeekISO8601(DateTime.UtcNow.Year, query.Week);
             DateTime sunday = monday.AddDays(6);
 
-
+            var dtoList = new List<WeatherForecastDto>();
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
             var datesInWeek = new List<DateTime>();
 
@@ -50,24 +54,13 @@ namespace WeatherWebAPI.DAL
                             _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                         }
                     }
+                    return new();
                 }
                 else
                 {
                     cityName = citySearchedFor;
-                }
-            }
-            catch (Exception e)
-            {
 
-                Console.WriteLine(e.Message);
-            }
-
-            return await GetWeatherForecastFromDatabase(query, cityName);
-        }
-
-        private async Task<List<WeatherForecastDto>> GetWeatherForecastFromDatabase(WeekQueryAndCity query, string? cityName)
-        {
-            string queryString = $"SET DATEFIRST 1 " +
+                    string queryString = $"SET DATEFIRST 1 " +
                                   $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
                                         $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                                             $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
@@ -77,9 +70,15 @@ namespace WeatherWebAPI.DAL
                                                             $"WHERE CAST([DateForecast] as date) = CAST([Date] as date) AND DATEPART(week, [DateForecast]) = {query.Week} AND City.Name = '{cityName}' " +
                                                                 $"ORDER BY [DateForecast], [Date]";
 
-            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+                    await MakeWeatherForecastDto(dtoList, _contract, queryString);
+                }
+            }
+            catch (Exception e)
+            {
 
-            return await getWeatherDataFromDatabaseStrategy.Get(queryString);
+                Console.WriteLine(e.Message);
+            }
+            return dtoList;
         }
     }
 }

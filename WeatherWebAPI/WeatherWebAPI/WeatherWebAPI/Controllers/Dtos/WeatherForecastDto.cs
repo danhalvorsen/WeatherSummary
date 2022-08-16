@@ -1,4 +1,8 @@
-﻿namespace WeatherWebAPI.Controllers
+﻿using AutoMapper;
+using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Factory.Strategy.YR;
+
+namespace WeatherWebAPI.Controllers
 {
     public class WeatherForecastDto
     {
@@ -7,7 +11,7 @@
             Source = new WeatherSourceDto();
             Score = new ScoresDto();
         }
-        public int WeatherForecastId { get; set; }
+
         public string? City { get; set; }
         public DateTime Date { get; set; }
         public DateTime DateForecast { get; set; }

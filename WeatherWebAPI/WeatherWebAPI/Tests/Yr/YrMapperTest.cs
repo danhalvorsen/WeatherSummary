@@ -20,7 +20,7 @@ namespace Tests.Yr
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8604 // Possible null reference argument.
             var config = new MapperConfiguration(
-             cfg => cfg.CreateMap<ApplicationYr, WeatherForecastDto>()
+             cfg => cfg.CreateMap<ApplicationYr, WeatherForecast>()
              .ForPath(dest => dest.Date, opt => opt         // date
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
@@ -121,7 +121,7 @@ namespace Tests.Yr
 
             IMapper mapper = new Mapper(_config);
 
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             Console.WriteLine(result.Date);
 
@@ -153,7 +153,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.WeatherType.Should().Be(weatherType);
@@ -185,7 +185,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             //Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             //Assert
             result.Temperature.Should().Be(temp);
@@ -218,7 +218,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.Windspeed.Should().Be(windspeed);
@@ -250,7 +250,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.WindDirection.Should().Be(windDirection);
@@ -282,7 +282,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.WindspeedGust.Should().Be(windspeedGust);
@@ -313,7 +313,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.Pressure.Should().Be(pressure);
@@ -344,7 +344,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.Humidity.Should().Be(humidity);
@@ -375,7 +375,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.ProbOfRain.Should().Be(probOfRain);
@@ -406,7 +406,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.AmountRain.Should().Be(amountOfRain);
@@ -437,7 +437,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.CloudAreaFraction.Should().Be(cloudAreaFraction);
@@ -468,7 +468,7 @@ namespace Tests.Yr
             IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.FogAreaFraction.Should().Be(fogAreaFraction);
@@ -499,7 +499,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.ProbOfThunder.Should().Be(probThunder);
@@ -512,7 +512,7 @@ namespace Tests.Yr
             Mapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<WeatherForecastDto>(application);
+            var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
             result.Source.DataProvider.Should().Be("Yr"); // Change here aswell

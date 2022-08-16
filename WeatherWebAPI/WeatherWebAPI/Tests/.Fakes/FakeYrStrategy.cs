@@ -6,7 +6,7 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests.Fakes
 {
-    public class FakeYrStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IYrStrategy
+    public class FakeYrStrategy : IGetWeatherDataStrategy<WeatherForecast>, IYrStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -26,16 +26,16 @@ namespace Tests.Fakes
         private const string OSLO = "Oslo";
         private const string WEATHERTYPE = "sunny";
 
-        public Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             return Task.FromResult(CreateTestData(city.Name!, queryDate));
         }
 
-        private static WeatherForecastDto CreateTestData(string cityName, DateTime date)
+        private static WeatherForecast CreateTestData(string cityName, DateTime date)
         {
             if (cityName == STAVANGER || cityName == OSLO)
             {
-                return new WeatherForecastDto
+                return new WeatherForecast
                 {
                     Date = date,
                     Temperature = TEMP,

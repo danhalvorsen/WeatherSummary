@@ -13,7 +13,7 @@ namespace Tests.Yr
     public class YrStrategyFutureDateTest
     {
         private DateTime _date;
-        private IGetWeatherDataStrategy<WeatherForecastDto>? _strategy;
+        private IGetWeatherDataStrategy<WeatherForecast>? _strategy;
 
         private readonly CityDto _city = new()
         {
@@ -35,7 +35,7 @@ namespace Tests.Yr
         public async Task ShouldGetDateForecast()
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.DateForecast);
 
             result.DateForecast
@@ -47,7 +47,7 @@ namespace Tests.Yr
         public async Task ShouldGetDate()
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.Date);
 
             result.Date

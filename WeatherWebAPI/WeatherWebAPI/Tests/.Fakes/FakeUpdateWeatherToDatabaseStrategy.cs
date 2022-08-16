@@ -6,13 +6,13 @@ namespace Tests.Fakes
 {
     public class FakeUpdateWeatherToDatabaseStrategy /*: IUpdateWeatherDataToDatabaseStrategy*/
     {
-        public static async Task<WeatherForecastDto> Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+        public static async Task<WeatherForecast> Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
         {
             return await Task.FromResult(CreateTestData(weatherData, city, dateToBeUpdated));
         }
-        private static WeatherForecastDto CreateTestData(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+        private static WeatherForecast CreateTestData(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
         {
-            return new WeatherForecastDto
+            return new WeatherForecast
             {
                 Date = weatherData.Date,
                 Temperature = weatherData.Temperature,

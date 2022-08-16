@@ -4,7 +4,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.YR
 {
-    public class YrStrategy : IGetWeatherDataStrategy<WeatherForecastDto>, IYrStrategy
+    public class YrStrategy : IGetWeatherDataStrategy<WeatherForecast>, IYrStrategy
     {
         private readonly YrConfig _yrConfig;
         //private readonly YrHttpClient _httpClient;
@@ -17,7 +17,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 
         public IEnumerable<YrHttpClient>? Response { get; set; }
 
-        public async Task<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             var httpClient = new HttpClient
             {
@@ -40,11 +40,11 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 _yrConfig.Get(queryDate);
 
 
-                var resultWeatherData = _yrConfig.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weatherData);
+                var resultWeatherData = _yrConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
                 return resultWeatherData;
             }
 
-            return new WeatherForecastDto();
+            return new WeatherForecast();
         }
 
         public string GetDataSource()

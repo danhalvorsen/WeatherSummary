@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -8,9 +9,12 @@ namespace WeatherWebAPI.DAL
 {
     public class GetWeatherForecastBetweenDatesCommand : BaseCommands
     {
-        public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory) : base(config, factory)
-        {
 
+        protected readonly WeatherForecastContract _contract;
+
+        public GetWeatherForecastBetweenDatesCommand(IConfiguration config, IFactory factory, WeatherForecastContract contract) : base(config, factory)
+        {
+            _contract = contract;
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity)
@@ -22,6 +26,7 @@ namespace WeatherWebAPI.DAL
 
             var datesQuery = new List<DateTime>();
             var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var dtoList = new List<WeatherForecastDto>();
 
             try
             {
@@ -49,24 +54,13 @@ namespace WeatherWebAPI.DAL
                             _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
                         }
                     }
+                    return new();
                 }
                 else
                 {
                     cityName = citySearchedFor;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
 
-            return await GetWeatherForecastFromDatabase(cityName, fromDate, toDate);
-
-        }
-
-        private async Task<List<WeatherForecastDto>> GetWeatherForecastFromDatabase(string? cityName, DateTime fromDate, DateTime toDate)
-        {
-            string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
+                    string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
                     $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                         $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                             $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
@@ -75,9 +69,14 @@ namespace WeatherWebAPI.DAL
                                         $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
                                             $"ORDER BY [DateForecast], [Date]";
 
-            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
-
-            return await getWeatherDataFromDatabaseStrategy.Get(queryString);
+                    await MakeWeatherForecastDto(dtoList, _contract, queryString);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return dtoList;
         }
     }
 }

@@ -94,6 +94,10 @@ namespace WeatherWebAPI.DAL
                     }
                 }
             }
+            catch (OperationCanceledException ex) // includes TaskCanceledException
+            {
+                Console.WriteLine(ex.Message);
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -105,7 +109,7 @@ namespace WeatherWebAPI.DAL
             return (sumActualWeather - difference) / sumActualWeather * 100;
         }
 
-        private static double SumWeatherScoreVariables(WeatherForecastDto forecast)
+        private static double SumWeatherScoreVariables(WeatherForecast forecast)
         {
             return Math.Abs(forecast.Temperature + forecast.Windspeed + forecast.WindDirection +
                                 forecast.Pressure + forecast.Humidity + forecast.ProbOfRain + forecast.AmountRain +

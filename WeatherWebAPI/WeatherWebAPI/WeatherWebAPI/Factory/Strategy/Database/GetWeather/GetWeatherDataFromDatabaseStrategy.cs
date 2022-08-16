@@ -13,14 +13,14 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
-        public async Task<List<WeatherForecastDto>> Get(string queryString)
+        public async Task<List<WeatherForecast>> Get(string queryString)
         {
             using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
 
-                var weatherForecastDtos = new List<WeatherForecastDto>();
+                var WeatherForecasts = new List<WeatherForecast>();
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -34,14 +34,14 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                             DataProvider = reader["SourceName"].ToString()
                         };
 
-                        var score = new ScoresDto
+                        var score = new Scores
                         {
                             WeatherDataId = reader["FK_WeatherDataId"] != System.DBNull.Value ? Convert.ToInt32(reader["FK_WeatherDataId"]) : 0,
                             Score = reader["Score"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Score"]), 2) : 0,
                             ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
                         };
 
-                        weatherForecastDtos.Add(new WeatherForecastDto
+                        WeatherForecasts.Add(new WeatherForecast
                         {
                             WeatherForecastId = Convert.ToInt32(reader["Id"]),
                             City = reader["CityName"].ToString(),
@@ -65,7 +65,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                     }
                 }
                 await command.ExecuteNonQueryAsync();
-                return weatherForecastDtos;
+                return WeatherForecasts;
             }
         }
     }

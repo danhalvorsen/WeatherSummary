@@ -12,7 +12,7 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
-        public async Task Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+        public async Task Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
         {
             string queryString = $"UPDATE WeatherData " +
                         $"SET [Date] = '{weatherData.Date}', " +

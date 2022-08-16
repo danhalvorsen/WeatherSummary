@@ -12,7 +12,7 @@ namespace Tests.Yr
     public class YrStrategyCurrentDateTest
     {
         private DateTime _date;
-        private IGetWeatherDataStrategy<WeatherForecastDto>? _strategy;
+        private IGetWeatherDataStrategy<WeatherForecast>? _strategy;
         private readonly CityDto _city = new()
         {
             Name = "Stavanger",
@@ -37,7 +37,7 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.DateForecast);
 
             result.DateForecast

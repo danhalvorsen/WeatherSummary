@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -13,7 +14,7 @@ namespace WeatherWebAPI.DAL
 
         }
 
-        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresForSelectedPredictionLengthAndCity(DaysQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecastDto>> weatherDataStrategies)
+        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresForSelectedPredictionLengthAndCity(DaysQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
         {
             var avgScoreForCityList = new List<ScoresAverageForCityDto>();
             string? citySearchedFor = query.CityQuery?.City;
@@ -69,7 +70,7 @@ namespace WeatherWebAPI.DAL
                     {
                         City = cityName,
                         AverageScore = avgScore,
-                        AveragecoreWeighted = avgScoreWeighted,
+                        AverageScoreWeighted = avgScoreWeighted,
                         DataProvider = strategy.GetDataSource()
                     });
                 }

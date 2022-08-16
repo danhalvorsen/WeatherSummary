@@ -34,7 +34,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 
                 MapperConfig = new MapperConfiguration(
 
-                cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
+                cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecast>()
                 .ForPath(dest => dest.DateForecast, opt => opt
                 .MapFrom(src => UnixTimeStampToDateTime(src.daily
                     .ToList()
@@ -93,7 +93,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 #pragma warning disable CS8604 // Possible null reference argument.
                 MapperConfig = new MapperConfiguration(
 
-                cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecastDto>()
+                cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecast>()
              .ForPath(dest => dest.DateForecast, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
              .ForPath(dest => dest.WeatherType, opt => opt // weathertype
                  .MapFrom(src => src.current.weather[0].description)) // <-- Got a mapper exception once, because the city of stockholm had 2 descriptions. This should work                                                   

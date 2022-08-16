@@ -27,42 +27,42 @@
     class IAddWeatherDataToDatabaseStrategy {
         <<interface>>
 
-        + Add(WeatherForecastDto weatherData, CityDto city)
+        + Add(WeatherForecast weatherData, CityDto city)
     }
     IAddWeatherDataToDatabaseStrategy <|-- AddWeatherDataToDatabaseStrategy
 
 
     class AddWeatherDataToDatabaseStrategy {
         + AddWeatherDataToDatabaseStrategy(IDatabaseConfig config)
-        + Add(WeatherForecastDto weatherData, CityDto city)
+        + Add(WeatherForecast weatherData, CityDto city)
     }
 
 
     class IGetWeatherDataFromDatabaseStrategy {
         <<interface>>
 
-        + List<WeatherForecastDto> Get(string queryString)
+        + List<WeatherForecast> Get(string queryString)
     }
     IGetWeatherDataFromDatabaseStrategy <|-- GetWeatherDataFromDatabaseStrategy
 
 
     class GetWeatherDataFromDatabaseStrategy {
         + GetWeatherDataFromDatabaseStrategy(IDatabaseConfig config)
-        + List<WeatherForecastDto> Get(string queryString)
+        + List<WeatherForecast> Get(string queryString)
     }
 
 
     class IUpdateWeatherDataToDatabaseStrategy {
         <<interface>>
 
-        + Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+        + Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
     }
     IUpdateWeatherDataToDatabaseStrategy <|-- UpdateWeatherDataToDatabaseStrategy
 
 
     class UpdateWeatherDataToDatabaseStrategy {
         + UpdateWeatherDataToDatabaseStrategy(IDatabaseConfig config)
-        + Update(WeatherForecastDto weatherData, CityDto city, DateTime dateToBeUpdated)
+        + Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
     }
     
  ```

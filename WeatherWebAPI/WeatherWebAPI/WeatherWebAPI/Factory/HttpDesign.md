@@ -20,7 +20,7 @@ classDiagram
 
     class IYrStrategy {
 
-        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        + List<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
     }
     IYrStrategy <|-- YrStrategy
     YrStrategy -- YrConfig
@@ -30,14 +30,14 @@ classDiagram
         - YrConfig _yrConfig
         + YrStrategy(YrConfig config)
 
-        + List<WeatherForecastDto> GetWeatherDataFrom(Citydto city, DateTime queryDate)
+        + List<WeatherForecast> GetWeatherDataFrom(Citydto city, DateTime queryDate)
         + string GetDataSource()
     }
 
 
     class IOpenWeatherStrategy {
 
-        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        + List<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         + List<CityDto> GetCityDataFor(string city)
     }
     IOpenWeatherStrategy <|-- OpenWeatherStrategy
@@ -48,7 +48,7 @@ classDiagram
         - OpenWeatherConfig _openWeatherConfig
         + OpenWeatherConfig(OpenWeatherConfig config)
 
-        + List<WeatherForecastDto> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        + List<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         + List<CityDto> GetCityDataFor(string city)
 
         + string GetDataSource()

@@ -10,7 +10,7 @@ namespace Tests.OpenWeather
 {
     public class OpenWeatherStrategyCurrentDateTest
     {
-        private readonly IGetWeatherDataStrategy<WeatherForecastDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+        private readonly IGetWeatherDataStrategy<WeatherForecast> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
 
         private CityDto _city = new CityDto
         {
@@ -29,7 +29,7 @@ namespace Tests.OpenWeather
         {
             var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.DateForecast);
 
             result.DateForecast.Date
@@ -42,7 +42,7 @@ namespace Tests.OpenWeather
         {
             var result = await _strategy.GetWeatherDataFrom(_city, _date);
 
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecastDto>
+            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.Date);
 
             result.Date.Date
