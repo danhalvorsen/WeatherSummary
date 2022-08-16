@@ -58,6 +58,7 @@
         "prettier/prettier": ["warn"],
         "linebreak-style": ["off"],
         "no-unused-vars": ["off"],
+        "comma-dangle": ["off"],
         "quotes": ["off"],
 
         "object-curly-spacing": ["off"],

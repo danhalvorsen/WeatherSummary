@@ -22,7 +22,7 @@ export const WeatherForcastSearchState = (
     // const [isChecked, setIsChecked] = useState(true);
     const [weekNo, setWeekNo] = useState(14)
     // const [fromDate, setFromDate] = useState(new Date());
-    // const [ToDate, setToDate] = useState(new Date());
+    const [ToDate, setToDate] = useState(new Date());
 
     const changeCityNameState = (cityName: string) => {
         setCityName(cityName)
