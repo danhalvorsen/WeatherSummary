@@ -29,7 +29,6 @@
     "pp": "plop",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
   },
-
   "browserslist": {
     "production": [
       ">0.2%",
@@ -45,8 +44,13 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@types/react-datepicker": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
     "jest": "^28.1.0",
     "plop": "^3.1.1",
+    "prettier": "^2.7.1",
     "react-scripts": "^5.0.1"
   }
 }

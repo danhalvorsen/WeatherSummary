@@ -9,7 +9,7 @@ type lookupCityFieldhProps = {
 }
 
 export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
-    let buffer: string = ''
+    let buffer: string
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
     const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -25,9 +25,9 @@ export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
         if (e.key !== undefined && alphabet.includes(e.key)) buffer += e.key
     }
 
-    const onInputChange = (
-        textInput: React.ChangeEventHandler<HTMLInputElement>
-    ): void => {}
+    // const onInputChange = (
+    //     textInput: React.ChangeEventHandler<HTMLInputElement>
+    // ): void => { }
     const onFormSubmit = (event: React.FormEvent<HTMLInputElement>): void => {
         event.preventDefault()
     }
