@@ -44,7 +44,7 @@ export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
                         onKeyDown={handleChange}
                         onSubmit={onFormSubmit}
                     />
-                    <SearchButton />
+                    {/* <SearchButton /> */}
                 </form>
             </div>
         </>
