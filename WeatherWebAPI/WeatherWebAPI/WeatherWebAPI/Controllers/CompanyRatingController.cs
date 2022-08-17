@@ -2,6 +2,7 @@
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
@@ -34,6 +35,7 @@ namespace WeatherWebAPI.Controllers
 
             _strategies.Add(this._factory.Build<IYrStrategy>());
             _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
+            _strategies.Add(_factory.Build<IWeatherApiStrategy>());
         }
 
 

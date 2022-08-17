@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using WeatherWebAPI.Factory;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.Controllers

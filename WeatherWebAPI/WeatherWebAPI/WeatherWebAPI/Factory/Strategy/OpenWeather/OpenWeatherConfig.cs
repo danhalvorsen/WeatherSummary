@@ -3,7 +3,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherConfig : IHttpConfig
+    public class OpenWeatherConfig : BaseConfigFunctions, IHttpConfig
     {
         private MapperConfiguration _mapperConfig;
         private IHttpClientFactory _httpClientFactory;
@@ -131,27 +131,6 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
             return MapperConfig;
-        }
-
-        // Need to convert from Unix to DateTime when fetching data from OpenWeather datasource and vice versa
-        private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
-        {
-            // Unix timestamp is seconds past epoch
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dateTime;
-        }
-
-        private static int DateTimeToUnixTime(DateTime dateTime)
-        {
-            dateTime = dateTime.ToUniversalTime(); // If this is not done, the time would be 2 hours ahead of what we'd actually want.
-            int unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            return unixTimestamp;
-        }
-
-        private static double VisibilityConvertedToFogAreaFraction(double value)
-        {
-            return Math.Abs((value / 100) - 100);
         }
     }
 }

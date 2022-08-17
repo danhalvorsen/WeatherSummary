@@ -21,7 +21,7 @@ namespace Tests.Yr
 #pragma warning disable CS8604 // Possible null reference argument.
             var config = new MapperConfiguration(
              cfg => cfg.CreateMap<ApplicationYr, WeatherForecast>()
-             .ForPath(dest => dest.Date, opt => opt         // date
+             .ForPath(dest => dest.DateForecast, opt => opt         // date
                 .MapFrom(src => src.properties.timeseries
                     .ToList()
                         .Single(i => i.time.Equals(queryDate)).time)) // TIMESERIES OVER UPDATED AT; WEATHER MORE EQUAL TO REAL TIME (properties.meta.updated_at))
@@ -86,6 +86,7 @@ namespace Tests.Yr
                     .Single(i => i.time.Equals(queryDate))
                         .data.next_1_hours.details.probability_of_thunder))
               .AfterMap((s, d) => d.Source.DataProvider = "Yr") // Adding the datasource name to weatherforceastdto
+              .AfterMap((s, d) => d.Date = DateTime.UtcNow.Date)
              );
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -123,9 +124,9 @@ namespace Tests.Yr
 
             var result = mapper.Map<WeatherForecast>(application);
 
-            Console.WriteLine(result.Date);
+            Console.WriteLine(result.DateForecast);
 
-            result.Date.Should().Be(_dateTime);
+            result.DateForecast.Should().Be(_dateTime);
         }
 
         [Test]
@@ -516,6 +517,19 @@ namespace Tests.Yr
 
             // Assert
             result.Source.DataProvider.Should().Be("Yr"); // Change here aswell
+        }
+
+        [Test]
+        public void ShouldSetDate() // Remember to change strategy name to test for different forecast websites
+        {
+            var application = new ApplicationYr();
+            Mapper mapper = new Mapper(_config);
+
+            // Act
+            var result = mapper.Map<WeatherForecast>(application);
+
+            // Assert
+            result.Date.Should().Be(DateTime.UtcNow.Date); // Change here aswell
         }
     }
 }
