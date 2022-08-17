@@ -1,7 +1,7 @@
-import { Children } from '../Form/compTypes';
-import { LookupCityField } from './LookupCityField';
-import { SelectSearchOptionState } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
-import { propsType } from '../Form/compTypes';
+import { Children } from '../compTypes';
+import { LookupCityField } from '../../searchBox/LookupCityField';
+import { SelectSearchOptionState } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
+import { propsType } from '../compTypes';
 
 type props = {
   cityName: (newCityName: string) => void;

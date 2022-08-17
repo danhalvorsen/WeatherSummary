@@ -1,7 +1,9 @@
-export const ListItem = ({ Number }: { Number: Number }) => {
+export const ListItem = () => {
     return (
-        <>
-            <p>Provider NO[{Number}]</p>
-        </>
+        
+        <div className="border border-danger mt-5 m-3">
+            <h2>ListItem</h2>
+            
+        </div>
     )
 }
