@@ -1,6 +1,6 @@
 import { Children } from '../compTypes';
 import { LookupCityField } from '../../searchBox/LookupCityField';
-import { SelectSearchOptionState } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
+import { SelectSearchOptionState, WeatherForcastEnumType } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
 import { propsType } from '../compTypes';
 
 type props = {
@@ -8,6 +8,7 @@ type props = {
   choiceDate: (date: string) => void;
   choiceFromDate: (date: string) => void;
   choiceToDate: (date: string) => void;
+  whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;
 };
 
 export const WeatherForcastSearch: React.FC<props> = (props) => {
@@ -19,6 +20,8 @@ export const WeatherForcastSearch: React.FC<props> = (props) => {
         choiceDate={props.choiceDate}
         choiceFromDate={props.choiceFromDate}
         choiceToDate={props.choiceToDate}
+        whichOneIsSelected={props.whichOneIsSelected}
+
       />
     </div>
   );

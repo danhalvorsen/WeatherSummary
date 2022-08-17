@@ -14,6 +14,7 @@ type props = {
   choiceDate: (date: string) => void;
   choiceFromDate: (date: string) => void;
   choiceToDate: (date: string) => void;
+  whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
@@ -31,6 +32,8 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
   };
 
   const changeState = (typeName: WeatherForcastEnumType): void => {
+    props.whichOneIsSelected(typeName)
+
     switch (typeName) {
       case WeatherForcastEnumType.WeatherForcastSearchOneDate:
         setState(true, false, false);
