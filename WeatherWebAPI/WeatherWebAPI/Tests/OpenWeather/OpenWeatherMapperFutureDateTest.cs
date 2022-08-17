@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
 {
-    public class OpenWeatherMapperFutureDateTest
+    public class OpenWeatherMapperFutureDateTest : BaseConfigFunctions
     {
         private int _unix;
         private DateTime _dateTime;
@@ -18,14 +19,14 @@ namespace Tests.OpenWeather
         private MapperConfiguration CreateConfig(DateTime queryDate)
         {
             //queryDate = queryDate.Date + new TimeSpan(11, 0, 0);
-            // Daily has datetime set to 11:00 GMT and 13:00 Localtime <- add this to the strategy config.
+            //Daily has datetime set to 11:00 GMT and 13:00 Localtime < -add this to the strategy config.
 
 #pragma warning disable CS8604 // Possible null reference argument.
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             var config = new MapperConfiguration(
 
                     cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecast>()
-                 .ForPath(dest => dest.Date, opt => opt
+                 .ForPath(dest => dest.DateForecast, opt => opt
                     .MapFrom(src => UnixTimeStampToDateTime(src.daily
                         .ToList()
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))).dt))) // date <- this is an UNIX int type
@@ -70,25 +71,12 @@ namespace Tests.OpenWeather
                         .ToList()
                         .Single(i => i.dt.Equals(DateTimeToUnixTime(queryDate))).clouds))
                   .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
+                  .AfterMap((s, d) => d.Date = DateTime.UtcNow.Date)
+
                  );
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CS8604 // Possible null reference argument.
             return config;
-        }
-
-        private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
-        {
-            // Unix timestamp is seconds past epoch
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dateTime;
-        }
-
-        private static int DateTimeToUnixTime(DateTime dateTime)
-        {
-            dateTime = dateTime.ToUniversalTime(); // If this is not done, the time would be 2 hours ahead of what we'd actually want.
-            int unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            return unixTimestamp;
         }
 
 
@@ -118,8 +106,8 @@ namespace Tests.OpenWeather
             var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
-            Console.WriteLine(result.Date);
-            result.Date.Should().Be(UnixTimeStampToDateTime(_unix));
+            Console.WriteLine(result.DateForecast);
+            result.DateForecast.Should().Be(UnixTimeStampToDateTime(_unix));
         }
 
         [Test]
@@ -436,6 +424,21 @@ namespace Tests.OpenWeather
             Console.WriteLine(result?.Source?.DataProvider);
 
             result?.Source?.DataProvider.Should().Be("OpenWeather");
+        }
+
+        [Test]
+        public void ShouldSetDate()
+        {
+            var application = new ApplicationOpenWeather();
+            Mapper mapper = new Mapper(_config);
+
+            // Act
+            var result = mapper.Map<WeatherForecast>(application);
+
+            // Assert
+            Console.WriteLine(result.Date);
+
+            result.Date.Should().Be(DateTime.UtcNow.Date);
         }
     }
 }
