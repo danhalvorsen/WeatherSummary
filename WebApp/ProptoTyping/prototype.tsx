@@ -1,4 +1,5 @@
-<App>
+{
+  /* <App>
     <WeatherForcastSearchState>
         <WeatherForcastSearch>
             <InputCity></InputCity><SearchButton></SearchButton>
@@ -47,11 +48,5 @@
     }
 
 
-
-
-
-
-
-
-
-</App>
+</App> */
+}
