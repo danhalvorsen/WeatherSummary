@@ -22,7 +22,6 @@ namespace WeatherWebAPI.DAL.Commands
 
             try
             {
-
                 _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
