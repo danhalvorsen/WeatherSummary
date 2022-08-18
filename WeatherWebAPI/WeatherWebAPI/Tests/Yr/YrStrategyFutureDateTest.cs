@@ -28,7 +28,7 @@ namespace Tests.Yr
         public void Setup()
         {
             _strategy = new YrStrategy(new YrConfig());
-            _date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day + 1, 12, 0, 0, DateTimeKind.Utc); // Just change for future dates / date today.
+            _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0); // Just change for future dates / date today.
         }
 
         [Test]
