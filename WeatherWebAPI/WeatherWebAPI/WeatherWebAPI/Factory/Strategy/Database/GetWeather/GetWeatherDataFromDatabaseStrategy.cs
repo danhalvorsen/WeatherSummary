@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Diagnostics;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
 {

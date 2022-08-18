@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Factory.Strategy.YR;
 
-namespace WeatherWebAPI.Controllers
+namespace WeatherWebAPI.Contracts
 {
     public class WeatherForecastDto
     {

@@ -1,15 +1,11 @@
-﻿using Castle.Core.Configuration;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL;
-using WeatherWebAPI.Factory;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using System.Linq;
+using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace Tests.BackgroundServices
 {

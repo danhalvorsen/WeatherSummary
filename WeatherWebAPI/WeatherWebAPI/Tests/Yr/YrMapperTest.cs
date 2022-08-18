@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests.Yr

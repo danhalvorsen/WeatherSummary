@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.WeatherApi;
@@ -12,7 +12,7 @@ using WeatherWebAPI.Factory.Strategy.WeatherApi;
 
 namespace Tests.WeatherApi
 {
-    public class WeatherApiMapperTest : BaseConfigFunctions
+    public class WeatherApiMapperTest : BaseMapperConfigFunctions
     {
         private int _unix;
         private int _unixDate;

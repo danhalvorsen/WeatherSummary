@@ -1,4 +1,4 @@
-﻿namespace WeatherWebAPI.Controllers
+﻿namespace WeatherWebAPI.Contracts
 {
     public class ScoresDto
     {

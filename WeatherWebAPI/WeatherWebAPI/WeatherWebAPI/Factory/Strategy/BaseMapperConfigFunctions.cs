@@ -2,7 +2,7 @@
 
 namespace WeatherWebAPI.Factory.Strategy
 {
-    public abstract class BaseConfigFunctions
+    public abstract class BaseMapperConfigFunctions
     {
         // Need to convert from Unix to DateTime when fetching data from OpenWeather datasource and vice versa
         protected static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
