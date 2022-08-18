@@ -65,11 +65,11 @@ docker network create YourNetworkName
 ```
 
 # Backend setup
-[Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/README_VisualStudioSetup.md)
+[Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/Documentation/README_VisualStudioSetup.md)
 
-[SQL Server Management Studio](/WeatherWebAPI/WeatherWebAPI/README_SQLServerManagementStudioSetup.md)
+[SQL Server Management Studio](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SQLServerManagementStudioSetup.md)
 
-[Make Self Signed HTTPS Certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md)
+[Make Self Signed HTTPS Certificate](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SelfSignedHttpsCertificate.md)
 
 # Backlog
 ### Backend

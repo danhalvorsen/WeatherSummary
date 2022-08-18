@@ -36,7 +36,6 @@ namespace WeatherWebAPI.Factory.Strategy.WeatherApi
                 // Mapper
                 _weatherApiConfig.Get(queryDate);
 
-
                 var resultWeatherData = _weatherApiConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
                 return resultWeatherData;
             }
