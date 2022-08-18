@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackgroundServiceCalculateScoreCommand : BaseCommands
+    public class BackgroundServiceCalculateScoreCommand : BaseFunctionsForQueriesAndCommands
     {
         private const double WEIGHT_TEMPERATURE = 0.3;
         private const double WEIGHT_PRESSURE = 0.2;

@@ -1,5 +1,5 @@
 ﻿using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -12,11 +12,11 @@ namespace WeatherWebAPI
     {
         private readonly IFactory _factory;
         private readonly IConfiguration _config;
-        private readonly WeatherForecastContract _contract;
+        private readonly WeatherForecastMapping _contract;
         private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _weatherDataStrategies = new();
         private const int HOUR_DELAY = 24;
 
-        public BackgroundServiceGetWeatherData(IConfiguration config, IFactory factory, WeatherForecastContract contract)
+        public BackgroundServiceGetWeatherData(IConfiguration config, IFactory factory, WeatherForecastMapping contract)
         {
             _config = config;
             _factory = factory;

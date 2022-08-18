@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 
 namespace Tests.Fakes

@@ -4,14 +4,14 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
 {
-    public class OpenWeatherMapperFutureDateTest : BaseConfigFunctions
+    public class OpenWeatherMapperFutureDateTest : BaseMapperConfigFunctions
     {
         private int _unix;
         private DateTime _dateTime;

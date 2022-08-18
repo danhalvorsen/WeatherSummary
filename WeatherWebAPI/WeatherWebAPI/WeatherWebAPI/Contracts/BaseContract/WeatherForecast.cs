@@ -1,4 +1,6 @@
-﻿namespace WeatherWebAPI.Controllers
+﻿using WeatherWebAPI.Contracts;
+
+namespace WeatherWebAPI.Contracts.BaseContract
 {
     public class WeatherForecast
     {

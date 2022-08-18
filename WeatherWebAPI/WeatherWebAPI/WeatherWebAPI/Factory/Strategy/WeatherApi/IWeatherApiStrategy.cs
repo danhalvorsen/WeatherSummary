@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Controllers;
+﻿using WeatherWebAPI.Contracts.BaseContract;
+using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 {

@@ -1,5 +1,5 @@
 ﻿using System.Data.SqlClient;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
 {

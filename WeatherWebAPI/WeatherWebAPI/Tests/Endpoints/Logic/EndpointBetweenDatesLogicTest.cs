@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Tests.Fakes;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 
@@ -298,7 +298,7 @@ namespace Tests.Endpoints.Logic
             }
 
 
-            if (_weatherAdded + _weatherDatabase * _weatherDataStrategies?.Count == datesQuery.Count * _weatherDataStrategies?.Count())
+            if (_weatherAdded + _weatherDatabase * _weatherDataStrategies?.Count == datesQuery.Count * _weatherDataStrategies?.Count)
                 result = datesQuery.Count;
             else
                 result = -1;

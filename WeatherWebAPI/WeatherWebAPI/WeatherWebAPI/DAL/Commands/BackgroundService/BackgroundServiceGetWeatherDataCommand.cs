@@ -1,11 +1,11 @@
 ﻿using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackgroundServiceGetWeatherDataCommand : BaseCommands
+    public class BackgroundServiceGetWeatherDataCommand : BaseFunctionsForQueriesAndCommands
     {
         public BackgroundServiceGetWeatherDataCommand(IConfiguration config, IFactory factory) : base(config, factory)
         {

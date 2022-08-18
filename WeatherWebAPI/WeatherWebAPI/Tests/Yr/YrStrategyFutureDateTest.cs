@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.YR;
@@ -28,7 +29,10 @@ namespace Tests.Yr
         public void Setup()
         {
             _strategy = new YrStrategy(new YrConfig());
-            _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0); // Just change for future dates / date today.
+            if (DateTime.UtcNow.Hour > 12)
+                _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0); // Just change for future dates / date today.
+            else
+                _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(12, 0, 0); // Just change for future dates / date today.
         }
 
         [Test]

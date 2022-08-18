@@ -68,7 +68,7 @@ public static class MyConfigServiceCollectionExtensions
          this IServiceCollection services, IConfiguration config)
     {
         services.AddTransient(typeof(IFactory), typeof(StrategyBuilderFactory));
-        services.AddTransient<WeatherForecastContract>();
+        services.AddTransient<WeatherForecastMapping>();
         services.AddFluentValidation(options =>
         {
             options.RegisterValidatorsFromAssemblyContaining<DateQueryAndCityValidator>();

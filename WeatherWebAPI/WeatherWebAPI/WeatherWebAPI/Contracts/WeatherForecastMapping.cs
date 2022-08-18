@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Contracts
 {
-    public class WeatherForecastContract
+    public class WeatherForecastMapping
     {
         private MapperConfiguration _mapperConfig;
         public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
 
-        public WeatherForecastContract()
+        public WeatherForecastMapping()
         {
             _mapperConfig = MapperConfig;
         }

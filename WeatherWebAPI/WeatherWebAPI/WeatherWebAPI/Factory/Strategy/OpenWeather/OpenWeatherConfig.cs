@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherConfig : BaseConfigFunctions, IHttpConfig
+    public class OpenWeatherConfig : BaseMapperConfigFunctions, IHttpConfig
     {
         private MapperConfiguration _mapperConfig;
         private IHttpClientFactory _httpClientFactory;
