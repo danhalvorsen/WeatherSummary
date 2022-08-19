@@ -8,6 +8,7 @@ import { ListState } from '../../searchBox/ListState';
 import { WeatherForcastEnumType } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
 import { api } from './WeatherForcastSearch/SelectSearchOptionState/api';
 import {
+  myDate,
   weekNo,
   WeekNoValidator,
 } from './WeatherForcastSearch/SelectSearchOptionState/apiTypes';
@@ -24,8 +25,8 @@ export const WeatherForcastSearchState = (
   const [cityName, setCityName] = useState('Stavanger');
   const [oneDate, setOneDate] = useState(new Date().toISOString());
   const [weekNumber, setWeekNumber] = useState<weekNo>({ value: -1000 });
-  const [fromDate, setFromDate] = useState<string>();
-  const [toDate, setToDate] = useState<string>();
+  const [fromDate, setFromDate] = useState<myDate>({value:''});
+  const [toDate, setToDate] = useState<myDate>({value:''});
   const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
@@ -33,10 +34,10 @@ export const WeatherForcastSearchState = (
   const changeChoiceDate = (date: string) => {
     setOneDate(date);
   };
-  const changeChoiceFrom = (date: string) => {
+  const changeChoiceFrom = (date: myDate) => {
     setFromDate(date);
   };
-  const changeChoiceTo = (date: string) => {
+  const changeChoiceTo = (date: myDate) => {
     setToDate(date);
   };
 
@@ -44,19 +45,13 @@ export const WeatherForcastSearchState = (
     switch (typeName) {
       case WeatherForcastEnumType.WeatherForcastSearchOneDate:
         api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
-        // makeSingleDateApiRequest(cityName, choiceDate);
         break;
 
       case WeatherForcastEnumType.WeatherForcastSearchTypeWeekNo:
         api(baseURL).makeWeekNumberApiRequest(cityName, weekNumber);
         break;
       case WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates:
-        api(baseURL).makeBetweenDatesApiRequest(
-          cityName,
-          fromDate,
-          toDate,
-          oneDate,
-        );
+        api(baseURL).makeBetweenDatesApiRequest(cityName, fromDate, toDate);
         break;
     }
   };

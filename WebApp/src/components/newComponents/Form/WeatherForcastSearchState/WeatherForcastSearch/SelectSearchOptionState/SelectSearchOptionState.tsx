@@ -4,6 +4,9 @@ import { propsType } from '../../../compTypes';
 import { WeatherForcastSearchOneDate } from './WeatherForcastSearchTypes/WeatherForcastSearchOneDate';
 import { WeatherForcastSearchTypeWeekNo } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeWeekNo';
 import { WeatherForcastSearchTypeBetweenTwoDates } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeBetweenTwoDates';
+import { myDate } from './apiTypes';
+
+
 
 export enum WeatherForcastEnumType {
   WeatherForcastSearchOneDate = 1,
@@ -12,8 +15,8 @@ export enum WeatherForcastEnumType {
 }
 type props = {
   choiceDate: (date: string) => void;
-  choiceFromDate: (date: string) => void;
-  choiceToDate: (date: string) => void;
+  choiceFromDate: (date: myDate) => void;
+  choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {

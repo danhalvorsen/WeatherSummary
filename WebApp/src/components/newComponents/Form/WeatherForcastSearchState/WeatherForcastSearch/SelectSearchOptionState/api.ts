@@ -1,6 +1,7 @@
-import { ValidationErrors } from "fluentvalidation-ts/dist/ValidationErrors";
-import StatusCodeNotOkError from "./apiErrors";
-import { weekNo, WeekNoValidator } from "./apiTypes";
+import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
+import StatusCodeNotOkError from './apiErrors';
+import { weekNo, WeekNoValidator , MyDateValidator , myDate } from './apiTypes';
+
 
 export const api = (baseUrl: string) => {
     const queryCityByDate = (oneDate: string, cityName: string): string =>
@@ -14,11 +15,11 @@ export const api = (baseUrl: string) => {
     ): string =>
         `${baseUrl}weatherforecast/between?BetweenDateQuery.From=${from}&BetweenDateQuery.To=${to}&CityQuery.City=${city}`;
 
+
     const makeSingleDateApiRequest = async (
         city: string,
         date: string,
     ): Promise<any> => {
-
         const url = queryCityByDate(date, city);
         const res = await fetch(url);
         if (res.ok) {
@@ -26,21 +27,29 @@ export const api = (baseUrl: string) => {
         } else {
             throw new StatusCodeNotOkError(res);
         }
-
     };
     const makeWeekNumberApiRequest = (cityName: string, weekNo: weekNo) => {
         weekNo;
-        console.log('******************************************' + weekNo + + "value:" + weekNo.value)
+        console.log(
+            '******************************************' +
+            weekNo +
+            +'value:' +
+            weekNo.value,
+        );
         const weekNoValidator = new WeekNoValidator();
         const result: ValidationErrors<weekNo> = weekNoValidator.validate(weekNo);
-        console.log('validation of weekNo' + result)
+        console.log('validation of weekNo' + result);
         if (result !== {}) {
             //We have an error in weekNi type
-            console.log('The object is not valid')
-            console.log(result.value)
+            console.log('The object is not valid');
+            console.log(result.value);
 
-            console.log(result.value === 'week number should be greater or equal to 1');
-            console.log(result.value === 'week number should be greater or equal to 1');
+            console.log(
+                result.value === 'week number should be greater or equal to 1',
+            );
+            console.log(
+                result.value === 'week number should be greater or equal to 1',
+            );
             return [];
         }
 
@@ -48,21 +57,28 @@ export const api = (baseUrl: string) => {
             response.json(),
         );
     };
-    const makeBetweenDatesApiRequest = (
+    //   const makeSingleDateApiRequest = async (
+    //     city: string,
+    //     date: string,
+    //   ): Promise<any> => {
+    //     const url = queryCityByDate(date, city);
+    //     const res = await fetch(url);
+    //     if (res.ok) {
+    //       return res.json();
+    //     } else {
+    //       throw new StatusCodeNotOkError(res);
+    //     }
+    //   };
+    const makeBetweenDatesApiRequest = async (
         cityName: string,
-        fromDate: string | undefined,
-        toDate: string | undefined,
-        choiceDate: string | undefined,
-    ) => {
-        if (fromDate && toDate !== undefined) {
-            fetch(
-                `https://localhost:5000/api/weatherforecast/between?BetweenDateQuery.From=${fromDate}&BetweenDateQuery.To=${toDate}&CityQuery.City=${cityName}`,
-            ).then((response) => response.json());
-        } else {
-            fetch(
-                `https://localhost:5000/api/weatherforecast/between?BetweenDateQuery.From=${choiceDate}&BetweenDateQuery.To=${choiceDate}&CityQuery.City=${cityName}`,
-            ).then((response) => response.json());
-        }
+        fromDate: myDate,
+        toDate: myDate,
+    ): Promise<any> => {
+        const url = queryCityBetweenToDates(fromDate, toDate, cityName);
+        const dateValidator = new MyDateValidator();
+        const result = dateValidator.validate(fromDate)
+
+       
     };
     return {
         makeSingleDateApiRequest,

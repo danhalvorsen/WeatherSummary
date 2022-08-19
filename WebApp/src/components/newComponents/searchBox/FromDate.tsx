@@ -1,9 +1,18 @@
+import { myDate } from "../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/apiTypes";
+
 type props = {
-    choiceFromDate:(date: string) => void
+    choiceFromDate:(date: myDate) => void
     }
 export const FromDate: React.FC<props> = (props): JSX.Element => {
   const handleChangeFrom = ( event : React.ChangeEvent<HTMLInputElement>)=>{
-    props.choiceFromDate(event.target.value);
+
+
+    const value= event.target.value
+    const myLocalDate = {value}
+    props.choiceFromDate(myLocalDate)
+    //props.choiceFromDate(event.target.value);
+
+
   }
   return (
     <>

@@ -2,14 +2,15 @@ import { FromDate } from '../../../../../searchBox/FromDate'
 import { RadioButton } from '../../../../../searchBox/RadioButton'
 import { ToDate } from '../../../../../searchBox/ToDate'
 import { Children } from '../../../../compTypes'
+import { myDate } from '../apiTypes'
 import { WeatherForcastEnumType } from '../SelectSearchOptionState'
 
 type WeatherForcastSearchTypeBetweenTwoDatesProps = {
     children?: Children
     radioButtonChecked: boolean
     onChange: (typeName: WeatherForcastEnumType) => void,
-    choiceFromDate: (date: string) => void,
-    choiceToDate: (date: string) => void
+    choiceFromDate: (date: myDate) => void,
+    choiceToDate: (date: myDate) => void
 }
 
 export const WeatherForcastSearchTypeBetweenTwoDates: React.FC<
