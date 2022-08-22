@@ -50,7 +50,7 @@ namespace WeatherWebAPI.DAL
                                                             $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                                 $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                                     $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
-                                                                        $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = 'Stavanger' AND Score.FK_WeatherDataId IS null " +
+                                                                        $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{city.Name}' AND Score.FK_WeatherDataId IS null " +
                                                                             $"ORDER BY [Date], SourceName";
 
 
