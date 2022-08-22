@@ -7,13 +7,11 @@ namespace WeatherWebAPI.Factory.Strategy.YR
     {
 
         private MapperConfiguration _mapperConfig;
-        //private readonly IHttpClientFactory _httpClientFactory;
         public string? DataSource { get; }
         public Uri? BaseUrl { get; }
         public Uri? HomePage { get; set; }
 
         public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
-        //public IHttpClientFactory HttpClientFactory { get => _httpClientFactory; }
 
         public YrConfig()
         {
@@ -21,7 +19,6 @@ namespace WeatherWebAPI.Factory.Strategy.YR
             BaseUrl = new Uri("https://api.met.no/weatherapi/");
             HomePage = new Uri("https://www.yr.no/");
             _mapperConfig = MapperConfig;
-            //_httpClientFactory = HttpClientFactory;
         }
 
         public MapperConfiguration Get(DateTime queryDate)

@@ -6,13 +6,11 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
     public class OpenWeatherConfig : BaseMapperConfigFunctions, IHttpConfig
     {
         private MapperConfiguration _mapperConfig;
-        private IHttpClientFactory _httpClientFactory;
         public string? DataSource { get; }
         public Uri? BaseUrl { get; }
         public Uri? HomePage { get; set; }
 
         public MapperConfiguration MapperConfig { get => _mapperConfig; set => _mapperConfig = value; }
-        public IHttpClientFactory HttpClientFactory { get => _httpClientFactory; set => _httpClientFactory = value; }
 
         public OpenWeatherConfig()
         {
@@ -20,7 +18,6 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             BaseUrl = new Uri("https://api.openweathermap.org/");
             HomePage = new Uri("https://openweathermap.org/");
             _mapperConfig = MapperConfig;
-            _httpClientFactory = HttpClientFactory;
         }
 
         public MapperConfiguration Get(DateTime queryDate) // ADD DIFFERENT CFG FOR TODAY OR FUTURE??

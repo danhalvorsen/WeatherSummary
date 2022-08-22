@@ -18,17 +18,17 @@ namespace WeatherWebAPI.Factory
         {
             if (typeof(S).Name == typeof(IYrStrategy).Name)
             {
-                var strategy = new YrStrategy(new YrConfig());
+                var strategy = new YrStrategy(new YrConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IOpenWeatherStrategy).Name)
             {
-                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IWeatherApiStrategy).Name)
             {
-                var strategy = new WeatherApiStrategy(new WeatherApiConfig());
+                var strategy = new WeatherApiStrategy(new WeatherApiConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IAddWeatherDataToDatabaseStrategy).Name)
