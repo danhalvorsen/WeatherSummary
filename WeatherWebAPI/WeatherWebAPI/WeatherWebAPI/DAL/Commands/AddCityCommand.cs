@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Net;
+using System.Globalization;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
@@ -40,10 +41,22 @@ namespace WeatherWebAPI.DAL.Commands
                             await AddCityToDatabase(cityData);
                         }
                     }
+
+                    //return new HttpResponseMessage(HttpStatusCode.OK)
+                    //{
+                    //    Content = new StringContent(
+                    //        $"The city {cityName} has been added.")
+                    //};
                 }
                 else
                 {
                     cityName = citySearchedFor;
+
+                    //return new HttpResponseMessage(HttpStatusCode.Found)
+                    //{
+                    //    Content = new StringContent(
+                    //        $"The city {cityName} is already saved to the database.")
+                    //};
                 }
             }
             catch(Exception e)
