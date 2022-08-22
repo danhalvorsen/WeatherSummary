@@ -9,7 +9,7 @@ import { myDate } from './WeatherForcastSearch/SelectSearchOptionState/apiTypes'
 
 type props = {
   cityName: (newCityName: string) => void;
-  choiceDate: (date: string) => void;
+  choiceDate: (date: myDate) => void;
   choiceFromDate: (date: myDate) => void;
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;

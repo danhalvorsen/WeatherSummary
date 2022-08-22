@@ -23,15 +23,17 @@ export const WeatherForcastSearchState = (
 ) => {
   // Define States
   const [cityName, setCityName] = useState('Stavanger');
-  const [oneDate, setOneDate] = useState(new Date().toISOString());
+  const [oneDate, setOneDate] = useState<myDate>({
+    value: new Date().toISOString(),
+  });
   const [weekNumber, setWeekNumber] = useState<weekNo>({ value: -1000 });
-  const [fromDate, setFromDate] = useState<myDate>({value:''});
-  const [toDate, setToDate] = useState<myDate>({value:''});
+  const [fromDate, setFromDate] = useState<myDate>({ value: '' });
+  const [toDate, setToDate] = useState<myDate>({ value: '' });
   const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
   };
-  const changeChoiceDate = (date: string) => {
+  const changeChoiceDate = (date: myDate) => {
     setOneDate(date);
   };
   const changeChoiceFrom = (date: myDate) => {
@@ -56,14 +58,9 @@ export const WeatherForcastSearchState = (
     }
   };
 
-  useEffect(() => {
-    //check condition and make API request
-  }),
-    [];
-
   return (
     <>
-      <h1>STATE {oneDate}</h1>
+      <h1>STATE {oneDate.value}</h1>
       <div className="border border-dark">
         <h3>WeatherForcastSearchState</h3>{' '}
         <h1>the city name now is: {cityName}</h1>

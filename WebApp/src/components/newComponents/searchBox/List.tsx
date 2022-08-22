@@ -5,7 +5,6 @@ export const List: React.FC = (props) => {
         <>
             <div className="border border-info m-3 mt-5 pt-2 border-2">
                 <h3>List</h3>
-                {props?.children}
                 <ListItem />
                 <ListItem />
                 <ListItem />

@@ -1,4 +1,11 @@
 import { Validator } from 'fluentvalidation-ts';
+import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
+
+
+export const theObjectIsEmpty = <T>(object: ValidationErrors<T>): boolean => {
+
+    return Object.keys(object).length === 0 ? true : false;
+}
 
 export type weekNo = {
     value: number;
@@ -29,7 +36,7 @@ export class MyDateValidator extends Validator<myDate> {
             .minLength(8)
             .withMessage('the Date you entered is too short.');
         this.ruleFor('value')
-            .maxLength(15)
+            .maxLength(24)
             .withMessage('the Date you entered is too long.');
         this.ruleFor('value')
             .must(this.isValid)
@@ -42,4 +49,35 @@ export class MyDateValidator extends Validator<myDate> {
         const date = new Date(value);
         return !isNaN(date.getTime()) ? true : false;
     };
+}
+
+export type twoDates = {
+    from: myDate,
+    to: myDate
+}
+
+
+export class BetweenTwoDatesValidator extends Validator<twoDates> {
+    constructor() {
+        super();
+        this
+            .ruleFor('from').setValidator(() => new MyDateValidator());
+        this
+            .ruleFor('to').setValidator(() => new MyDateValidator());
+
+        this.ruleFor('from').must((value, model) => {
+
+            const from = Date.parse(model.from.value);
+            const to = Date.parse(model.to.value);
+
+            if (from > to)
+                return false;
+
+            return true;
+        })
+
+
+
+
+    }
 }

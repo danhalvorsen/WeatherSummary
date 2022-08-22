@@ -57,27 +57,27 @@ test('validator should not fail when input data contains garbage at the end of r
     console.log(result);
 });
 
-test('validator should not fail when input data contains garbage at the end of raw string (value)', () => {
-    const sut: myDate = { value: '12.99.2022' };
-
+test('validator should not fail when input data is equal to empty object {}', () => {
+    const sut: myDate = { value: '2022-08-22T08:26:30.840Z' };
+    const emptyObject = {};
     const result = validator.validate(sut);
-    expect(result).not.toStrictEqual({});
-    console.log(result);
-});
-
-test('validator should not fail when input data contains garbage at the end of raw string (value)', () => {
-    const sut: myDate = { value: '12.99.99999' };
-
-    const result = validator.validate(sut);
-    expect(result).not.toStrictEqual({});
-    console.log(result);
+    expect(result).toEqual(emptyObject);
 });
 
 
-test('validator should not fail when input data contains garbage at the end of raw string (value)', () => {
-    const sut: myDate = { value: '12/12/2022' };
+test('validator should pass for Today date(default date)', () => {
+    const sut: myDate = { value: '2022-08-22T08:26:30.840Z' };
 
     const result = validator.validate(sut);
     expect(result).toStrictEqual({});
     console.log(result);
 });
+
+test('validator should return True if isValid works correctly', () => {
+    const sut: myDate = { value: '2022-08-22T08:26:30.840Z' };
+
+    const result = validator.isValid(sut.value);
+    expect(result).toBe(true);
+});
+
+

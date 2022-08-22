@@ -14,7 +14,7 @@ export enum WeatherForcastEnumType {
   WeatherForcastSearchTypeBetweenTwoDates = 200,
 }
 type props = {
-  choiceDate: (date: string) => void;
+  choiceDate: (date: myDate) => void;
   choiceFromDate: (date: myDate) => void;
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;

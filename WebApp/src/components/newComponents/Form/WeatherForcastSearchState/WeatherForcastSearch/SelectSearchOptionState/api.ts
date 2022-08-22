@@ -1,32 +1,46 @@
 import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
 import StatusCodeNotOkError from './apiErrors';
-import { weekNo, WeekNoValidator , MyDateValidator , myDate } from './apiTypes';
+import { weekNo, WeekNoValidator, MyDateValidator, myDate, theObjectIsEmpty as isObjectEmpty } from './apiTypes';
+
 
 
 export const api = (baseUrl: string) => {
-    const queryCityByDate = (oneDate: string, cityName: string): string =>
+    const queryCityByDate = (oneDate: myDate, cityName: string): string =>
         `${baseUrl}weatherforecast/date?DateQuery.Date=${oneDate}&CityQuery.City=${cityName}`;
     const queryCityByWeekNo = (weekNo: weekNo, cityName: string): string =>
         `${baseUrl}weatherforecast/week?Week=${weekNo}&CityQuery.City=${cityName}`;
     const queryCityBetweenToDates = (
-        from: string,
-        to: string,
+        from: myDate,
+        to: myDate,
         city: string,
     ): string =>
-        `${baseUrl}weatherforecast/between?BetweenDateQuery.From=${from}&BetweenDateQuery.To=${to}&CityQuery.City=${city}`;
+        `${baseUrl}weatherforecast/between?BetweenDateQuery.From=${from.value}&BetweenDateQuery.To=${to.value}&CityQuery.City=${city}`;
 
 
     const makeSingleDateApiRequest = async (
         city: string,
-        date: string,
+        date: myDate,
     ): Promise<any> => {
         const url = queryCityByDate(date, city);
-        const res = await fetch(url);
-        if (res.ok) {
-            return res.json();
-        } else {
-            throw new StatusCodeNotOkError(res);
+        const dateValidator = new MyDateValidator();
+        const result = dateValidator.validate(date);
+        const emptyObject = {}
+
+        //if (result == {}) {
+        if (isObjectEmpty(result)) {
+            console.log("We've got an Error from single date request: ");
         }
+        else {
+            console.log("going to fetch date....")
+            const res = await fetch(url);
+            if (res.ok) {
+                return res.json();
+            } else {
+                console.log("Error: 404")
+                throw new StatusCodeNotOkError(res);
+            }
+        }
+
     };
     const makeWeekNumberApiRequest = (cityName: string, weekNo: weekNo) => {
         weekNo;
@@ -40,16 +54,9 @@ export const api = (baseUrl: string) => {
         const result: ValidationErrors<weekNo> = weekNoValidator.validate(weekNo);
         console.log('validation of weekNo' + result);
         if (result !== {}) {
-            //We have an error in weekNi type
+            //We have an error in weekNo type
             console.log('The object is not valid');
             console.log(result.value);
-
-            console.log(
-                result.value === 'week number should be greater or equal to 1',
-            );
-            console.log(
-                result.value === 'week number should be greater or equal to 1',
-            );
             return [];
         }
 
@@ -57,18 +64,7 @@ export const api = (baseUrl: string) => {
             response.json(),
         );
     };
-    //   const makeSingleDateApiRequest = async (
-    //     city: string,
-    //     date: string,
-    //   ): Promise<any> => {
-    //     const url = queryCityByDate(date, city);
-    //     const res = await fetch(url);
-    //     if (res.ok) {
-    //       return res.json();
-    //     } else {
-    //       throw new StatusCodeNotOkError(res);
-    //     }
-    //   };
+
     const makeBetweenDatesApiRequest = async (
         cityName: string,
         fromDate: myDate,
@@ -76,9 +72,19 @@ export const api = (baseUrl: string) => {
     ): Promise<any> => {
         const url = queryCityBetweenToDates(fromDate, toDate, cityName);
         const dateValidator = new MyDateValidator();
-        const result = dateValidator.validate(fromDate)
+        const result = dateValidator.validate(fromDate);
+        if (result !== {}) {
+            console.log(result);
+            console.log("We've got an error!");
+        }
+        else
+            fetch(url)
+                .then((response) =>
+                    response.json()
+                );
 
-       
+
+
     };
     return {
         makeSingleDateApiRequest,

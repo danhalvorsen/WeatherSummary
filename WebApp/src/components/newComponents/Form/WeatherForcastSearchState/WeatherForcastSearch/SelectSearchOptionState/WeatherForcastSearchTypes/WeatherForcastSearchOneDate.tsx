@@ -3,12 +3,13 @@ import { Children } from '../../../../compTypes';
 import { WeatherForcastEnumType } from '../SelectSearchOptionState';
 import { TodayDateShow } from '../../../../../searchBox/TodayDateShow';
 import { DayPicker } from '../../../../../searchBox/DayPicker';
+import { myDate } from '../apiTypes';
 
 type WeatherForcastSearchOneDateProps = {
   children?: JSX.Element | JSX.Element[];
   radioButtonChecked: boolean;
   onChange: (typeName: WeatherForcastEnumType) => void;
-  choiceDate: (date: string) => void;
+  choiceDate: (date: myDate) => void;
 };
 
 export const WeatherForcastSearchOneDate: React.FC<
