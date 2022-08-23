@@ -19,6 +19,7 @@ type props = {
   choiceFromDate: (date: myDate) => void;
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;
+  thisWeekNumber: weekNo
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
@@ -64,6 +65,7 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
           onChange={changeState}
           radioButtonChecked={stateWeekNo}
           ChoiceWeekNo={props.ChoiceWeekNo}
+          thisWeekNumber={props.thisWeekNumber}
 
         />
         <WeatherForcastSearchTypeBetweenTwoDates

@@ -9,6 +9,7 @@ type WeatherForcastSearchTypeWeekNoProps = {
     radioButtonChecked: boolean
     ChoiceWeekNo: (weekNo: weekNo) => void;
     onChange: (typeName: WeatherForcastEnumType) => void
+    thisWeekNumber: weekNo
 }
 
 export const WeatherForcastSearchTypeWeekNo: React.FC<
@@ -26,7 +27,7 @@ export const WeatherForcastSearchTypeWeekNo: React.FC<
                         WeatherForcastEnumType.WeatherForcastSearchTypeWeekNo
                     }
                 />
-                <WeekPicker ChoiceWeekNo={props.ChoiceWeekNo} />
+                <WeekPicker ChoiceWeekNo={props.ChoiceWeekNo} thisWeekNumber={props.thisWeekNumber} />
             </div>
 
             {props.children}

@@ -1,4 +1,5 @@
 import '../../../../../src/App.css';
+import { getWeek } from 'date-fns';
 import React, { useCallback, useMemo, useState } from 'react';
 import { WeatherForcastSearch } from './WeatherForcastSearch';
 import { LookupCityField } from '../../searchBox/LookupCityField';
@@ -21,18 +22,22 @@ export type weatherForcastSearchStatetypeProps = {
 export const WeatherForcastSearchState = (
   props: weatherForcastSearchStatetypeProps,
 ) => {
+  const thisWeekNumber = getWeek(new Date());
+
   // Define States
   const [cityName, setCityName] = useState('Stavanger');
   const [oneDate, setOneDate] = useState<myDate>({
     value: new Date().toISOString(),
   });
-  const [weekNumber, setWeekNumber] = useState<weekNo>({ value: 20 });
+  const [weekNumber, setWeekNumber] = useState<weekNo>({
+    value: thisWeekNumber,
+  });
   const [fromDate, setFromDate] = useState<myDate>({ value: '' });
   const [toDate, setToDate] = useState<myDate>({ value: '' });
   const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
-    console.log(cityName)
+    console.log(cityName);
   };
   const changeChoiceDate = (date: myDate) => {
     setOneDate(date);
@@ -52,7 +57,7 @@ export const WeatherForcastSearchState = (
     (() => {
       api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
     })();
-  }, [oneDate , cityName]);
+  }, [oneDate, cityName]);
 
   const whichOneIsSelected = (typeName: WeatherForcastEnumType) => {
     switch (typeName) {
@@ -85,6 +90,7 @@ export const WeatherForcastSearchState = (
         <div className="border border-success m-2">
           <WeatherForcastSearch
             cityName={changeCityNameState}
+            thisWeekNumber={weekNumber} 
             choiceDate={changeChoiceDate}
             ChoiceWeekNo={changeChoiceWeekNo}
             choiceFromDate={changeChoiceFrom}
