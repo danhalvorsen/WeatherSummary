@@ -1,11 +1,13 @@
 import { RadioButton } from '../../../../../searchBox/RadioButton'
 import { WeekPicker } from '../../../../../searchBox/WeekPicker'
 import { Children } from '../../../../compTypes'
+import { weekNo } from '../apiTypes'
 import { WeatherForcastEnumType } from '../SelectSearchOptionState'
 
 type WeatherForcastSearchTypeWeekNoProps = {
     children?: Children
     radioButtonChecked: boolean
+    ChoiceWeekNo: (weekNo: weekNo) => void;
     onChange: (typeName: WeatherForcastEnumType) => void
 }
 
@@ -24,7 +26,7 @@ export const WeatherForcastSearchTypeWeekNo: React.FC<
                         WeatherForcastEnumType.WeatherForcastSearchTypeWeekNo
                     }
                 />
-                <WeekPicker />
+                <WeekPicker ChoiceWeekNo={props.ChoiceWeekNo} />
             </div>
 
             {props.children}

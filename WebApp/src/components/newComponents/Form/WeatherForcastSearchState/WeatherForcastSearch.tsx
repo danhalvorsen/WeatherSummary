@@ -5,11 +5,15 @@ import {
   WeatherForcastEnumType,
 } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
 import { propsType } from '../compTypes';
-import { myDate } from './WeatherForcastSearch/SelectSearchOptionState/apiTypes';
+import {
+  myDate,
+  weekNo,
+} from './WeatherForcastSearch/SelectSearchOptionState/apiTypes';
 
 type props = {
   cityName: (newCityName: string) => void;
   choiceDate: (date: myDate) => void;
+  ChoiceWeekNo: (weekNo: weekNo) => void;
   choiceFromDate: (date: myDate) => void;
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
@@ -22,6 +26,7 @@ export const WeatherForcastSearch: React.FC<props> = (props) => {
       <LookupCityField cityName={props.cityName} />
       <SelectSearchOptionState
         choiceDate={props.choiceDate}
+        ChoiceWeekNo={props.ChoiceWeekNo}
         choiceFromDate={props.choiceFromDate}
         choiceToDate={props.choiceToDate}
         whichOneIsSelected={props.whichOneIsSelected}

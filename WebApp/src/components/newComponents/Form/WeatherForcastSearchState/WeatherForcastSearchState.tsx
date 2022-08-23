@@ -26,15 +26,19 @@ export const WeatherForcastSearchState = (
   const [oneDate, setOneDate] = useState<myDate>({
     value: new Date().toISOString(),
   });
-  const [weekNumber, setWeekNumber] = useState<weekNo>({ value: -1000 });
+  const [weekNumber, setWeekNumber] = useState<weekNo>({ value: 20 });
   const [fromDate, setFromDate] = useState<myDate>({ value: '' });
   const [toDate, setToDate] = useState<myDate>({ value: '' });
   const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
+    console.log(cityName)
   };
   const changeChoiceDate = (date: myDate) => {
     setOneDate(date);
+  };
+  const changeChoiceWeekNo = (weekNo: weekNo) => {
+    setWeekNumber(weekNo);
   };
   const changeChoiceFrom = (date: myDate) => {
     setFromDate(date);
@@ -42,6 +46,13 @@ export const WeatherForcastSearchState = (
   const changeChoiceTo = (date: myDate) => {
     setToDate(date);
   };
+
+  useEffect(() => {
+    // run Fetch Api when page is loaded
+    (() => {
+      api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
+    })();
+  }, [oneDate , cityName]);
 
   const whichOneIsSelected = (typeName: WeatherForcastEnumType) => {
     switch (typeName) {
@@ -53,7 +64,14 @@ export const WeatherForcastSearchState = (
         api(baseURL).makeWeekNumberApiRequest(cityName, weekNumber);
         break;
       case WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates:
-        api(baseURL).makeBetweenDatesApiRequest(cityName, fromDate, toDate);
+        api(baseURL).makeBetweenDatesApiRequest(cityName, {
+          from: {
+            value: fromDate.value,
+          },
+          to: {
+            value: toDate.value,
+          },
+        });
         break;
     }
   };
@@ -68,6 +86,7 @@ export const WeatherForcastSearchState = (
           <WeatherForcastSearch
             cityName={changeCityNameState}
             choiceDate={changeChoiceDate}
+            ChoiceWeekNo={changeChoiceWeekNo}
             choiceFromDate={changeChoiceFrom}
             choiceToDate={changeChoiceTo}
             whichOneIsSelected={whichOneIsSelected}
