@@ -1,4 +1,4 @@
-import { myDate } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/apiTypes';
+import { myDate } from '../../../communication/apiTypes';
 
 type props = {
   choiceDate: (date: myDate) => void;

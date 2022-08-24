@@ -3,7 +3,7 @@ import { Children } from '../../../../compTypes';
 import { WeatherForcastEnumType } from '../SelectSearchOptionState';
 import { TodayDateShow } from '../../../../../searchBox/TodayDateShow';
 import { DayPicker } from '../../../../../searchBox/DayPicker';
-import { myDate } from '../apiTypes';
+import { myDate } from '../../../../../../../communication/apiTypes';
 
 type WeatherForcastSearchOneDateProps = {
   children?: JSX.Element | JSX.Element[];

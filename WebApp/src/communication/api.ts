@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
 import StatusCodeNotOkError from './apiErrors';
 import {
-  weekNo,
+  WeekNumber,
   WeekNoValidator,
   MyDateValidator,
   myDate,
@@ -13,7 +14,7 @@ import {
 export const api = (baseUrl: string) => {
   const queryCityByDate = (oneDate: myDate, cityName: string): string =>
     `${baseUrl}weatherforecast/date?DateQuery.Date=${oneDate.value}&CityQuery.City=${cityName}`;
-  const queryCityByWeekNo = (weekNo: weekNo, cityName: string): string =>
+  const queryCityByWeekNo = (weekNo: WeekNumber, cityName: string): string =>
     `${baseUrl}weatherforecast/week?Week=${weekNo.value}&CityQuery.City=${cityName}`;
   const queryCityBetweenToDates = (dates: twoDates, city: string): string =>
     `${baseUrl}weatherforecast/between?BetweenDateQuery.From=${dates.from.value}&BetweenDateQuery.To=${dates.to.value}&CityQuery.City=${city}`;
@@ -27,10 +28,14 @@ export const api = (baseUrl: string) => {
     const result = dateValidator.validate(date);
     const emptyObject = {};
 
+    //just for test
+    // const [temp , setTemp] = useState<any>()
+
     //if (result == {}) {
     if (isValid(result)) {
       const res = await fetch(url);
       if (res.ok) {
+        // setTemp(res)
         return res.json();
       } else {
         throw new StatusCodeNotOkError(res);
@@ -39,7 +44,7 @@ export const api = (baseUrl: string) => {
   };
   const makeWeekNumberApiRequest = async (
     cityName: string,
-    weekNo: weekNo,
+    weekNo: WeekNumber,
   ): Promise<any> => {
     const weekNoValidator = new WeekNoValidator();
     const result = weekNoValidator.validate(weekNo);

@@ -1,9 +1,9 @@
 import { isPropertySignature } from 'typescript';
-import { weekNo } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/apiTypes';
+import { WeekNumber } from '../../../communication/apiTypes';
 
 type weekPickerProps = {
-  ChoiceWeekNo: (weekNo: weekNo) => void;
-  thisWeekNumber: weekNo
+  ChoiceWeekNo: (weekNo: WeekNumber) => void;
+  thisWeekNumber: WeekNumber;
 };
 //            ChoiceWeekNo={changeChoiceWeekNo}
 

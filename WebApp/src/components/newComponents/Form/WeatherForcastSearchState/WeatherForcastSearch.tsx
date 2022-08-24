@@ -6,18 +6,18 @@ import {
 } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
 import { propsType } from '../compTypes';
 import {
-  myDate,
-  weekNo,
-} from './WeatherForcastSearch/SelectSearchOptionState/apiTypes';
+  myDate as WFDate,
+  WeekNumber as WFWeekNumber,
+} from '../../../../communication/apiTypes';
 
 type props = {
   cityName: (newCityName: string) => void;
-  choiceDate: (date: myDate) => void;
-  ChoiceWeekNo: (weekNo: weekNo) => void;
-  choiceFromDate: (date: myDate) => void;
-  choiceToDate: (date: myDate) => void;
+  choiceDate: (date: WFDate) => void;
+  ChoiceWeekNo: (weekNo: WFWeekNumber) => void;
+  choiceFromDate: (date: WFDate) => void;
+  choiceToDate: (date: WFDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
-  thisWeekNumber: weekNo    
+  thisWeekNumber: WFWeekNumber;
 };
 
 export const WeatherForcastSearch: React.FC<props> = (props) => {

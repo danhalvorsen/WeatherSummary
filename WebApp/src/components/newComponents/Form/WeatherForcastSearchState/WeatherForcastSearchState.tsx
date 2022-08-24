@@ -7,12 +7,15 @@ import { useEffect } from 'react';
 import { ListItem } from '../../resultBox/ListItem';
 import { ListState } from '../../searchBox/ListState';
 import { WeatherForcastEnumType } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
-import { api } from './WeatherForcastSearch/SelectSearchOptionState/api';
+import { api } from '../../../../communication/api';
 import {
   myDate,
-  weekNo,
-  WeekNoValidator,
-} from './WeatherForcastSearch/SelectSearchOptionState/apiTypes';
+  WeekNumber as WeekNumber,
+} from '../../../../communication/apiTypes';
+import {
+  Client,
+  WeatherForecastDto,
+} from '../../../../communication/api.client.generated';
 
 export type weatherForcastSearchStatetypeProps = {
   children?: JSX.Element | JSX.Element[];
@@ -29,11 +32,17 @@ export const WeatherForcastSearchState = (
   const [oneDate, setOneDate] = useState<myDate>({
     value: new Date().toISOString(),
   });
-  const [weekNumber, setWeekNumber] = useState<weekNo>({
+  const [weekNumber, setWeekNumber] = useState<WeekNumber>({
     value: thisWeekNumber,
   });
   const [fromDate, setFromDate] = useState<myDate>({ value: '' });
   const [toDate, setToDate] = useState<myDate>({ value: '' });
+  const [weatherForcase, setWeatherForcase] = useState<WeatherForecastDto[]>(
+    [],
+  );
+  //Define States for received data
+  const [singleDateData, setSingleDateData] = useState(null);
+
   const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
@@ -42,7 +51,7 @@ export const WeatherForcastSearchState = (
   const changeChoiceDate = (date: myDate) => {
     setOneDate(date);
   };
-  const changeChoiceWeekNo = (weekNo: weekNo) => {
+  const changeChoiceWeekNo = (weekNo: WeekNumber) => {
     setWeekNumber(weekNo);
   };
   const changeChoiceFrom = (date: myDate) => {
@@ -53,9 +62,14 @@ export const WeatherForcastSearchState = (
   };
 
   useEffect(() => {
+    const apiClient = new Client();
     // run Fetch Api when page is loaded
-    (() => {
-      api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
+    const getData = (async () => {
+      //api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
+      const res = await apiClient.date(new Date(oneDate.value), cityName);
+      console.log('data from api:' + res);
+      setWeatherForcase(res);
+      console.log('state:' + weatherForcase);
     })();
   }, [oneDate, cityName]);
 
@@ -90,7 +104,7 @@ export const WeatherForcastSearchState = (
         <div className="border border-success m-2">
           <WeatherForcastSearch
             cityName={changeCityNameState}
-            thisWeekNumber={weekNumber} 
+            thisWeekNumber={weekNumber}
             choiceDate={changeChoiceDate}
             ChoiceWeekNo={changeChoiceWeekNo}
             choiceFromDate={changeChoiceFrom}

@@ -4,9 +4,7 @@ import { propsType } from '../../../compTypes';
 import { WeatherForcastSearchOneDate } from './WeatherForcastSearchTypes/WeatherForcastSearchOneDate';
 import { WeatherForcastSearchTypeWeekNo } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeWeekNo';
 import { WeatherForcastSearchTypeBetweenTwoDates } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeBetweenTwoDates';
-import { myDate, weekNo } from './apiTypes';
-
-
+import { myDate, WeekNumber } from '../../../../../../communication/apiTypes';
 
 export enum WeatherForcastEnumType {
   WeatherForcastSearchOneDate = 1,
@@ -15,11 +13,11 @@ export enum WeatherForcastEnumType {
 }
 type props = {
   choiceDate: (date: myDate) => void;
-  ChoiceWeekNo: (weekNo: weekNo) => void;
+  ChoiceWeekNo: (weekNo: WeekNumber) => void;
   choiceFromDate: (date: myDate) => void;
   choiceToDate: (date: myDate) => void;
-  whichOneIsSelected: (typeName: WeatherForcastEnumType)=> void;
-  thisWeekNumber: weekNo
+  whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
+  thisWeekNumber: WeekNumber;
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
@@ -37,7 +35,7 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
   };
 
   const changeState = (typeName: WeatherForcastEnumType): void => {
-    props.whichOneIsSelected(typeName)
+    props.whichOneIsSelected(typeName);
 
     switch (typeName) {
       case WeatherForcastEnumType.WeatherForcastSearchOneDate:
@@ -66,7 +64,6 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
           radioButtonChecked={stateWeekNo}
           ChoiceWeekNo={props.ChoiceWeekNo}
           thisWeekNumber={props.thisWeekNumber}
-
         />
         <WeatherForcastSearchTypeBetweenTwoDates
           onChange={changeState}
