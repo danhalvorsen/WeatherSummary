@@ -21,7 +21,7 @@ export class Client {
     http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> },
   ) {
     this.http = http ? http : (window as any);
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : 'https://localhost:5000';
   }
 
   /**

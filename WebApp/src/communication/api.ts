@@ -26,16 +26,10 @@ export const api = (baseUrl: string) => {
     const url = queryCityByDate(date, city);
     const dateValidator = new MyDateValidator();
     const result = dateValidator.validate(date);
-    const emptyObject = {};
 
-    //just for test
-    // const [temp , setTemp] = useState<any>()
-
-    //if (result == {}) {
     if (isValid(result)) {
       const res = await fetch(url);
       if (res.ok) {
-        // setTemp(res)
         return res.json();
       } else {
         throw new StatusCodeNotOkError(res);
