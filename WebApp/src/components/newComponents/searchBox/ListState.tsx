@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 type props = {
   weatherList: WeatherForecastDto[];
+  compare: boolean;
 };
 
 export const ListState: React.FC<props> = (props) => {
@@ -35,12 +36,18 @@ export const ListState: React.FC<props> = (props) => {
       <List row={listYr} background="danger" />
     </div>
   );
+  const compareList = (
+    <div>
+      <h1>Compare List </h1>
+    </div>
+  );
+  const showList = props.compare ? compareList : renderList;
 
   return (
     <>
       <div className="border border-danger mt-5 m-3">
         <h2>{cityName}</h2>
-        {renderList}
+        {showList}
       </div>
     </>
   );

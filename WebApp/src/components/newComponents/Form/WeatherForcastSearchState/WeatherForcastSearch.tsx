@@ -18,6 +18,7 @@ type props = {
   choiceToDate: (date: WFDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
   thisWeekNumber: WFWeekNumber;
+  changeCompareMode:() => void
 };
 
 export const WeatherForcastSearch: React.FC<props> = (props) => {
@@ -32,6 +33,7 @@ export const WeatherForcastSearch: React.FC<props> = (props) => {
         choiceToDate={props.choiceToDate}
         whichOneIsSelected={props.whichOneIsSelected}
         thisWeekNumber={props.thisWeekNumber}
+        changeCompareMode={props.changeCompareMode}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { WeatherForcastSearchOneDate } from './WeatherForcastSearchTypes/Weather
 import { WeatherForcastSearchTypeWeekNo } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeWeekNo';
 import { WeatherForcastSearchTypeBetweenTwoDates } from './WeatherForcastSearchTypes/WeatherForcastSearchTypeBetweenTwoDates';
 import { myDate, WeekNumber } from '../../../../../../communication/apiTypes';
+import { CompareWeatherInputCheck } from './WeatherForcastSearchTypes/CompareWeatherInputCheck';
 
 export enum WeatherForcastEnumType {
   WeatherForcastSearchOneDate = 1,
@@ -18,6 +19,7 @@ type props = {
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
   thisWeekNumber: WeekNumber;
+  changeCompareMode:() => void
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
@@ -71,6 +73,7 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
           choiceFromDate={props.choiceFromDate}
           choiceToDate={props.choiceToDate}
         />
+          <CompareWeatherInputCheck changeCompareMode={props.changeCompareMode}/>
       </div>
     </div>
   );

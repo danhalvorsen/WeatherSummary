@@ -17,6 +17,7 @@ import {
   WeatherForecastDto,
 } from '../../../../communication/api.client.generated';
 import { ToDate } from '../../searchBox/ToDate';
+import { isCallChain } from 'typescript';
 
 export type weatherForcastSearchStatetypeProps = {
   children?: JSX.Element | JSX.Element[];
@@ -44,6 +45,7 @@ export const WeatherForcastSearchState = (
   const [currentOption, setCurrentOption] = useState<WeatherForcastEnumType>(
     WeatherForcastEnumType.WeatherForcastSearchOneDate,
   );
+  const [isCompareActive, setIsCompareActive] = useState<boolean>(false);
 
   //Define States for received data
   //const [singleDateData, setSingleDateData] = useState(null);
@@ -64,7 +66,9 @@ export const WeatherForcastSearchState = (
   const changeChoiceTo = (date: myDate) => {
     setToDate(date);
   };
-
+  const changeCompareMode = () => {
+    setIsCompareActive(!isCompareActive);
+  };
   const whichOneIsSelected = async (typeName: WeatherForcastEnumType) => {
     const apiRequest = new Client();
 
@@ -132,7 +136,6 @@ export const WeatherForcastSearchState = (
     <>
       <div className="border border-dark">
         <h3>WeatherForcastSearchState</h3>{' '}
-        
         <div className="border border-success m-2">
           <WeatherForcastSearch
             cityName={changeCityNameState}
@@ -142,8 +145,9 @@ export const WeatherForcastSearchState = (
             choiceFromDate={changeChoiceFrom}
             choiceToDate={changeChoiceTo}
             whichOneIsSelected={whichOneIsSelected}
+            changeCompareMode={changeCompareMode}
           />
-          <ListState weatherList={weatherForecast}/>
+          <ListState compare={isCompareActive} weatherList={weatherForecast} />
         </div>
       </div>
       {props.children}
