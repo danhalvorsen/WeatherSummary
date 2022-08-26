@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 type props = {
   weatherList: WeatherForecastDto[];
-  currentOption: WeatherForcastEnumType;
 };
 
 export const ListState: React.FC<props> = (props) => {
@@ -13,16 +12,17 @@ export const ListState: React.FC<props> = (props) => {
   const [providerOpenWeather, setProviderOpenWeather] =
     useState<WeatherForecastDto>();
 
-    const listOpenWeather:WeatherForecastDto[] = [];
-    const listYr:WeatherForecastDto[] = [];
+  const listOpenWeather: WeatherForecastDto[] = [];
+  const listYr: WeatherForecastDto[] = [];
+  let cityName: string | undefined = '';
 
-
-   props.weatherList.map((row) => {
+  props.weatherList.map((row) => {
     // row.source?.dataProvider == "OpenWeather" && <List row={row} provider={"OpenWeather"} />
-    
+    cityName = row.city;
+
     if (row.source?.dataProvider == 'OpenWeather') {
       listOpenWeather.push(row);
-    } 
+    }
 
     if (row.source?.dataProvider == 'Yr') {
       listYr.push(row);
@@ -39,14 +39,8 @@ export const ListState: React.FC<props> = (props) => {
   return (
     <>
       <div className="border border-danger mt-5 m-3">
-        <h2>List State{}</h2>
-        <h2>
-          There are <strong>{props.weatherList.length} </strong> providers to
-          show their Data
-        </h2>
-        <h3>the current option is : {props.currentOption}</h3>
+        <h2>{cityName}</h2>
         {renderList}
-        {/* <List /> */}
       </div>
     </>
   );

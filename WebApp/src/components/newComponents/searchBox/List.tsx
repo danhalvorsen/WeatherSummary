@@ -7,11 +7,12 @@ type props = {
 
 export const List: React.FC<props> = (props) => {
   const style = `border border-info m-3 mt-5 pt-2 border-2 bg-${props.background}`;
-  let ProviderName: string | undefined= '';
+
+  let ProviderName: string | undefined = '';
 
   const renderList = props.row.map((item) => {
-    ProviderName = item.source?.dataProvider
-    return <ListItem eachDay={item} />;
+    ProviderName = item.source?.dataProvider;
+    return <ListItem key={item.date?.toDateString()} eachDay={item} />;
   });
 
   return (

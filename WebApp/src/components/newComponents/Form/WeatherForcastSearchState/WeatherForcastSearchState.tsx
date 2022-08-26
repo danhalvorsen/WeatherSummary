@@ -130,10 +130,9 @@ export const WeatherForcastSearchState = (
 
   return (
     <>
-      <h1>STATE {oneDate.value}</h1>
       <div className="border border-dark">
         <h3>WeatherForcastSearchState</h3>{' '}
-        <h1>the city name now is: {cityName}</h1>
+        
         <div className="border border-success m-2">
           <WeatherForcastSearch
             cityName={changeCityNameState}
@@ -144,7 +143,7 @@ export const WeatherForcastSearchState = (
             choiceToDate={changeChoiceTo}
             whichOneIsSelected={whichOneIsSelected}
           />
-          <ListState weatherList={weatherForecast} currentOption={currentOption} />
+          <ListState weatherList={weatherForecast}/>
         </div>
       </div>
       {props.children}
