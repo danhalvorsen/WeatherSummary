@@ -41,12 +41,13 @@ export const WeatherForcastSearchState = (
   const [weatherForecast, setWeatherForecast] = useState<WeatherForecastDto[]>(
     [],
   );
+  const [currentOption, setCurrentOption] = useState<WeatherForcastEnumType>(
+    WeatherForcastEnumType.WeatherForcastSearchOneDate,
+  );
 
   //Define States for received data
-  const [singleDateData, setSingleDateData] = useState(null);
-
-  const listToShow: JSX.Element = <ListState oneDay={weatherForecast} />;
-  const baseURL = 'https://localhost:5000/api/';
+  //const [singleDateData, setSingleDateData] = useState(null);
+  //const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
     setCityName(cityName);
     //console.log(cityName);
@@ -71,6 +72,7 @@ export const WeatherForcastSearchState = (
       case WeatherForcastEnumType.WeatherForcastSearchOneDate: {
         // api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
         //Request for One Date:
+        setCurrentOption(WeatherForcastEnumType.WeatherForcastSearchOneDate);
         try {
           const result = await apiRequest.date(
             new Date(oneDate.value),
@@ -85,7 +87,7 @@ export const WeatherForcastSearchState = (
 
       case WeatherForcastEnumType.WeatherForcastSearchTypeWeekNo:
         // api(baseURL).makeWeekNumberApiRequest(cityName, weekNumber);
-        //Request for a Week number:
+        setCurrentOption(WeatherForcastEnumType.WeatherForcastSearchTypeWeekNo);
         try {
           const result = await apiRequest.week(weekNumber.value, cityName);
           setWeatherForecast(result);
@@ -94,13 +96,10 @@ export const WeatherForcastSearchState = (
         }
 
         break;
-      case WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates: //   }, 
-      //     value: fromDate.value, //   from: { // api(baseURL).makeBetweenDatesApiRequest(cityName, {
-      //   to: {
-      //     value: toDate.value,
-      //   },
-      // });
-      {
+      case WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates: {
+        setCurrentOption(
+          WeatherForcastEnumType.WeatherForcastSearchTypeBetweenTwoDates,
+        );
         try {
           const resultBetween = await apiRequest.between(
             new Date(fromDate.value),
@@ -119,25 +118,12 @@ export const WeatherForcastSearchState = (
 
   useEffect(() => {
     const apiClient = new Client();
-    // run Fetch Api when page is loaded
     const getData = (async () => {
-      //api(baseURL).makeSingleDateApiRequest(cityName, oneDate);
       try {
-        const res = await apiClient.date(new Date(oneDate.value), cityName);
-
-        // setWeatherForecast(res);
-        // console.log(weatherForecast);
-
-        //For between Dates:
-        const resultBetween = await apiClient.between(
-          new Date(fromDate.value),
-          new Date(toDate.value),
-          cityName,
-        );
-        setWeatherForecast(resultBetween);
-        console.log(resultBetween);
-      } catch (ex) {
-        console.error('API Error');
+        const result = await apiClient.date(new Date(oneDate.value), cityName);
+        setWeatherForecast(result);
+      } catch (error) {
+        console.error('API Error' + error);
       }
     })();
   }, [oneDate, cityName]);
@@ -158,7 +144,7 @@ export const WeatherForcastSearchState = (
             choiceToDate={changeChoiceTo}
             whichOneIsSelected={whichOneIsSelected}
           />
-          {listToShow}
+          <ListState weatherList={weatherForecast} currentOption={currentOption} />
         </div>
       </div>
       {props.children}
