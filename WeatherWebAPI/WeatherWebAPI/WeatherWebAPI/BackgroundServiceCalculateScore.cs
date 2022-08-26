@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Contracts;
+﻿using Microsoft.VisualBasic;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
@@ -13,14 +14,19 @@ namespace WeatherWebAPI
         private readonly IFactory _factory;
         private readonly IConfiguration _config;
         private readonly WeatherForecastMapping _contract;
+        private readonly BackgroundServiceCalculateScoreCommand _command;
         private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _weatherDataStrategies = new();
         private const int HOUR_DELAY = 24;
 
-        public BackgroundServiceGetScore(IConfiguration config, IFactory factory, WeatherForecastMapping contract)
+        public BackgroundServiceGetScore(IConfiguration config, 
+            IFactory factory,
+            BackgroundServiceCalculateScoreCommand command,
+            WeatherForecastMapping contract)
         {
             _config = config;
             _factory = factory;
             _contract = contract;
+            _command = command;
             _weatherDataStrategies.Add(_factory.Build<IYrStrategy>());
             _weatherDataStrategies.Add(_factory.Build<IOpenWeatherStrategy>());
             _weatherDataStrategies.Add(_factory.Build<IWeatherApiStrategy>());
@@ -30,21 +36,10 @@ namespace WeatherWebAPI
         {
             try
             {
-                await Task.Delay(10000);
-
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    Console.WriteLine($"{this.GetType().Name} DOING WORK");
-
-                    var command = new BackgroundServiceCalculateScoreCommand(_config, _factory);
-                    await command.CalculateScore();
-
-                    Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");
-
-                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0)); // 24 hours delay
-                    //await Task.Delay(1000);
-                }
-                //await Task.CompletedTask;
+                DateTime start = DateTime.UtcNow.Date + new TimeSpan(11, 0, 0);
+                DateTime stop = DateTime.UtcNow.Date + new TimeSpan(12, 0, 0);
+                
+                await StartWork(stoppingToken, start, stop, _config, _factory);
             }
             catch (OperationCanceledException ex)
             {
@@ -53,6 +48,23 @@ namespace WeatherWebAPI
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private async Task StartWork(CancellationToken stoppingToken, DateTime StartTime, DateTime StopTime, IConfiguration config, IFactory factory)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                if (DateTime.UtcNow > StartTime && DateTime.UtcNow < StopTime)
+                {
+                    Console.WriteLine($"{this.GetType().Name} DOING WORK");
+                    
+                    await _command.CalculateScore();
+                    
+                    Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");
+
+                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0)); // 24 hours delay
+                }
             }
         }
     }

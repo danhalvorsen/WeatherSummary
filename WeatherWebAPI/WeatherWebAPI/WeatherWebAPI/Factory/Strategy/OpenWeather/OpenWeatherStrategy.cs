@@ -1,4 +1,5 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using AutoMapper;
+using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Contracts.BaseContract;
@@ -8,11 +9,13 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
     public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
+        private readonly IMapper _mapper;
         private readonly OpenWeatherConfig _openWeatherConfig;
         private readonly HttpClient _httpClient;
 
-        public OpenWeatherStrategy(OpenWeatherConfig config, HttpClient httpClient)
+        public OpenWeatherStrategy(IMapper mapper, OpenWeatherConfig config, HttpClient httpClient)
         {
+            _mapper = mapper;
             _openWeatherConfig = config;
             _httpClient = httpClient;
 
@@ -33,11 +36,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var weatherData = JsonSerializer.Deserialize<ApplicationOpenWeather>(responseBody);
 
-                //Mapper
-                _openWeatherConfig.Get(queryDate);
-
-
-                var resultWeatherData = _openWeatherConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
+                var resultWeatherData = _mapper.Map<WeatherForecast>(weatherData);
                 return resultWeatherData;
             }
 
@@ -48,7 +47,6 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
 
-            //var httpClient = _openWeatherConfig.HttpClientFactory.CreateClient("OpenWeather");
             var response = await _httpClient.GetAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
 
             if (response.IsSuccessStatusCode)

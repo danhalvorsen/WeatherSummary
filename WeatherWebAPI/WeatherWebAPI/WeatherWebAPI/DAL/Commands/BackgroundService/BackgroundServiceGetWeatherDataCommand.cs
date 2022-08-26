@@ -1,10 +1,18 @@
-﻿using WeatherWebAPI.Contracts;
+﻿using Microsoft.Extensions.Configuration;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
+using WeatherWebAPI.DAL.Commands.BackgroundService;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
+
+    public class BackgroundServiceGetWeatherDataCommandConfiguration : IMyConfiguration
+    { 
+
+    }
+
     public class BackgroundServiceGetWeatherDataCommand : BaseFunctionsForQueriesAndCommands
     {
         public BackgroundServiceGetWeatherDataCommand(IConfiguration config, IFactory factory) : base(config, factory)
@@ -31,23 +39,24 @@ namespace WeatherWebAPI.DAL
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
 
 
+
                 foreach (var weatherStrategy in weatherDataStrategies)
                 {
                     //foreach (var city in _citiesDatabase)
                     //{
                         _datesDatabase = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, weatherStrategy);
 
-                        if (DateDoesNotExistInDatabase(fromDate))
-                        {
-                            foreach (DateTime date in datesQuery)
-                            {
-                                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
-                            }
-                        }
-                        if (DateExistsInDatabase(fromDate))
-                        {
-                            Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
-                        }
+                        //if (DateDoesNotExistInDatabase(fromDate))
+                        //{
+                        //    foreach (DateTime date in datesQuery)
+                        //    {
+                        //        await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
+                        //    }
+                        //}
+                        //if (DateExistsInDatabase(fromDate))
+                        //{
+                        //    Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
+                        //}
                     //}
                 }
             }

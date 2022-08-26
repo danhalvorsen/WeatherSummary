@@ -32,10 +32,10 @@ namespace WeatherWebAPI.Query
                 {
                     foreach (object o in reader)
                     {
-                        list.Add(new WeatherForecast
-                        {
-                            Date = Convert.ToDateTime(reader["Date"])
-                        });
+                        //list.Add(new WeatherForecast
+                        //{
+                        //    Date = Convert.ToDateTime(reader["Date"])
+                        //});
                     }
                 }
 

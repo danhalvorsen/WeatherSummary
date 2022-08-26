@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Factory.Strategy.Database;
+﻿using AutoMapper;
+using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
@@ -8,27 +9,31 @@ namespace WeatherWebAPI.Factory
     public class StrategyBuilderFactory : IFactory
     {
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public StrategyBuilderFactory(IConfiguration config)
+        public StrategyBuilderFactory(IConfiguration config, IMapper mapper)
         {
             this._config = config;
+            _mapper = mapper;
         }
+
+        public IMapper Mapper { get => _mapper; }
 
         public dynamic Build<S>() //Build(GetType(YrStrategy)
         {
             if (typeof(S).Name == typeof(IYrStrategy).Name)
             {
-                var strategy = new YrStrategy(new YrConfig(), new HttpClient());
+                var strategy = new YrStrategy(Mapper, new YrConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IOpenWeatherStrategy).Name)
             {
-                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig(), new HttpClient());
+                var strategy = new OpenWeatherStrategy(Mapper, new OpenWeatherConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IWeatherApiStrategy).Name)
             {
-                var strategy = new WeatherApiStrategy(new WeatherApiConfig(), new HttpClient());
+                var strategy = new WeatherApiStrategy(Mapper, new WeatherApiConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IAddWeatherDataToDatabaseStrategy).Name)

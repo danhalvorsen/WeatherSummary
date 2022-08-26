@@ -4,6 +4,9 @@ namespace WeatherWebAPI.Factory.Strategy
 {
     public abstract class BaseMapperConfigFunctions
     {
+        private const int MAX_VALUE_VISIBILITY = 10;
+        private const int PERCENTAGE_FACTOR = 10;
+
         // Need to convert from Unix to DateTime when fetching data from OpenWeather datasource and vice versa
         protected static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
@@ -22,13 +25,7 @@ namespace WeatherWebAPI.Factory.Strategy
 
         protected static double VisibilityConvertedToFogAreaFraction(double value)
         {
-            var trace = new StackTrace(true);
-
-            if(trace.GetFrame(1)?.GetMethod()?.DeclaringType?.Namespace == "WeatherWebAPI.Factory.Strategy.WeatherApi")
-                return Math.Abs((value - 10) * 10);
-            else
-                return Math.Abs((value / 100) - 100);
-
+            return Math.Abs((value - MAX_VALUE_VISIBILITY) * PERCENTAGE_FACTOR);
         }
     }
 }

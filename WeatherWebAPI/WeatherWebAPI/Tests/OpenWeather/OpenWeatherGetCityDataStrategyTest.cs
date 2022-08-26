@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using AutoMapper;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Globalization;
+using System.Net.Http;
 using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
@@ -11,15 +13,21 @@ namespace Tests.OpenWeather
 {
     public class OpenWeatherGetCityDataStrategyTest
     {
-        //private GetWeatherDataFactory _factory = new GetWeatherDataFactory();
-        private readonly IGetCityDataStrategy<CityDto> _strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+        private readonly IMapper? _mapper;
+        private IGetCityDataStrategy<CityDto>? _strategy;
         private readonly string _city = "Oslo";
+
+        [SetUp]
+        public void SetUp()
+        {
+           _strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
+        }
 
 
         [Test]
         public async Task ShouldGetName()
         {
-            var result = await _strategy.GetCityDataFor(_city);
+            var result = await _strategy!.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Name);
 

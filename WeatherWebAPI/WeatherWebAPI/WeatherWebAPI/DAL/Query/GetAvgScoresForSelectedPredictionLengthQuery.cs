@@ -39,8 +39,8 @@ namespace WeatherWebAPI.DAL.Query
 
                     foreach (var score in scoreData)
                     {
-                        sumScore += score.Score.Score;
-                        sumScoreWeighted += score.Score.ScoreWeighted;
+                        //sumScore += score.Score.Score;
+                        //sumScoreWeighted += score.Score.ScoreWeighted;
                     }
 
                     float avgScore = (float)CalculateAverageScore(sumScore, scoreData);

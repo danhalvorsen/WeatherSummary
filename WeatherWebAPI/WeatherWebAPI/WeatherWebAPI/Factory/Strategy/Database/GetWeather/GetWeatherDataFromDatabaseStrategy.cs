@@ -42,27 +42,27 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                             ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
                         };
 
-                        WeatherForecasts.Add(new WeatherForecast
-                        {
-                            WeatherForecastId = Convert.ToInt32(reader["Id"]),
-                            City = reader["CityName"].ToString(),
-                            Date = Convert.ToDateTime(reader["Date"]).ToUniversalTime(),
-                            WeatherType = reader["WeatherType"].ToString(),
-                            Temperature = (float)Convert.ToDouble(reader["Temperature"]),
-                            Windspeed = (float)Convert.ToDouble(reader["Windspeed"]),
-                            WindDirection = (float)Convert.ToDouble(reader["WindDirection"]),
-                            WindspeedGust = (float)Convert.ToDouble(reader["WindspeedGust"]),
-                            Pressure = (float)Convert.ToDouble(reader["Pressure"]),
-                            Humidity = (float)Convert.ToDouble(reader["Humidity"]),
-                            ProbOfRain = (float)Convert.ToDouble(reader["ProbOfRain"]),
-                            AmountRain = (float)Convert.ToDouble(reader["AmountRain"]),
-                            CloudAreaFraction = (float)Convert.ToDouble(reader["CloudAreaFraction"]),
-                            FogAreaFraction = (float)Convert.ToDouble(reader["FogAreaFraction"]),
-                            ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
-                            DateForecast = Convert.ToDateTime(reader["DateForecast"]).ToUniversalTime(),
-                            Source = weatherSource,
-                            Score = score
-                        });
+                        //WeatherForecasts.Add(new WeatherForecast
+                        //{
+                        //    WeatherForecastId = Convert.ToInt32(reader["Id"]),
+                        //    City = reader["CityName"].ToString(),
+                        //    Date = Convert.ToDateTime(reader["Date"]).ToUniversalTime(),
+                        //    WeatherType = reader["WeatherType"].ToString(),
+                        //    Temperature = (float)Convert.ToDouble(reader["Temperature"]),
+                        //    Windspeed = (float)Convert.ToDouble(reader["Windspeed"]),
+                        //    WindDirection = (float)Convert.ToDouble(reader["WindDirection"]),
+                        //    WindspeedGust = (float)Convert.ToDouble(reader["WindspeedGust"]),
+                        //    Pressure = (float)Convert.ToDouble(reader["Pressure"]),
+                        //    Humidity = (float)Convert.ToDouble(reader["Humidity"]),
+                        //    ProbOfRain = (float)Convert.ToDouble(reader["ProbOfRain"]),
+                        //    AmountRain = (float)Convert.ToDouble(reader["AmountRain"]),
+                        //    CloudAreaFraction = (float)Convert.ToDouble(reader["CloudAreaFraction"]),
+                        //    FogAreaFraction = (float)Convert.ToDouble(reader["FogAreaFraction"]),
+                        //    ProbOfThunder = (float)Convert.ToDouble(reader["ProbOfThunder"]),
+                        //    DateForecast = Convert.ToDateTime(reader["DateForecast"]).ToUniversalTime(),
+                        //    Source = weatherSource,
+                        //    Score = score
+                        //});
                     }
                 }
                 await command.ExecuteNonQueryAsync();

@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using WeatherWebAPI.Controllers;
+using WeatherWebAPI.DAL.Commands.BackgroundService;
 
 namespace WeatherWebAPI.Query
 {
@@ -10,7 +11,7 @@ namespace WeatherWebAPI.Query
 
         public GetCitiesQuery(IConfiguration config)
         {
-            this._config = config;
+            _config = config;
         }
 
         public async Task<List<CityDto>> GetAllCities()

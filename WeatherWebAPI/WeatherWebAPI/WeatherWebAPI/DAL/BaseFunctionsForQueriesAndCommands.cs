@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+﻿using Microsoft.Extensions.Configuration;
+using System.Globalization;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
+using WeatherWebAPI.DAL.Commands.BackgroundService;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -68,15 +70,15 @@ namespace WeatherWebAPI.DAL
             return _citiesDatabase!.Where(c => c.Name!.Equals(cityName)).First();
         }
 
-        protected bool DateExistsInDatabase(DateTime date) // DateExist()
-        {
-            return _datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
-        }
+        //protected bool DateExistsInDatabase(DateTime date) // DateExist()
+        //{
+        //    return _datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
+        //}
 
-        protected bool DateDoesNotExistInDatabase(DateTime date) // !DateExists()
-        {
-            return !_datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
-        }
+        //protected bool DateDoesNotExistInDatabase(DateTime date) // !DateExists()
+        //{
+        //    return !_datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
+        //}
 
         protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
         {

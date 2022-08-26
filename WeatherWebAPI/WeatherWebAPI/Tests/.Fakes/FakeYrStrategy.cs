@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
@@ -39,21 +40,25 @@ namespace Tests.Fakes
             {
                 return new WeatherForecast
                 {
-                    Date = date,
-                    Temperature = TEMP,
-                    Windspeed = WIND_SPEED,
-                    WindDirection = WIND_DIRECTION,
-                    WindspeedGust = WIND_SPEED_GUST,
-                    Pressure = PRESSURE,
-                    Humidity = HUMIDITY,
-                    ProbOfRain = PROB_OF_RAIN,
-                    AmountRain = AMOUNT_RAIN,
-                    CloudAreaFraction = CLOUD_AREA_FRACTION,
-                    FogAreaFraction = FOG_AREA_FRACTION,
-                    ProbOfThunder = PROB_OF_THUNDER,
-                    City = cityName,
-                    WeatherType = WEATHERTYPE,
-                    Source = new WeatherSourceDto { DataProvider = "Yr"}
+                    Forecast = new List<WeatherForecast.Data>
+                    {
+
+                    }
+                    //Date = date,
+                    //Temperature = TEMP,
+                    //Windspeed = WIND_SPEED,
+                    //WindDirection = WIND_DIRECTION,
+                    //WindspeedGust = WIND_SPEED_GUST,
+                    //Pressure = PRESSURE,
+                    //Humidity = HUMIDITY,
+                    //ProbOfRain = PROB_OF_RAIN,
+                    //AmountRain = AMOUNT_RAIN,
+                    //CloudAreaFraction = CLOUD_AREA_FRACTION,
+                    //FogAreaFraction = FOG_AREA_FRACTION,
+                    //ProbOfThunder = PROB_OF_THUNDER,
+                    //City = cityName,
+                    //WeatherType = WEATHERTYPE,
+                    //Source = new WeatherSourceDto { DataProvider = "Yr"}
                 };
             }
             throw new ArgumentException("City name doesn't match test constants");

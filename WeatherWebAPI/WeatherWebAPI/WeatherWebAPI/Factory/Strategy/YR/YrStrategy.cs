@@ -1,4 +1,5 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using AutoMapper;
+using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Contracts.BaseContract;
@@ -8,11 +9,14 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class YrStrategy : IGetWeatherDataStrategy<WeatherForecast>, IYrStrategy
     {
+        private readonly IMapper _mapper;
         private readonly YrConfig _yrConfig;
         private readonly HttpClient _httpClient;
+        
 
-        public YrStrategy(YrConfig config, HttpClient httpClient)
+        public YrStrategy(IMapper mapper, YrConfig config, HttpClient httpClient)
         {
+            _mapper = mapper;
             _yrConfig = config;
             _httpClient = httpClient;
 
@@ -34,10 +38,9 @@ namespace WeatherWebAPI.Factory.Strategy.YR
                 var weatherData = JsonSerializer.Deserialize<ApplicationYr>(responseBody);
 
                 // Mapper
-                _yrConfig.Get(queryDate);
+                //_yrConfig.Get(queryDate);
 
-
-                var resultWeatherData = _yrConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
+                var resultWeatherData = _mapper.Map<WeatherForecast>(weatherData);
                 return resultWeatherData;
             }
 

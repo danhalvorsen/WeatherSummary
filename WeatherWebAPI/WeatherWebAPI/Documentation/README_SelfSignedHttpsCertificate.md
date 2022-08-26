@@ -11,4 +11,4 @@ $ dotnet dev-certs https --trust
 
 **Remember to add the correct certificate name and password to the docker-compose.yml and docker-compose.override.yml files as shown in the [Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/README_VisualStudioSetup.md) file.**
 
-[Go back](/README.md/#backend-setup)
+[Go back](/WeatherWebAPI/WeatherWebAPI/Documentation/README.md)

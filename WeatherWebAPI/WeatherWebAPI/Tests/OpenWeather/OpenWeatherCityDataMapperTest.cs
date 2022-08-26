@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Reflection;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -9,27 +14,19 @@ namespace Tests.OpenWeather
 {
     public class OpenWeatherCityDataMapperTest // Not getting used because of GetSteamAsync.
     {
-        private MapperConfiguration ?_config;
-
-        private MapperConfiguration CreateConfigForFetchingCityCoordinates()
-        {
-            MapperConfiguration config;
-
-            config = new MapperConfiguration(
-
-            cfg => cfg.CreateMap<ApplicationOpenWeather, CityDto>()
-            .ForPath(dest => dest.Name, opt => opt.MapFrom(src => src.city!.name)) // name
-            .ForPath(dest => dest.Longitude, opt => opt.MapFrom(src => src.city!.lon))
-            .ForPath(dest => dest.Latitude, opt => opt.MapFrom(src => src.city!.lat))
-            .ForPath(dest => dest.Country, opt => opt.MapFrom(src => src.city!.country)));
-            return config;
-        }
+        private ServiceProvider? _serviceProvider;
+        private IMapper? _mapper;
 
         [SetUp]
         public void Setup()
         {
-            IGetCityDataStrategy<CityDto> strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
-            _config = CreateConfigForFetchingCityCoordinates();
+            IGetCityDataStrategy<CityDto> strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
+
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddAutoMapper(new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") });
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+
+            _mapper = _serviceProvider.GetService<IMapper>();
         }
 
         [Test]
@@ -45,14 +42,14 @@ namespace Tests.OpenWeather
                     name = name
                 }
             };
-            IMapper mapper = new Mapper(_config);
 
             // Act
-            var result = mapper.Map<CityDto>(application);
+            var result = _mapper?.Map<CityDto>(application);
 
 
             //Assert
-            result.Name.Should().Be(name);
+            Console.WriteLine(result?.Name);
+            result?.Name.Should().Be(name);
         }
 
         [Test]
@@ -68,13 +65,13 @@ namespace Tests.OpenWeather
                     country = country
                 }
             };
-            IMapper mapper = new Mapper(_config);
 
             //Act
-            var result = mapper.Map<CityDto>(application);
+            var result = _mapper?.Map<CityDto>(application);
 
             // Assert
-            result.Country.Should().Be(country);
+            Console.WriteLine(result?.Country);
+            result?.Country.Should().Be(country);
         }
 
         [Test]
@@ -90,13 +87,13 @@ namespace Tests.OpenWeather
                     lon = lon
                 }
             };
-            IMapper mapper = new Mapper(_config);
 
             //Act
-            var result = mapper.Map<CityDto>(application);
+            var result = _mapper?.Map<CityDto>(application);
 
             // Assert
-            result.Longitude.Should().Be(lon);
+            Console.WriteLine(result?.Longitude);
+            result?.Longitude.Should().Be(lon);
         }
 
 
@@ -113,13 +110,13 @@ namespace Tests.OpenWeather
                     lat = lat
                 }
             };
-            IMapper mapper = new Mapper(_config);
 
             //Act
-            var result = mapper.Map<CityDto>(application);
+            var result = _mapper?.Map<CityDto>(application);
 
             // Assert
-            result.Latitude.Should().Be(lat);
+            Console.WriteLine(result?.Latitude);
+            result?.Latitude.Should().Be(lat);
         }
     }
 }
