@@ -2,7 +2,8 @@ import { WeatherForecastDto } from '../../../communication/api.client.generated'
 
 type props = {
   eachDay: WeatherForecastDto;
-  };
+  children?: JSX.Element | JSX.Element[];
+};
 
 export const ListItem: React.FC<props> = (props) => {
   return (
@@ -11,11 +12,11 @@ export const ListItem: React.FC<props> = (props) => {
         <h5>{props.eachDay.date?.toDateString()}</h5>
         <p>
           Temperture:<strong> {props.eachDay.temperature}</strong> - Humidity :
-          <strong> {props.eachDay.humidity}</strong>- Amount rain :
-          <strong> {props.eachDay.amountRain}</strong> - Cloud fraction :
-          <strong> {props.eachDay.cloudAreaFraction}</strong>- Pressure :
+          <strong> {props.eachDay.humidity}</strong> - Cloud fraction :
+          <strong> {props.eachDay.cloudAreaFraction}</strong> - Pressure :
           <strong> {props.eachDay.pressure}</strong> - Rain probability :
-          <strong> {props.eachDay.probOfRain}</strong>
+          <strong> {props.eachDay.pressure}</strong> - Wind Speed :
+          <strong> {props.eachDay.windspeedGust}</strong>
         </p>
       </div>
     </>
