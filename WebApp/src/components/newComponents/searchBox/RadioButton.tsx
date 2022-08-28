@@ -1,4 +1,4 @@
-import { Children, propsType } from '../Form/compTypes';
+import { Children } from '../Form/compTypes';
 import { WeatherForcastEnumType } from '../Form/WeatherForcastSearchState/WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
 
 type RadioButtonProps = {

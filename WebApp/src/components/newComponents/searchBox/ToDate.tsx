@@ -1,5 +1,4 @@
-import { myDate } from "../../../communication/apiTypes";
-
+import { myDate } from '../../../communication/apiTypes';
 
 type props = {
   choiceToDate: (date: myDate) => void;
@@ -7,9 +6,8 @@ type props = {
 
 export const ToDate: React.FC<props> = (props): JSX.Element => {
   const handleChangeTo = (event: React.ChangeEvent<myDate>) => {
-    
-    const value= event.target.value
-    const myLocalDate = {value}
+    const value = event.target.value;
+    const myLocalDate = { value };
     props.choiceToDate(myLocalDate);
   };
   return (

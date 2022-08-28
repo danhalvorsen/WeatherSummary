@@ -1,12 +1,9 @@
-import { isPropertySignature } from 'typescript';
 import { WeekNumber } from '../../../communication/apiTypes';
 
 type weekPickerProps = {
   ChoiceWeekNo: (weekNo: WeekNumber) => void;
   thisWeekNumber: WeekNumber;
 };
-//            ChoiceWeekNo={changeChoiceWeekNo}
-
 export const WeekPicker: React.FC<weekPickerProps> = (
   weekPickerProps,
 ): JSX.Element => {
@@ -16,7 +13,6 @@ export const WeekPicker: React.FC<weekPickerProps> = (
     const myLocalDate = { value };
     weekPickerProps.ChoiceWeekNo(myLocalDate);
   };
-
   return (
     <>
       <input

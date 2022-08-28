@@ -6,7 +6,7 @@ type props = {
 };
 
 export const List: React.FC<props> = (props) => {
-  const style = `border border-info m-3 mt-5 pt-2 border-2 bg-${props.background}`;
+  const style = `mx-3 m-2 mt-1 pb-1 border-1 bg-${props.background}`;
 
   let ProviderName: string | undefined = '';
 

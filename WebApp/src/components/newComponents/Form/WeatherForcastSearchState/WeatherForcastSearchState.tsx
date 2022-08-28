@@ -1,13 +1,10 @@
 import '../../../../../src/App.css';
 import { getWeek } from 'date-fns';
-import React, { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { WeatherForcastSearch } from './WeatherForcastSearch';
-import { LookupCityField } from '../../searchBox/LookupCityField';
 import { useEffect } from 'react';
-import { ListItem } from '../../resultBox/ListItem';
 import { ListState } from '../../searchBox/ListState';
 import { WeatherForcastEnumType } from './WeatherForcastSearch/SelectSearchOptionState/SelectSearchOptionState';
-import { api } from '../../../../communication/api';
 import {
   myDate,
   WeekNumber as WeekNumber,
@@ -16,12 +13,10 @@ import {
   Client,
   WeatherForecastDto,
 } from '../../../../communication/api.client.generated';
-import { ToDate } from '../../searchBox/ToDate';
-import { isCallChain } from 'typescript';
 
 export type weatherForcastSearchStatetypeProps = {
   children?: JSX.Element | JSX.Element[];
-  stringDate: string | undefined;
+
 };
 
 export const WeatherForcastSearchState = (
@@ -47,7 +42,7 @@ export const WeatherForcastSearchState = (
   );
   const [isCompareActive, setIsCompareActive] = useState<boolean>(false);
 
-  //Define States for received data
+
   //const [singleDateData, setSingleDateData] = useState(null);
   //const baseURL = 'https://localhost:5000/api/';
   const changeCityNameState = (cityName: string) => {
@@ -122,7 +117,7 @@ export const WeatherForcastSearchState = (
 
   useEffect(() => {
     const apiClient = new Client();
-    const getData = (async () => {
+    (async () => {
       try {
         const result = await apiClient.date(new Date(oneDate.value), cityName);
         setWeatherForecast(result);
@@ -134,9 +129,8 @@ export const WeatherForcastSearchState = (
 
   return (
     <>
-      <div className="border border-dark">
-        <h3>WeatherForcastSearchState</h3>{' '}
-        <div className="border border-success m-2">
+      <div>
+        <div className="m-2">
           <WeatherForcastSearch
             cityName={changeCityNameState}
             thisWeekNumber={weekNumber}

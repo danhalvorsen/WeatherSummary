@@ -33,18 +33,14 @@ export const LookupCityField = (props?: lookupCityFieldhProps): JSX.Element => {
     props?.cityName(event.currentTarget.elements.cityNameInput.value);
     console.log(event.currentTarget.elements.cityNameInput.value);
   };
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const setInter = setInterval(()=>{
-    props?.cityName(e.target.value) ; clearInterval(setInter);
-    },3000);
-   // clearInterval(setInter);
-    
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const setInter = setInterval(() => {
+      props?.cityName(e.target.value);
+      clearInterval(setInter);
+    }, 3000);
+    // clearInterval(setInter);
   };
 
-
-  
   return (
     <>
       <div className="border border-success mx-5 mb-2">

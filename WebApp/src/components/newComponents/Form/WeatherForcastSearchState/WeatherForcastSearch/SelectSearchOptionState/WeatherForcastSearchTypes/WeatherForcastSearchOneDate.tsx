@@ -17,8 +17,7 @@ export const WeatherForcastSearchOneDate: React.FC<
 > = (props): JSX.Element => {
   return (
     <>
-      <div className="border border-info m-3 mt-5 pt-2 border-2">
-        <h5 className="">WeatherForcastSearchOneDate</h5>
+      <div className="m-1">
         <span>Today: </span>
         <RadioButton
           enabled={props.radioButtonChecked}

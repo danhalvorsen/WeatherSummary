@@ -10,9 +10,7 @@ type props = {
 };
 
 export const ListState: React.FC<props> = (props) => {
-  const [providerYr, setProviderYr] = useState<WeatherForecastDto>();
-  const [providerOpenWeather, setProviderOpenWeather] =
-    useState<WeatherForecastDto>();
+  useState<WeatherForecastDto>();
 
   const listOpenWeather: WeatherForecastDto[] = [];
   const listYr: WeatherForecastDto[] = [];
@@ -29,7 +27,6 @@ export const ListState: React.FC<props> = (props) => {
     }
   });
 
-  /////////////////////create for compare by dates
   let twoArray: WeatherForecastDto[] = [];
   const compareItems = props.weatherList.map((line) => {
     twoArray.push(line);
@@ -45,20 +42,18 @@ export const ListState: React.FC<props> = (props) => {
     }
   });
 
-  /////////////////
-
   const renderList = (
     <div>
       <List row={listOpenWeather} background="success" />
       <List row={listYr} background="danger" />
     </div>
   );
-  const compareList =  compareItems ;
-  const showList = props.compare ?    compareList: renderList;
+  const compareList = compareItems;
+  const showList = props.compare ? compareList : renderList;
 
   return (
     <>
-      <div className="border border-danger mt-5 m-3">
+      <div className=" mt-5 m-3">
         <h2>{cityName}</h2>
       </div>
       {showList}

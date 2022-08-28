@@ -11,6 +11,7 @@ export const DayPicker: React.FC<props> = (props): JSX.Element => {
   };
   return (
     <>
+      {' '}
       <input type="datetime-local" onChange={handleChange} />
     </>
   );

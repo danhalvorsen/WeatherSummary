@@ -7,18 +7,20 @@ import { WeatherForcastEnumType } from '../SelectSearchOptionState';
 
 type CompareWeatherInputCheckProps = {
   children?: Children;
-  changeCompareMode:() => void
+  changeCompareMode: () => void;
 };
 
-export const CompareWeatherInputCheck: React.FC<CompareWeatherInputCheckProps> = (CompareWeatherInputCheckProps): JSX.Element => {
-  const handleChange = ()=>{
-    CompareWeatherInputCheckProps.changeCompareMode()
-    return
-  }
+export const CompareWeatherInputCheck: React.FC<
+  CompareWeatherInputCheckProps
+> = (CompareWeatherInputCheckProps): JSX.Element => {
+  const handleChange = () => {
+    CompareWeatherInputCheckProps.changeCompareMode();
+    return;
+  };
   return (
     <>
-      <div className="border border-dark m-3 mt-5 pt-2 border-2">
-        Compare Providers mode: {' '}
+      <div className="m-3 pt-2 ">
+        <strong>Compare mode:</strong>{' '}
         <input type="checkbox" defaultChecked={false} onChange={handleChange} />
       </div>
     </>

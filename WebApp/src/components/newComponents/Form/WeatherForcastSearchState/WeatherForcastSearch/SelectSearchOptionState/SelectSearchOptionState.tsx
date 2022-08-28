@@ -19,7 +19,7 @@ type props = {
   choiceToDate: (date: myDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
   thisWeekNumber: WeekNumber;
-  changeCompareMode:() => void
+  changeCompareMode: () => void;
 };
 export const SelectSearchOptionState: React.FC<props> = (props) => {
   const [stateOneDate, setStateOneDate] = useState<boolean>(true);
@@ -53,9 +53,8 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
   };
 
   return (
-    <div className="border border-info m-3 mt-5 pt-2 border-2">
+    <div className="m-3 mt-5">
       <div>
-        <h3>SelectSearchOptionState</h3>
         <WeatherForcastSearchOneDate
           onChange={changeState}
           radioButtonChecked={stateOneDate}
@@ -73,7 +72,7 @@ export const SelectSearchOptionState: React.FC<props> = (props) => {
           choiceFromDate={props.choiceFromDate}
           choiceToDate={props.choiceToDate}
         />
-          <CompareWeatherInputCheck changeCompareMode={props.changeCompareMode}/>
+        <CompareWeatherInputCheck changeCompareMode={props.changeCompareMode} />
       </div>
     </div>
   );

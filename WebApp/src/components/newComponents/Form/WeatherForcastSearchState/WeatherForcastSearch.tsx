@@ -18,13 +18,12 @@ type props = {
   choiceToDate: (date: WFDate) => void;
   whichOneIsSelected: (typeName: WeatherForcastEnumType) => void;
   thisWeekNumber: WFWeekNumber;
-  changeCompareMode:() => void
+  changeCompareMode: () => void;
 };
 
 export const WeatherForcastSearch: React.FC<props> = (props) => {
   return (
-    <div className="border border-danger mt-5 m-3">
-      <h3>WeatherForcastSearch</h3>
+    <div className="mt-2 m-3">
       <LookupCityField cityName={props.cityName} />
       <SelectSearchOptionState
         choiceDate={props.choiceDate}
