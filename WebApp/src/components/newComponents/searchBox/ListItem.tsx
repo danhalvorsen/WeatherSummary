@@ -2,7 +2,7 @@ import { WeatherForecastDto } from '../../../communication/api.client.generated'
 
 type props = {
   eachDay: WeatherForecastDto;
-};
+  };
 
 export const ListItem: React.FC<props> = (props) => {
   return (

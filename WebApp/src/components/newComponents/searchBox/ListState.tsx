@@ -18,30 +18,30 @@ export const ListState: React.FC<props> = (props) => {
   const listYr: WeatherForecastDto[] = [];
   let cityName: string | undefined = '';
 
-  const mergedList: WeatherForecastPairDto[] = [];
-  let arrayIndex = 0;
-  let lastDay: number | undefined = 28;
-  let internalIndex = -1;
-  let currentItem: WeatherForecastPairDto;
+  // const mergedList: WeatherForecastPairDto[] = [];
+  // let arrayIndex = 0;
+  // let lastDay: number | undefined = 28;
+  // let internalIndex = -1;
+  // let currentItem: WeatherForecastPairDto;
 
   props.weatherList.forEach((row) => {
     // row.source?.dataProvider == "OpenWeather" && <List row={row} provider={"OpenWeather"} />
     cityName = row.city;
-    console.log(row.date?.getDate());
-    if (row.date?.getDate() != lastDay) {
-      lastDay = row.date?.getDate();
-      arrayIndex += 1;
-      internalIndex = -1;
-    } else {
-      internalIndex += 1;
-      if (internalIndex == 0) {
-        currentItem = new WeatherForecastPairDto();
-        currentItem.first = row;
-      } else {
-        currentItem.second = row;
-        mergedList.push(currentItem);
-      }
-    }
+    // console.log(row.date?.getDate());
+    // if (row.date?.getDate() != lastDay) {
+    //   lastDay = row.date?.getDate();
+    //   arrayIndex += 1;
+    //   internalIndex = -1;
+    // } else {
+    //   internalIndex += 1;
+    //   if (internalIndex == 0) {
+    //     currentItem = new WeatherForecastPairDto();
+    //     currentItem.first = row;
+    //   } else {
+    //     currentItem.second = row;
+    //     mergedList.push(currentItem);
+    //   }
+    // }
 
     if (row.source?.dataProvider == 'OpenWeather') {
       listOpenWeather.push(row);
@@ -50,10 +50,26 @@ export const ListState: React.FC<props> = (props) => {
     if (row.source?.dataProvider == 'Yr') {
       listYr.push(row);
     }
-    console.log(mergedList);
+    // console.log(mergedList);
   });
 
-  // console.log(props.weatherList[0].date?.getDate())
+  /////////////////////create for compare by dates
+  const mainArray: WeatherForecastDto[][] = [];
+  const twoArray: WeatherForecastDto[] = [];
+  //firstDate: Number = props.weatherList[0].date?.getDate();
+  //let baseDate: number | undefined = 0;
+  const count = 2;
+  const ListFinal: JSX.Element=<></>
+
+  const ddd = props.weatherList.map((line) => {
+    twoArray.push(line);
+    if (twoArray.length == 2) {
+     return <ListCompare array={twoArray} />
+      twoArray.splice(0);
+    }
+  });
+
+  /////////////////
 
   const renderList = (
     <div>
@@ -65,6 +81,7 @@ export const ListState: React.FC<props> = (props) => {
     <div>
       {/* <ListCompare/> */}
       {/* {generator} */}
+     
     </div>
   );
   const showList = props.compare ? compareList : renderList;
@@ -75,6 +92,8 @@ export const ListState: React.FC<props> = (props) => {
         <h2>{cityName}</h2>
         {/* {showList} */}
         {renderList}
+        {ddd}
+      
       </div>
     </>
   );
