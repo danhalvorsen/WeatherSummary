@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-    public class BackgroundServiceCalculateScoreCommand : BaseCommands
+    public class BackgroundServiceCalculateScoreCommand : BaseFunctionsForQueriesAndCommands
     {
         private const double WEIGHT_TEMPERATURE = 0.3;
         private const double WEIGHT_PRESSURE = 0.2;
@@ -50,7 +50,7 @@ namespace WeatherWebAPI.DAL
                                                             $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                                 $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                                     $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
-                                                                        $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = 'Stavanger' AND Score.FK_WeatherDataId IS null " +
+                                                                        $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{city.Name}' AND Score.FK_WeatherDataId IS null " +
                                                                             $"ORDER BY [Date], SourceName";
 
 

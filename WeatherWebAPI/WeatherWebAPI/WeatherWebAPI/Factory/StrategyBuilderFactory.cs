@@ -1,5 +1,6 @@
 ﻿using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Factory
@@ -17,12 +18,17 @@ namespace WeatherWebAPI.Factory
         {
             if (typeof(S).Name == typeof(IYrStrategy).Name)
             {
-                var strategy = new YrStrategy(new YrConfig());
+                var strategy = new YrStrategy(new YrConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IOpenWeatherStrategy).Name)
             {
-                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig());
+                var strategy = new OpenWeatherStrategy(new OpenWeatherConfig(), new HttpClient());
+                return strategy;
+            }
+            if (typeof(S).Name == typeof(IWeatherApiStrategy).Name)
+            {
+                var strategy = new WeatherApiStrategy(new WeatherApiConfig(), new HttpClient());
                 return strategy;
             }
             if (typeof(S).Name == typeof(IAddWeatherDataToDatabaseStrategy).Name)

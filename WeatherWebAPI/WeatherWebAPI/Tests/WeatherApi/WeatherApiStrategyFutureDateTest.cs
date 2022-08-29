@@ -1,21 +1,18 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.YR;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 
-namespace Tests.Yr
+namespace Tests.WeatherApi
 {
-    public class YrStrategyFutureDateTest
+    public class WeatherApiStrategyFutureDateTest
     {
         private DateTime _date;
         private IGetWeatherDataStrategy<WeatherForecast>? _strategy;
-
         private readonly CityDto _city = new()
         {
             Name = "Stavanger",
@@ -28,35 +25,21 @@ namespace Tests.Yr
         [SetUp]
         public void Setup()
         {
-            _strategy = new YrStrategy(new YrConfig());
-            if (DateTime.UtcNow.Hour > 12)
-                _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0); // Just change for future dates / date today.
-            else
-                _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(12, 0, 0); // Just change for future dates / date today.
+            _strategy = new WeatherApiStrategy(new WeatherApiConfig());
+            _date = DateTime.UtcNow.AddDays(1).Date + new TimeSpan(12, 0, 0);
         }
 
         [Test]
         public async Task ShouldGetDateForecast()
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
+
             //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
             Console.WriteLine(result.DateForecast);
 
             result.DateForecast
                     .Should()
                         .Be(_date);
-        }
-
-        [Test]
-        public async Task ShouldGetDate()
-        {
-            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
-            //result.Should().NotBeEmpty(); <- Used when GetWeatherDataFrom returned List<WeatherForecast>
-            Console.WriteLine(result.Date);
-
-            result.Date
-                    .Should()
-                        .Be(DateTime.UtcNow.Date);
         }
 
         [Test]

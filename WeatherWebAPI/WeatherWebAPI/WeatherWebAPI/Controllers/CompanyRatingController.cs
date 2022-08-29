@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeatherWebAPI.DAL;
+using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Contracts.BaseContract;
+using WeatherWebAPI.DAL.Query;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
@@ -34,6 +37,7 @@ namespace WeatherWebAPI.Controllers
 
             _strategies.Add(this._factory.Build<IYrStrategy>());
             _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
+            _strategies.Add(_factory.Build<IWeatherApiStrategy>());
         }
 
 
@@ -44,7 +48,7 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ScoresAverageDto>>> GetAverageScoreForWeatherProvider()
         {
-            var command = new GetAvgScoresWeatherProviderCommand(_config, _factory);
+            var command = new GetAvgScoresWeatherProviderQuery(_config, _factory);
 
             return await command.CalculateAverageScores(_strategies);
         }
@@ -60,7 +64,7 @@ namespace WeatherWebAPI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresForSelectedPredictionLength(_config, _factory);
+            var command = new GetAvgScoresForSelectedPredictionLengthQuery(_config, _factory);
 
             return await command.CalculateAverageScoresForSelectedPredictionLength(query, _strategies);
         }
@@ -76,7 +80,7 @@ namespace WeatherWebAPI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresWeatherProviderForCityCommand(_config, _factory);
+            var command = new GetAvgScoresWeatherProviderForCityQuery(_config, _factory);
 
             return await command.CalculateAverageScoresFor(query, _strategies);
         }
@@ -92,7 +96,7 @@ namespace WeatherWebAPI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresForSelectedPredictionLengthForCity(_config, _factory);
+            var command = new GetAvgScoresForSelectedPredictionLengthForCityQuery(_config, _factory);
 
             return await command.CalculateAverageScoresForSelectedPredictionLengthAndCity(query, _strategies);
         }

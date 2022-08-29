@@ -1,19 +1,21 @@
 ﻿using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
+using WeatherWebAPI.Query;
 
-namespace WeatherWebAPI.DAL
+namespace WeatherWebAPI.DAL.Query
 {
-    public class GetAvgScoresWeatherProviderCommand : BaseCommands
+    public class GetAvgScoresForSelectedPredictionLengthQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetAvgScoresWeatherProviderCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public GetAvgScoresForSelectedPredictionLengthQuery(IConfiguration config, IFactory factory) : base(config, factory)
         {
 
         }
 
-        public async Task<List<ScoresAverageDto>> CalculateAverageScores(List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
+        public async Task<List<ScoresAverageDto>> CalculateAverageScoresForSelectedPredictionLength(DaysQuery query, List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
         {
+            var days = query.Days;
             var avgScoreList = new List<ScoresAverageDto>();
             try
             {
@@ -26,7 +28,7 @@ namespace WeatherWebAPI.DAL
                                                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                         $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                             $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
-                                                                $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND Score.FK_WeatherDataId IS NOT null";
+                                                                $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND Score.FK_WeatherDataId IS NOT null AND CAST([DateForecast] as Date) = [Date] + {days}";
 
                     IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
@@ -50,7 +52,7 @@ namespace WeatherWebAPI.DAL
                         AverageScoreWeighted = avgScoreWeighted,
                         DataProvider = strategy.GetDataSource()
                     });
-                    
+
                 }
             }
             catch (Exception e)
@@ -58,7 +60,7 @@ namespace WeatherWebAPI.DAL
 
                 Console.WriteLine(e.Message);
             }
-            
+
             return avgScoreList;
         }
     }

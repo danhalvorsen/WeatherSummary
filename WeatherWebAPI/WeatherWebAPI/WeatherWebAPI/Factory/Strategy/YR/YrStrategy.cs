@@ -1,5 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text.Json;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.YR
@@ -7,29 +9,24 @@ namespace WeatherWebAPI.Factory.Strategy.YR
     public class YrStrategy : IGetWeatherDataStrategy<WeatherForecast>, IYrStrategy
     {
         private readonly YrConfig _yrConfig;
-        //private readonly YrHttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
-        public YrStrategy(YrConfig config/*, YrHttpClient httpClient*/)
+        public YrStrategy(YrConfig config, HttpClient httpClient)
         {
             _yrConfig = config;
-            //_httpClient = httpClient;
-        }
+            _httpClient = httpClient;
 
-        public IEnumerable<YrHttpClient>? Response { get; set; }
+            _httpClient.BaseAddress = new Uri("https://api.met.no/weatherapi/");
+
+            _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            _httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "Mozilla/5.0 (Windows 10, Win64; x64; rv: 100.0) Gecko/20100101 FireFox/100.0");
+        }
 
         public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            var httpClient = new HttpClient
-            {
-                BaseAddress = _yrConfig.BaseUrl
-            };
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
 
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-
-            //var httpClient = _httpClientFactory.CreateClient("Yr");
-            var response = await httpClient.GetAsync($"locationforecast/2.0/complete?lat={city.Latitude}&lon={city.Longitude}");
+            var response = await _httpClient.GetAsync($"locationforecast/2.0/complete?lat={city.Latitude}&lon={city.Longitude}");
 
             if (response.IsSuccessStatusCode)
             {

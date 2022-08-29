@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.YR;

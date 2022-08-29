@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.Contracts;
-using System.Globalization;
+﻿using System.Globalization;
 using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -8,14 +8,14 @@ using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace WeatherWebAPI.DAL
 {
-    public abstract class BaseCommands
+    public abstract class BaseFunctionsForQueriesAndCommands
     {
         protected readonly IConfiguration _config;
         protected readonly IFactory _factory;
         protected List<CityDto>? _citiesDatabase;
         protected List<WeatherForecast>? _datesDatabase;
 
-        public BaseCommands(IConfiguration config, IFactory factory)
+        public BaseFunctionsForQueriesAndCommands(IConfiguration config, IFactory factory)
         {
             _config = config;
             _factory = factory;
@@ -124,7 +124,7 @@ namespace WeatherWebAPI.DAL
             return average;
         }
 
-        protected async Task MakeWeatherForecastDto(List<WeatherForecastDto> dtoList, WeatherForecastContract contract, string queryString)
+        protected async Task MakeWeatherForecastDto(List<WeatherForecastDto> dtoList, WeatherForecastMapping contract, string queryString)
         {
             IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
             var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);

@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL;
+using WeatherWebAPI.Contracts.BaseContract;
+using WeatherWebAPI.DAL.Query;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
@@ -13,7 +14,7 @@ public class WeatherForecastController : ControllerBase
 {
     private readonly IConfiguration _config;
     private readonly IFactory _factory;
-    private readonly WeatherForecastContract _contract;
+    private readonly WeatherForecastMapping _contract;
 
     private readonly DateQueryAndCityValidator _dateQueryAndCityValidator;
     private readonly CityQueryValidator _cityQueryValidator;
@@ -25,7 +26,7 @@ public class WeatherForecastController : ControllerBase
     private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _strategies = new();
 
 
-    public WeatherForecastController(IConfiguration config, IFactory factory, WeatherForecastContract contract,
+    public WeatherForecastController(IConfiguration config, IFactory factory, WeatherForecastMapping contract,
        DateQueryAndCityValidator dateQueryAndCityValidator,
        CityQueryValidator cityQueryValidator,
        DaysQueryValidator daysQueryValidator,
@@ -45,6 +46,7 @@ public class WeatherForecastController : ControllerBase
 
         _strategies.Add(_factory.Build<IYrStrategy>());
         _strategies.Add(_factory.Build<IOpenWeatherStrategy>());
+        _strategies.Add(_factory.Build<IWeatherApiStrategy>());
     }
 
 
@@ -60,7 +62,7 @@ public class WeatherForecastController : ControllerBase
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastPredictionByDate(_config, _factory, _contract);
+        var command = new GetWeatherForecastPredictionByDateQuery(_config, _factory, _contract);
 
         return await command.GetWeatherForecastPredictionByDateForOneWeek(query);
     }
@@ -77,7 +79,7 @@ public class WeatherForecastController : ControllerBase
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastByDateCommand(_config, _factory, _contract);
+        var command = new GetWeatherForecastByDateQuery(_config, _factory, _contract);
 
         return await command.GetWeatherForecastByDate(query, _strategies);
     }
@@ -93,7 +95,7 @@ public class WeatherForecastController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastBetweenDatesCommand(_config, _factory, _contract);
+        var command = new GetWeatherForecastBetweenDatesQuery(_config, _factory, _contract);
 
         return await command.GetWeatherForecastBetweenDates(query);
     }
@@ -108,7 +110,7 @@ public class WeatherForecastController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastByWeekNumberCommand(_config, _factory, _contract);
+        var command = new GetWeatherForecastByWeekNumberQuery(_config, _factory, _contract);
 
         return await command.GetWeatherForecastByWeek(query);
     }

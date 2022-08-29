@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;

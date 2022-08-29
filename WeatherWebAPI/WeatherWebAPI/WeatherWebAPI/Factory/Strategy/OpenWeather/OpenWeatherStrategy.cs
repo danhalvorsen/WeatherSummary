@@ -1,6 +1,7 @@
 ﻿using Microsoft.Net.Http.Headers;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
@@ -8,25 +9,24 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
     public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
         private readonly OpenWeatherConfig _openWeatherConfig;
+        private readonly HttpClient _httpClient;
 
-        public OpenWeatherStrategy(OpenWeatherConfig config)
+        public OpenWeatherStrategy(OpenWeatherConfig config, HttpClient httpClient)
         {
             _openWeatherConfig = config;
+            _httpClient = httpClient;
+
+            _httpClient.BaseAddress = new Uri("https://api.openweathermap.org/");
+
+            _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            _httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "Mozilla/5.0 (Windows 10, Win64; x64; rv: 100.0) Gecko/20100101 FireFox/100.0");
         }
 
         public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
-            var httpClient = new HttpClient
-            {
-                BaseAddress = _openWeatherConfig.BaseUrl
-            };
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
 
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
-
-            //var httpClient = _openWeatherConfig.HttpClientFactory.CreateClient("OpenWeather");
-            var response = await httpClient.GetAsync($"data/2.5/onecall?lat={city.Latitude}&lon={city.Longitude}&units=metric&appid=7397652ad9c5f55e36782bb22811ca43");
+            var response = await _httpClient.GetAsync($"data/2.5/onecall?lat={city.Latitude}&lon={city.Longitude}&units=metric&appid=7397652ad9c5f55e36782bb22811ca43");
 
             if (response.IsSuccessStatusCode)
             {
@@ -46,20 +46,14 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 
         public async Task<List<CityDto>> GetCityDataFor(string city) // Have to use list when using streamasync
         {
-            var httpClient = new HttpClient
-            {
-                BaseAddress = _openWeatherConfig.BaseUrl
-            };
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows 10, Win64; x64; rv:100.0) Gecko/20100101 FireFox/100.0");
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
 
             //var httpClient = _openWeatherConfig.HttpClientFactory.CreateClient("OpenWeather");
-            var response = await httpClient.GetAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
+            var response = await _httpClient.GetAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
 
             if (response.IsSuccessStatusCode)
             {
-                var streamTask = await httpClient.GetStreamAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
+                var streamTask = await _httpClient.GetStreamAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
                 var cityData = await JsonSerializer.DeserializeAsync<List<CityDto>>(streamTask);
 
                 if (cityData != null)

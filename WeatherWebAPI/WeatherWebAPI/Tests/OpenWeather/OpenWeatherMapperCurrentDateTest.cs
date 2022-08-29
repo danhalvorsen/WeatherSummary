@@ -4,13 +4,14 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
 {
-    public class OpenWeatherMapperCurrentDateTest
+    public class OpenWeatherMapperCurrentDateTest : BaseMapperConfigFunctions
     {
         private int _unix;
         private DateTime _dateTime;
@@ -22,7 +23,7 @@ namespace Tests.OpenWeather
             var config = new MapperConfiguration(
 
                     cfg => cfg.CreateMap<ApplicationOpenWeather, WeatherForecast>()
-                 .ForPath(dest => dest.Date, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
+                 .ForPath(dest => dest.DateForecast, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.current.dt))) // date <- this is an UNIX int type
                  .ForPath(dest => dest.WeatherType, opt => opt // weathertype
                      .MapFrom(src => src.current.weather[0].description)) // <-- Got a mapper exception once, because the city of stockholm had 2 descriptions. Just made this one
                                                                           // enter the first one each time. Should work.
@@ -62,32 +63,12 @@ namespace Tests.OpenWeather
                   //           .data.next_1_hours.details.probability_of_thunder))
                   .AfterMap((s, d) => d.Source.DataProvider = "OpenWeather") // Adding the datasource name to weatherforceastdto
                   .AfterMap((s, d) => d.FogAreaFraction = (float)VisibilityConvertedToFogAreaFraction(d.FogAreaFraction))
+                  .AfterMap((s, d) => d.Date = DateTime.UtcNow.Date)
                  );
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             return config;
         }
-
-        private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
-        {
-            // Unix timestamp is seconds past epoch
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dateTime;
-        }
-
-        private static int DateTimeToUnixTime(DateTime dateTime)
-        {
-            dateTime = dateTime.ToUniversalTime(); // If this is not done, the time would be 2 hours ahead of what we'd actually want.
-            int unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            return unixTimestamp;
-        }
-
-        private float VisibilityConvertedToFogAreaFraction(float value)
-        {
-            return Math.Abs(value / 100 - 100);
-        }
-
 
         [SetUp]
         public void Setup()
@@ -115,8 +96,8 @@ namespace Tests.OpenWeather
             var result = mapper.Map<WeatherForecast>(application);
 
             // Assert
-            Console.WriteLine(result.Date);
-            result.Date.Should().Be(UnixTimeStampToDateTime(_unix));
+            Console.WriteLine(result.DateForecast);
+            result.DateForecast.Should().Be(UnixTimeStampToDateTime(_unix));
         }
 
         [Test]
@@ -370,7 +351,7 @@ namespace Tests.OpenWeather
         [Test]
         public void ShouldMapFogAreaFraction() // Visiblity is max 10km (10 000) -> To get the range as 0-100% we need to divide på 100. This is done in the mapper config
         {
-            var fogAreaFraction = 10000;
+            var fogAreaFraction = 1000;
 
             // Arrange
             var application = new ApplicationOpenWeather
@@ -424,6 +405,21 @@ namespace Tests.OpenWeather
             Console.WriteLine(result?.Source?.DataProvider);
 
             result?.Source?.DataProvider.Should().Be("OpenWeather");
+        }
+
+        [Test]
+        public void ShouldSetDate()
+        {
+            var application = new ApplicationOpenWeather();
+            Mapper mapper = new Mapper(_config);
+
+            // Act
+            var result = mapper.Map<WeatherForecast>(application);
+
+            // Assert
+            Console.WriteLine(result.Date);
+
+            result.Date.Should().Be(DateTime.UtcNow.Date);
         }
     }
 }
