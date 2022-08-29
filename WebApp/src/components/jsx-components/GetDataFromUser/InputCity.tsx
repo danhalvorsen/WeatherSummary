@@ -1,28 +1,25 @@
 interface IinputType {
-    City : (event: string) => void
+    City: (event: string) => void
 }
 
-export default function InputCity(props: IinputType){
+export default function InputCity(props: IinputType) {
+    var cityName: string
 
-    
-
-
-   var cityName: string;
-
-   const getText = (e: any)=>{
-    cityName = e.target.value;
+    const getText = (e: any) => {
+        cityName = e.target.value
     }
 
-    const passText = (event:any)=>{ 
+    const passText = (event: any) => {
         event.preventDefault()
-        props.City(cityName);
+        props.City(cityName)
     }
 
-    return(
+    return (
         <>
-        <form onSubmit={passText}>
-        <label>city name: </label> <input type='text' onChange={getText}></input>
-        </form>
+            <form onSubmit={passText}>
+                <label>city name: </label>{' '}
+                <input type="text" onChange={getText}></input>
+            </form>
         </>
     )
 }

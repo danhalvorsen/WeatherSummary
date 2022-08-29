@@ -1,0 +1,54 @@
+      <Form>
+        <WeatherForecastSearchState>
+
+           <WeatherForecastSearch>
+            
+              <LookupCityField>
+                  <SearchButton/>
+              </LookupCityField>   
+
+
+              [Date, RadioButton]
+            <SelectSearchOptionState> 
+              <SelectSearchOption>
+                <RadioButton>
+                  <DayPicker></DayPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+            
+            
+             [Date, RadioButton, WeekNo]
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <WeekPicker></WeekPicker>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+
+             [ToDate, FromDate, Date RadioButton, WeekNo]
+            <SelectSearchOptionState>
+              <SelectSearchOption>
+                <RadioButton>
+                  <FromDate></FromDate>
+                  <ToDate></ToDate>
+                </RadioButton>
+              </SelectSearchOption>
+            </SelectSearchOptionState>
+
+          </WeatherForecastSearch>
+        
+          <ListState>
+            <List>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+              <ListItem></ListItem>
+            </List>
+          </ListState>
+
+        </WeatherForecastSearchState>
+
+
+      </Form>

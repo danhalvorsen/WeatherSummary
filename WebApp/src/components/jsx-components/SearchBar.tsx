@@ -1,50 +1,46 @@
-import React, { ChangeEvent } from "react";
-import { Checkbox } from "./Checkbox";
+import React, { ChangeEvent } from 'react'
+import { Checkbox } from './Checkbox'
 
-
- export type ISearchbarProps=  {
-  onSubmit: string,
-  fn:(e: ChangeEvent) => void
+export type ISearchbarProps = {
+    onSubmit: string
+    fn: (e: ChangeEvent) => void
 }
 
 class SearchBar extends React.Component<ISearchbarProps> {
-  
-  state = { term: "" };
+    state = { term: '' }
 
- 
+    onInputSubmit = (event: any) => {
+        event.preventDefault()
+        this.props.fn(event)
+    }
 
-  onInputSubmit=(event : any) => {
-    event.preventDefault();
-        this.props.fn(event);
-  };
+    render() {
+        return (
+            <div>
+                <form onSubmit={this.onInputSubmit}>
+                    <div className="container">
+                        <div className="mb-3">
+                            <label
+                                htmlFor="exampleFormControlTextarea1"
+                                className="form-label"
+                            >
+                                Search for a City:
+                            </label>
+                            <input
+                                className="form-control"
+                                id="exampleFormControlTextarea1"
+                                placeholder="Enter a location name"
+                                onChange={(e) =>
+                                    this.setState({ term: e.target.value })
+                                }
+                            ></input>
 
-  render() {
-    
-    return (
-      <div>
-        <form onSubmit={this.onInputSubmit}>
-          <div className="container">
-            <div className="mb-3">
-              <label 
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              >
-                Search for a City:
-              </label>
-              <input
-                className="form-control"
-                id="exampleFormControlTextarea1"
-                placeholder="Enter a location name"
-                onChange={e=> this.setState({term: e.target.value})}
-              ></input>
-
-              <Checkbox />
-                    
+                            <Checkbox />
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
-        </form>
-      </div>
-    );
-  }
+        )
+    }
 }
-export default SearchBar;
+export default SearchBar

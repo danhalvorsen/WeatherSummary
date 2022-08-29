@@ -1,7 +1,14 @@
 {
-    
-    "cSpell.words": [
-        "Iprops",
-        "resultvalue"
-    ],
+  "cSpell.words": ["Iprops", "resultvalue"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
