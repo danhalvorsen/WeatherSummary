@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/MyOrderingSystem/mongoose/node_modules
 /.pnp
 .pnp.js
 

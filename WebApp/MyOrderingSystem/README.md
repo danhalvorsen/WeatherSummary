@@ -35,11 +35,13 @@ Ordering page
 
 #### User Stories
 
-As a user I need a web page so that I can place orders
-As a user I need a web page so that I can submit my order
-As a user I need a web page so that I can see list of products
-As a user I need a web page so that I can to see product details
-As a user I need a web page so that I can see my shopping list
+- As a user I need a web page so that I can place orders
+- As a user I need a web page so that I can submit my order
+- As a user I need a web page so that I can see list of products
+- As a user I need a web page so that I can to see product details
+- As a user I need a web page so that I can see my shopping list
+
+As a < type of user >, I want < some goal > so that < some reason >.
 
 ##### Task
 
@@ -49,11 +51,31 @@ Create a React or more to completed US2
 # Backlog Technical
 
 React
-IndexedDB (Browser)
+Json file (temporary database in this phase
+)
+functionality should be done in this phase (without styling)
 
----
+## <!-- IndexedDB (Browser) -->
 
-MongoDb (Backend)
+<!-- MongoDb (Backend) -->
+
+### Create Mocks for routes by using Json-server mock
+
+- As a frontend developer I need “Fack data for products”
+- Create mock route for GET /api/products/data - Make some fake data
+- Create mock route for POST / api/products/data - Get data from user in website
+
+### Create Tests for necessary functions
+
+- As a frontend developer I need to make tests for necessary functions
+
+### Search box component feature
+
+- As a user, I want to be able to search for products so that I can reach the specific product.
+  - Search component
+  - Create a result page to show result of searched text
+  - Create two kinds of result based on success search or failed search
+  - Show result of data like items in the product list page
 
 ## EPICS
 
