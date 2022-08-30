@@ -5,6 +5,6 @@ namespace WeatherWebAPI.Query
 {
     public interface IGetDatesQuery
     {
-        Task<List<WeatherForecast>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy);
+        Task<List<WeatherForecast.WeatherData>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy);
     }
 }

@@ -3,10 +3,12 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory
 {
+    public enum eDataSource { Yr, OpenWeather, WeatherApi }
+
     public interface IGetWeatherDataStrategy<T>
     {
-        public Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate);
-        //public List<WeatherForecast> GetHistoricData(CityDto city, DateTime from, DateTime to);
+        public Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate);
+
         public string GetDataSource();
     }
 }

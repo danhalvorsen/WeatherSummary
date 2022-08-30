@@ -1,13 +1,7 @@
-using AutoMapper;
 using FluentValidation.AspNetCore;
-using Microsoft.Extensions.Configuration;
-using System.ComponentModel;
 using System.Reflection;
 using WeatherWebAPI;
-using WeatherWebAPI.Automapper;
-using WeatherWebAPI.Contracts;
 using WeatherWebAPI.DAL;
-using WeatherWebAPI.DAL.Commands.BackgroundService;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Factory.Strategy.WeatherApi;
@@ -20,8 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddConfig(builder.Configuration);
-//builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
-//builder.Services.AddHostedService<BackgroundServiceGetScore>();
+builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
+builder.Services.AddHostedService<BackgroundServiceGetScore>();
 builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,7 +26,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IFactory, StrategyBuilderFactory>();
 //builder.Services.AddSingleton<IMyConfiguration>(new BackgroundServiceGetWeatherDataCommandConfiguration());
 
-//builder.Services.AddTransient<BackgroundServiceGetWeatherDataCommand>();
+builder.Services.AddTransient<BackgroundServiceGetWeatherDataCommand>();
+builder.Services.AddTransient<BackgroundServiceCalculateScoreCommand>();
 
 
 builder.Services.AddHttpClient<YrStrategy>();
@@ -63,7 +58,6 @@ public static class MyConfigServiceCollectionExtensions
          this IServiceCollection services, IConfiguration config)
     {
         services.AddTransient(typeof(IFactory), typeof(StrategyBuilderFactory));
-        services.AddTransient<WeatherForecastMapping>();
         services.AddFluentValidation(options =>
         {
             options.RegisterValidatorsFromAssemblyContaining<DateQueryAndCityValidator>();

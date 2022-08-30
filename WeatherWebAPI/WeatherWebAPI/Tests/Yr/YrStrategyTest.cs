@@ -4,14 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.YR;
+using static WeatherWebAPI.Contracts.BaseContract.WeatherForecast;
 
 namespace Tests.Yr
 {
@@ -20,8 +19,8 @@ namespace Tests.Yr
         private ServiceProvider? _serviceProvider;
         private IMapper? _mapper;
         private DateTime _date;
-        private IGetWeatherDataStrategy<WeatherForecast>? _strategy;
-        
+        private IGetWeatherDataStrategy<WeatherData>? _strategy;
+
         private readonly CityDto _city = new()
         {
             Name = "Stavanger",
@@ -35,14 +34,20 @@ namespace Tests.Yr
         public void Setup()
         {
             IServiceCollection servicecollection = new ServiceCollection();
-            var whatafouck = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
-            servicecollection.AddAutoMapper(whatafouck);
+            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
+            servicecollection.AddAutoMapper(assembly);
             _serviceProvider = servicecollection.BuildServiceProvider();
 
-            
+
             _mapper = _serviceProvider.GetService<IMapper>();
             _strategy = new YrStrategy(_mapper!, new YrConfig(), new HttpClient());
-            _date = DateTime.UtcNow.Date;
+
+            _date = DateTime.UtcNow;
+
+            //if (DateTime.UtcNow.Hour < 12)
+            //    _date = DateTime.UtcNow.Date + new TimeSpan(12, 0, 0);
+            //else
+            //    _date = DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0);
         }
 
 
@@ -51,14 +56,21 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
+            Console.WriteLine(result.DateForecast);
 
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.DateForecast);
-            }
+            if (DateTime.UtcNow.Hour < 12)
+                result.DateForecast.Should().Be(_date.Date + new TimeSpan(12, 0, 0));
+            else
+                result.DateForecast.Should().Be(_date.Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0));
+        }
 
-            result.Forecast.ToList().Select(i => i.DateForecast).Should().NotBeEmpty();
+        [Test]
+        public async Task ShouldGetDate()
+        {
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
+
+            Console.WriteLine(result.Date);
+            result.Date.Should().Be(_date.Date);
         }
 
         [Test]
@@ -66,14 +78,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.Temperature);
-            }
-
-            result.Forecast.ToList().Select(i => i.Temperature).Should().NotBeEmpty();
+            Console.WriteLine(result.Temperature);
+            result.Temperature.Should()
+                .BeGreaterThan(-100)
+                .And
+                .BeLessThan(100);
         }
 
         [Test]
@@ -81,14 +90,8 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.Windspeed);
-            }
-
-            result.Forecast.ToList().Select(i => i.Windspeed).Should().NotBeEmpty();
+            Console.WriteLine(result.Windspeed);
+            result.Windspeed.Should().BeGreaterThanOrEqualTo(0);
         }
 
         [Test]
@@ -96,14 +99,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.WindDirection);
-            }
-
-            result.Forecast.ToList().Select(i => i.WindDirection).Should().NotBeEmpty();
+            Console.WriteLine(result.WindDirection);
+            result.WindDirection.Should()
+                .BeGreaterThanOrEqualTo(0) // 0 = North, 90 = East, 180 = South, 270 = West
+                .And
+                .BeLessThanOrEqualTo(360);
         }
 
         [Test]
@@ -111,14 +111,8 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.WindspeedGust);
-            }
-
-            result.Forecast.ToList().Select(i => i.WindspeedGust).Should().NotBeEmpty();
+            Console.WriteLine(result.WindspeedGust);
+            result.WindspeedGust.Should().BeGreaterThanOrEqualTo(0);
         }
 
         [Test]
@@ -126,14 +120,8 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.Pressure);
-            }
-
-            result.Forecast.ToList().Select(i => i.Pressure).Should().NotBeEmpty();
+            Console.WriteLine(result.Pressure);
+            result.Pressure.Should().BeGreaterThanOrEqualTo(0);
         }
 
         [Test]
@@ -141,14 +129,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.Humidity);
-            }
-
-            result.Forecast.ToList().Select(i => i.Humidity).Should().NotBeEmpty();
+            Console.WriteLine(result.Humidity);
+            result.Humidity.Should()
+                .BeGreaterThanOrEqualTo(0)
+                .And
+                .BeLessThanOrEqualTo(100);
         }
 
         [Test]
@@ -156,14 +141,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.ProbOfRain);
-            }
-
-            result.Forecast.ToList().Select(i => i.ProbOfRain).Should().NotBeEmpty();
+            Console.WriteLine(result.ProbOfRain);
+            result.ProbOfRain.Should()
+                .BeGreaterThanOrEqualTo(0)
+                .And
+                .BeLessThanOrEqualTo(100);
         }
 
         [Test]
@@ -171,14 +153,8 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.AmountRain);
-            }
-
-            result.Forecast.ToList().Select(i => i.AmountRain).Should().NotBeEmpty();
+            Console.WriteLine(result.AmountRain);
+            result.AmountRain.Should().BeGreaterThanOrEqualTo(0);
         }
 
         [Test]
@@ -186,14 +162,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.CloudAreaFraction);
-            }
-
-            result.Forecast.ToList().Select(i => i.CloudAreaFraction).Should().NotBeEmpty();
+            Console.WriteLine(result.CloudAreaFraction);
+            result.CloudAreaFraction.Should()
+                .BeGreaterThanOrEqualTo(0)
+                .And
+                .BeLessThanOrEqualTo(100);
         }
 
         [Test]
@@ -201,15 +174,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-            var count = 0;
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.FogAreaFraction);
-                count++;
-            }
-            Console.WriteLine("Count: " + count);
-            result.Forecast.ToList().Select(i => i.Temperature).Should().NotBeEmpty();
+            Console.WriteLine(result.FogAreaFraction);
+            result.FogAreaFraction.Should()
+                .BeGreaterThanOrEqualTo(0)
+                .And
+                .BeLessThanOrEqualTo(100);
         }
 
         [Test]
@@ -217,14 +186,11 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
-
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.ProbOfThunder);
-            }
-
-            result.Forecast.ToList().Select(i => i.ProbOfThunder).Should().NotBeEmpty();
+            Console.WriteLine(result.ProbOfThunder);
+            result.ProbOfThunder.Should()
+                .BeGreaterThanOrEqualTo(0)
+                .And
+                .BeLessThanOrEqualTo(100);
         }
 
         [Test]
@@ -232,14 +198,17 @@ namespace Tests.Yr
         {
             var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            var item = result!.Forecast.ToList();
+            Console.WriteLine(result.WeatherType);
+            result.WeatherType.Should().NotBeNullOrEmpty();
+        }
 
-            foreach (var i in item)
-            {
-                Console.WriteLine(i.WeatherType);
-            }
+        [Test]
+        public async Task ShouldGetWeatherSource()
+        {
+            var result = await _strategy!.GetWeatherDataFrom(_city, _date);
 
-            result.Forecast.ToList().Select(i => i.WeatherType).Should().NotBeEmpty();
+            Console.WriteLine(result.Source.DataProvider);
+            result.Source!.DataProvider.Should().NotBeNullOrEmpty();
         }
     }
 }

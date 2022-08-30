@@ -29,8 +29,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         scores.Add(new Scores
                         {
                             WeatherDataId = Convert.ToInt32(reader["FK_WeatherDataId"]),
-                            Score = (float)Convert.ToDouble(reader["Score"]),
-                            ScoreWeighted = (float)Convert.ToDouble(reader["ScoreWeighted"]),
+                            Value = (float)Convert.ToDouble(reader["Score"]),
+                            ValueWeighted = (float)Convert.ToDouble(reader["ScoreWeighted"]),
                         });
                     }
                 }

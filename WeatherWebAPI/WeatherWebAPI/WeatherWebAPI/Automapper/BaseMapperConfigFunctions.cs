@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace WeatherWebAPI.Factory.Strategy
+namespace WeatherWebAPI.Automapper
 {
     public abstract class BaseMapperConfigFunctions
     {

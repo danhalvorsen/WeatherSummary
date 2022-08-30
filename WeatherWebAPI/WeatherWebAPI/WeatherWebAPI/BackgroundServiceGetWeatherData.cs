@@ -1,5 +1,4 @@
-﻿using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Contracts.BaseContract;
+﻿using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -12,19 +11,18 @@ namespace WeatherWebAPI
     {
         private readonly IFactory _factory;
         private readonly IConfiguration _config;
-        private readonly WeatherForecastMapping _contract;
         private readonly BackgroundServiceGetWeatherDataCommand _command;
         private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _weatherDataStrategies = new();
         private const int HOUR_DELAY = 24;
+        
 
-        public BackgroundServiceGetWeatherData(IConfiguration config, 
+        public BackgroundServiceGetWeatherData(
+            IConfiguration config, 
             IFactory factory, 
-            WeatherForecastMapping contract,
             BackgroundServiceGetWeatherDataCommand command)
         {
             _config = config;
             _factory = factory;
-            _contract = contract;
             _command = command;
             _weatherDataStrategies.Add(_factory.Build<IYrStrategy>());
             _weatherDataStrategies.Add(_factory.Build<IOpenWeatherStrategy>());
@@ -38,10 +36,10 @@ namespace WeatherWebAPI
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    DateTime start = DateTime.UtcNow.Date + new TimeSpan(14, 0, 0);
-                    DateTime stop = DateTime.UtcNow.Date + new TimeSpan(15, 0, 0);
+                    DateTime start = DateTime.UtcNow.Date + new TimeSpan(06, 0, 0);
+                    DateTime stop = DateTime.UtcNow.Date + new TimeSpan(18, 0, 0);
 
-                    await StartWork(stoppingToken, start, stop, _config, _factory);
+                    await StartWork(start, stop, stoppingToken);
                 }
             }
             catch (Exception e)
@@ -50,7 +48,7 @@ namespace WeatherWebAPI
             }
         }
 
-        private async Task StartWork(CancellationToken stoppingToken, DateTime StartTime, DateTime StopTime, IConfiguration config, IFactory factory)
+        private async Task StartWork(DateTime StartTime, DateTime StopTime, CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {

@@ -9,7 +9,7 @@ namespace WeatherWebAPI.Automapper.Profiles
     {
         private const int PERCENTAGE_FACTOR = 100;
 
-        public string? DataSource { get; }
+        eDataSource eDataSource => eDataSource.OpenWeather;
 
         public OpenWeatherProfile()
         {
@@ -20,7 +20,7 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.city!.country));
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            CreateMap<Daily, WeatherForecast.Data>()
+            CreateMap<Daily, WeatherForecast.WeatherData>()
                 .ForMember(dest => dest.DateForecast, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.dt)))
                 .ForMember(dest => dest.WeatherType, opt => opt.MapFrom(src => src.weather[0].description))
                 .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.temp.day))
@@ -31,12 +31,16 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.Humidity, opt => opt.MapFrom(src => src.humidity))
                 .ForMember(dest => dest.ProbOfRain, opt => opt.MapFrom(src => src.pop * PERCENTAGE_FACTOR))
                 .ForMember(dest => dest.AmountRain, opt => opt.MapFrom(src => src.rain))
-                .ForMember(dest => dest.CloudAreaFraction, opt => opt.MapFrom(src => src.clouds));
+                .ForMember(dest => dest.CloudAreaFraction, opt => opt.MapFrom(src => src.clouds))
+                .AfterMap((src, dest) => dest.Date = DateTime.UtcNow.Date)
+                .AfterMap((src, dest) => dest.Source.DataProvider = eDataSource.ToString());
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             // OpenWeather doesn't show fog area fraction or thunder for dailiy forecasts.
 
             CreateMap<ApplicationOpenWeather, WeatherForecast>()
                 .ForMember(dest => dest.Forecast, opt => opt.MapFrom(src => src.daily));
+
+            
         }
 
         private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)

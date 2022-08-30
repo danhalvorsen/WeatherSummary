@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using AutoMapper;
+using System.Globalization;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
@@ -7,12 +9,9 @@ namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastBetweenDatesQuery : BaseFunctionsForQueriesAndCommands
     {
-
-        protected readonly WeatherForecastMapping _weatherForecastMapping;
-
-        public GetWeatherForecastBetweenDatesQuery(IConfiguration config, IFactory factory, WeatherForecastMapping weatherForecastMapping) : base(config, factory)
+        public GetWeatherForecastBetweenDatesQuery(CommonArgs commonArgs) : base(commonArgs)
         {
-            _weatherForecastMapping = weatherForecastMapping;
+
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity)
@@ -23,7 +22,7 @@ namespace WeatherWebAPI.DAL.Query
             DateTime toDate = betweenDateQueryAndCity!.BetweenDateQuery.To!.ToUniversalTime();
 
             var datesQuery = new List<DateTime>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
             var dtoList = new List<WeatherForecastDto>();
 
             try
@@ -58,7 +57,7 @@ namespace WeatherWebAPI.DAL.Query
                                     $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
                                         $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(dtoList, _weatherForecastMapping, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
             }
             catch (Exception e)
             {

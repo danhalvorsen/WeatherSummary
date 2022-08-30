@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL.Query;
@@ -10,43 +12,18 @@ using WeatherWebAPI.Query;
 
 [Route("api/[controller]")]
 [ApiController]
-public class WeatherForecastController : ControllerBase
+public partial class WeatherForecastController : ControllerBase
 {
-    private readonly IConfiguration _config;
-    private readonly IFactory _factory;
-    private readonly WeatherForecastMapping _contract;
-
-    private readonly DateQueryAndCityValidator _dateQueryAndCityValidator;
-    private readonly CityQueryValidator _cityQueryValidator;
-    private readonly DaysQueryValidator _daysQueryValidator;
-    private readonly BetweenDateQueryAndCityValidator _beetweenDateQueryAndCityValidator;
-    private readonly WeekQueryAndCityValidator _weekQueryAndCityValidator;
-    private readonly DaysQueryAndCityValidator _daysQueryAndCityValidator;
-
+   
     private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _strategies = new();
+    private readonly Args _arguments;
 
-
-    public WeatherForecastController(IConfiguration config, IFactory factory, WeatherForecastMapping contract,
-       DateQueryAndCityValidator dateQueryAndCityValidator,
-       CityQueryValidator cityQueryValidator,
-       DaysQueryValidator daysQueryValidator,
-       BetweenDateQueryAndCityValidator beetweenDateQueryAndCityValidator,
-       WeekQueryAndCityValidator weekQueryAndCityValidator,
-       DaysQueryAndCityValidator daysQueryAndCityValidator)
+    public WeatherForecastController(Args args)
     {
-        _config = config;
-        _factory = factory;
-        _contract = contract;
-        _dateQueryAndCityValidator = dateQueryAndCityValidator;
-        _cityQueryValidator = cityQueryValidator;
-        _daysQueryValidator = daysQueryValidator;
-        _beetweenDateQueryAndCityValidator = beetweenDateQueryAndCityValidator;
-        _weekQueryAndCityValidator = weekQueryAndCityValidator;
-        _daysQueryAndCityValidator = daysQueryAndCityValidator;
-
-        _strategies.Add(_factory.Build<IYrStrategy>());
-        _strategies.Add(_factory.Build<IOpenWeatherStrategy>());
-        _strategies.Add(_factory.Build<IWeatherApiStrategy>());
+        _strategies.Add(args.Common.Factory.Build<IYrStrategy>());
+        _strategies.Add(args.Common.Factory.Build<IOpenWeatherStrategy>());
+        _strategies.Add(args.Common.Factory.Build<IWeatherApiStrategy>());
+        _arguments = args;
     }
 
 
@@ -57,12 +34,12 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> PredictionByDate([FromQuery]DateQueryAndCity query)
     {
-        var validationResult = _dateQueryAndCityValidator.Validate(query);
+        var validationResult = _arguments.DateQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastPredictionByDateQuery(_config, _factory, _contract);
+        var command = new GetWeatherForecastPredictionByDateQuery(_arguments.Common);
 
         return await command.GetWeatherForecastPredictionByDateForOneWeek(query);
     }
@@ -74,12 +51,12 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Date([FromQuery]DateQueryAndCity query)
     {
-        var validationResult = _dateQueryAndCityValidator.Validate(query);
+        var validationResult = _arguments.DateQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastByDateQuery(_config, _factory, _contract);
+        var command = new GetWeatherForecastByDateQuery(_arguments.Common);
 
         return await command.GetWeatherForecastByDate(query, _strategies);
     }
@@ -91,11 +68,11 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Between([FromQuery]BetweenDateQueryAndCity query)
     {
-        var validationResult = _beetweenDateQueryAndCityValidator.Validate(query);
+        var validationResult = _arguments.BeetweenDateQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastBetweenDatesQuery(_config, _factory, _contract);
+        var command = new GetWeatherForecastBetweenDatesQuery(_arguments.Common);
 
         return await command.GetWeatherForecastBetweenDates(query);
     }
@@ -106,11 +83,11 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<WeatherForecastDto>>> Week([FromQuery]WeekQueryAndCity query)
     {
-        var validationResult = _weekQueryAndCityValidator.Validate(query);
+        var validationResult = _arguments.WeekQueryAndCityValidator.Validate(query);
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastByWeekNumberQuery(_config, _factory, _contract);
+        var command = new GetWeatherForecastByWeekNumberQuery(_arguments.Common);
 
         return await command.GetWeatherForecastByWeek(query);
     }

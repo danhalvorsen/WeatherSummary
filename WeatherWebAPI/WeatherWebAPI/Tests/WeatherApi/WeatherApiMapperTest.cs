@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
-using System.Net.Http;
 using System.Collections.Generic;
 using System.Linq;
-using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Automapper;
+using WeatherWebAPI.Contracts.BaseContract;
+using WeatherWebAPI.Factory.Strategy.WeatherApi;
 
 namespace Tests.WeatherApi
 {

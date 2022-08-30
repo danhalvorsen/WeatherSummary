@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
@@ -13,14 +16,24 @@ namespace Tests.OpenWeather
 {
     public class OpenWeatherGetCityDataStrategyTest
     {
-        private readonly IMapper? _mapper;
+        
         private IGetCityDataStrategy<CityDto>? _strategy;
+        private ServiceProvider? _serviceProvider;
+        private IMapper? _mapper;
         private readonly string _city = "Oslo";
 
         [SetUp]
         public void SetUp()
         {
-           _strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
+            IServiceCollection servicecollection = new ServiceCollection();
+            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
+            servicecollection.AddAutoMapper(assembly);
+            _serviceProvider = servicecollection.BuildServiceProvider();
+
+
+            _mapper = _serviceProvider.GetService<IMapper>();
+
+            _strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
         }
 
 
@@ -41,7 +54,7 @@ namespace Tests.OpenWeather
         [Test]
         public async Task ShouldGetCountry()
         {
-            var result = await _strategy.GetCityDataFor(_city);
+            var result = await _strategy!.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Country);
 
@@ -64,7 +77,7 @@ namespace Tests.OpenWeather
         [Test]
         public async Task ShouldGetLatitude()
         {
-            var result = await _strategy.GetCityDataFor(_city);
+            var result = await _strategy!.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Latitude);
 
@@ -80,7 +93,7 @@ namespace Tests.OpenWeather
         [Test]
         public async Task ShouldGetLongitude()
         {
-            var result = await _strategy.GetCityDataFor(_city);
+            var result = await _strategy!.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Longitude);
 
@@ -96,7 +109,7 @@ namespace Tests.OpenWeather
         [Test]
         public async Task ShouldGetAltitude()
         {
-            var result = await _strategy.GetCityDataFor(_city);
+            var result = await _strategy!.GetCityDataFor(_city);
 
             Console.WriteLine(result[0].Altitude);
 

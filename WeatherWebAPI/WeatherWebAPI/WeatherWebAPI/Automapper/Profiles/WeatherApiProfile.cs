@@ -10,9 +10,11 @@ namespace WeatherWebAPI.Automapper.Profiles
         private const int MAX_VALUE_VISIBILITY = 10;
         private const int PERCENTAGE_FACTOR = 10;
 
+        eDataSource eDataSource => eDataSource.WeatherApi;
+
         public WeatherApiProfile()
         {
-            CreateMap<Hour, WeatherForecast.Data>()
+            CreateMap<Hour, WeatherForecast.WeatherData>()
                 .ForMember(dest => dest.DateForecast, opt => opt.MapFrom(src => UnixTimeStampToDateTime(src.time_epoch)))
                 .ForMember(dest => dest.WeatherType, opt => opt.MapFrom(src => src.condition!.text))
                 .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.temp_c))
@@ -24,7 +26,9 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.ProbOfRain, opt => opt.MapFrom(src => src.chance_of_rain))
                 .ForMember(dest => dest.AmountRain, opt => opt.MapFrom(src => src.precip_mm))
                 .ForMember(dest => dest.CloudAreaFraction, opt => opt.MapFrom(src => src.cloud))
-                .ForMember(dest => dest.FogAreaFraction, opt => opt.MapFrom(src => VisibilityConvertedToFogAreaFraction(src.vis_km)));
+                .ForMember(dest => dest.FogAreaFraction, opt => opt.MapFrom(src => VisibilityConvertedToFogAreaFraction(src.vis_km)))
+                .AfterMap((src, dest) => dest.Date = DateTime.UtcNow.Date)
+                .AfterMap((src, dest) => dest.Source.DataProvider = eDataSource.ToString());
             // WeatherApi doesn't have prob of thunder
 
             CreateMap<ApplicationWeatherApi, WeatherForecast>()

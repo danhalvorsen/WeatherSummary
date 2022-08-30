@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Globalization;
+﻿using System.Globalization;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastByWeekNumberQuery : BaseFunctionsForQueriesAndCommands
     {
-        private readonly WeatherForecastMapping _weatherForecastMapping;
 
-        public GetWeatherForecastByWeekNumberQuery(IConfiguration config, IFactory factory, WeatherForecastMapping weatherForecastMapping) : base(config, factory)
+        public GetWeatherForecastByWeekNumberQuery(CommonArgs commonArgs) : base(commonArgs)
         {
-            _weatherForecastMapping = weatherForecastMapping;
+
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query)
@@ -24,7 +21,7 @@ namespace WeatherWebAPI.DAL.Query
             DateTime sunday = monday.AddDays(6);
 
             var dtoList = new List<WeatherForecastDto>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
             var datesInWeek = new List<DateTime>();
 
             try
@@ -61,7 +58,7 @@ namespace WeatherWebAPI.DAL.Query
                                                         $"WHERE CAST([DateForecast] as date) = CAST([Date] as date) AND DATEPART(week, [DateForecast]) = {query.Week} AND City.Name = '{cityName}' " +
                                                             $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(dtoList, _weatherForecastMapping, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
             }
             catch (Exception e)
             {

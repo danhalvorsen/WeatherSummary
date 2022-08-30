@@ -1,15 +1,12 @@
-﻿using System.Net;
-using System.Globalization;
-using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Controllers;
-using WeatherWebAPI.Factory;
+﻿using System.Globalization;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Commands
 {
     public class AddCityCommand : BaseFunctionsForQueriesAndCommands
     {
-        public AddCityCommand(IConfiguration config, IFactory factory) : base(config, factory)
+        public AddCityCommand(CommonArgs commonArgs) : base(commonArgs)
         {
 
         }
@@ -19,7 +16,7 @@ namespace WeatherWebAPI.DAL.Commands
             string? citySearchedFor = query.City;
             string? cityName;
 
-            var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
 
             try
             {

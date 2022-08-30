@@ -2,7 +2,7 @@
 {
     public class ScoresDto
     {
-        public float Score { get; set; }
-        public float ScoreWeighted { get; set; }
+        public float Value { get; set; }
+        public float ValueWeighted { get; set; }
     }
 }

@@ -1,17 +1,15 @@
 ﻿using System.Globalization;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastPredictionByDateQuery : BaseFunctionsForQueriesAndCommands
     {
-        private readonly WeatherForecastMapping _weatherForecastMapping;
-
-        public GetWeatherForecastPredictionByDateQuery(IConfiguration config, IFactory factory, WeatherForecastMapping weatherForecastMapping) : base(config, factory)
+        public GetWeatherForecastPredictionByDateQuery(CommonArgs commonArgs) : base(commonArgs)
         {
-            _weatherForecastMapping = weatherForecastMapping;
+
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastPredictionByDateForOneWeek(DateQueryAndCity query)
@@ -21,7 +19,7 @@ namespace WeatherWebAPI.DAL.Query
             DateTime date = query!.DateQuery!.Date.ToUniversalTime();
 
             var dtoList = new List<WeatherForecastDto>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
 
             try
             {
@@ -51,7 +49,7 @@ namespace WeatherWebAPI.DAL.Query
                                                             $"WHERE CAST([Date] as Date) = '{date}' AND City.Name = '{cityName}' " +
                                                                 $"ORDER BY DateForecast";
 
-                await MakeWeatherForecastDto(dtoList, _weatherForecastMapping, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
 
             }
             catch (Exception e)

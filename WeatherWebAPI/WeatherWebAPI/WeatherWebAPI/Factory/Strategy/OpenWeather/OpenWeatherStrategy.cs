@@ -1,31 +1,29 @@
 ﻿using AutoMapper;
 using Microsoft.Net.Http.Headers;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
     {
         private readonly IMapper _mapper;
-        private readonly OpenWeatherConfig _openWeatherConfig;
         private readonly HttpClient _httpClient;
+
+        eDataSource eDataSource => eDataSource.OpenWeather;
 
         public OpenWeatherStrategy(IMapper mapper, OpenWeatherConfig config, HttpClient httpClient)
         {
             _mapper = mapper;
-            _openWeatherConfig = config;
             _httpClient = httpClient;
-
-            _httpClient.BaseAddress = new Uri("https://api.openweathermap.org/");
+            _httpClient.BaseAddress = config.BaseUrl;
 
             _httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             _httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "Mozilla/5.0 (Windows 10, Win64; x64; rv: 100.0) Gecko/20100101 FireFox/100.0");
         }
 
-        public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public async Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
 
@@ -37,10 +35,11 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
                 var weatherData = JsonSerializer.Deserialize<ApplicationOpenWeather>(responseBody);
 
                 var resultWeatherData = _mapper.Map<WeatherForecast>(weatherData);
-                return resultWeatherData;
+
+                return resultWeatherData.GetByDate(queryDate.Date + new TimeSpan(11, 0, 0));
             }
 
-            return new WeatherForecast();
+            return new WeatherForecast.WeatherData();
         }
 
         public async Task<List<CityDto>> GetCityDataFor(string city) // Have to use list when using streamasync
@@ -64,7 +63,7 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 
         public string GetDataSource()
         {
-            return _openWeatherConfig.DataSource!;
+            return eDataSource.ToString();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Contracts;
+﻿using WeatherWebAPI.Arguments;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
@@ -7,7 +8,7 @@ namespace WeatherWebAPI.DAL.Query
 {
     public class GetAvgScoresWeatherProviderQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetAvgScoresWeatherProviderQuery(IConfiguration config, IFactory factory) : base(config, factory)
+        public GetAvgScoresWeatherProviderQuery(CommonArgs commonArgs) : base(commonArgs)
         {
 
         }
@@ -28,26 +29,27 @@ namespace WeatherWebAPI.DAL.Query
                                                             $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
                                                                 $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND Score.FK_WeatherDataId IS NOT null";
 
-                    IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+                    IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _commonArgs.Factory.Build<IGetWeatherDataFromDatabaseStrategy>();
 
-                    var scoreData = await getWeatherDataFromDatabaseStrategy.Get(queryString);
+                    var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);
+                    var weatherForecastsDto = _commonArgs.Mapper.Map<List<WeatherForecastDto>>(weatherForecasts);
 
                     float sumScore = 0;
                     float sumScoreWeighted = 0;
 
-                    foreach (var score in scoreData)
+                    foreach (var forecast in weatherForecastsDto)
                     {
-                        //sumScore += score.Score.Score;
-                        //sumScoreWeighted += score.Score.ScoreWeighted;
+                        sumScore += forecast.Score.Value;
+                        sumScoreWeighted += forecast.Score.ValueWeighted;
                     }
 
-                    float avgScore = (float)CalculateAverageScore(sumScore, scoreData);
-                    float avgScoreWeighted = (float)CalculateAverageScore(sumScoreWeighted, scoreData);
+                    float avgScore = (float)CalculateAverageScore(sumScore, weatherForecastsDto);
+                    float avgScoreWeighted = (float)CalculateAverageScore(sumScoreWeighted, weatherForecastsDto);
 
                     avgScoreList.Add(new ScoresAverageDto
                     {
-                        AverageScore = avgScore,
-                        AverageScoreWeighted = avgScoreWeighted,
+                        AverageValue = avgScore,
+                        AverageWeightedValue = avgScoreWeighted,
                         DataProvider = strategy.GetDataSource()
                     });
 

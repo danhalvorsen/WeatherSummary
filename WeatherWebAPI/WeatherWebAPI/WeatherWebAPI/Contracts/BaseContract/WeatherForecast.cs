@@ -1,18 +1,36 @@
-﻿using WeatherWebAPI.Contracts;
-
-namespace WeatherWebAPI.Contracts.BaseContract
+﻿namespace WeatherWebAPI.Contracts.BaseContract
 {
     public class WeatherForecast
     {
         public WeatherForecast()
         {
-            Forecast = new List<Data>();
+            Forecast = new List<WeatherData>();
         }
 
-        public List<Data> Forecast { get; set; }
 
-        public class Data
+        public List<WeatherData> Forecast { get; set; }
+
+        public WeatherData GetByDate(DateTime date)
         {
+            return Forecast.Where(f => f.DateForecast.Equals(date)).First();
+        }
+
+        public bool AnyForcast(DateTime date) // DateExist()
+        {
+            return Forecast.ToList().Any(y =>
+            {
+                bool SameDate = y.Date.Equals(date);
+                return SameDate;
+            });
+        }
+        public class WeatherData
+        {
+            public WeatherData()
+            {
+                Source = new WeatherSourceDto();
+                Score = new Scores();
+            }
+
             public int WeatherForecastId { get; set; }
             public string? City { get; set; }
             public DateTime Date { get; set; }
@@ -29,8 +47,8 @@ namespace WeatherWebAPI.Contracts.BaseContract
             public float CloudAreaFraction { get; set; }
             public float FogAreaFraction { get; set; }
             public float ProbOfThunder { get; set; }
-            public WeatherSourceDto? Source { get; set; }
-            public Scores? Score { get; set; }
+            public WeatherSourceDto Source { get; set; }
+            public Scores Score { get; set; }
         }
     }
 }

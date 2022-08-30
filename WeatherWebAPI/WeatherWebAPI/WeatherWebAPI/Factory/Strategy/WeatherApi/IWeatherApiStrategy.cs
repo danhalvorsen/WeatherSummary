@@ -5,6 +5,6 @@ namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 {
     public interface IWeatherApiStrategy
     {
-        Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate);
+        Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate);
     }
 }

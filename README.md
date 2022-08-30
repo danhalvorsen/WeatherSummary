@@ -64,12 +64,8 @@ For docker compose to work, we need to create a network that both the docker con
 docker network create YourNetworkName
 ```
 
-# Backend setup
-[Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/Documentation/README_VisualStudioSetup.md)
-
-[SQL Server Management Studio](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SQLServerManagementStudioSetup.md)
-
-[Make Self Signed HTTPS Certificate](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SelfSignedHttpsCertificate.md)
+# Backend
+[README](/WeatherWebAPI/WeatherWebAPI/Documentation/README.md)
 
 # Backlog
 ### Backend
@@ -90,6 +86,8 @@ docker network create YourNetworkName
 
 **Cities**
 ```
+POST api/Cities/addCity
+
 GET /api/Cities/getCitiesInDatabase
 ```
 **CompanyRating**

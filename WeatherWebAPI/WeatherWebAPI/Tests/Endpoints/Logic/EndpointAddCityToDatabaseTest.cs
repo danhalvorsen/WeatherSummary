@@ -17,7 +17,7 @@ namespace Tests.Endpoints.Logic
         private DateTime _date;
 
         private List<CityDto>? _cities;
-        private List<IGetWeatherDataStrategy<WeatherForecast>>? _weatherDataStrategies;
+        private List<IGetWeatherDataStrategy<WeatherForecast.WeatherData>>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()

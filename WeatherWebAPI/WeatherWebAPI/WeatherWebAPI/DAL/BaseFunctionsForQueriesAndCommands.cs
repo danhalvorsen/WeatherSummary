@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
 using System.Globalization;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL.Commands.BackgroundService;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.Database;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -12,20 +12,18 @@ namespace WeatherWebAPI.DAL
 {
     public abstract class BaseFunctionsForQueriesAndCommands
     {
-        protected readonly IConfiguration _config;
-        protected readonly IFactory _factory;
+        protected CommonArgs _commonArgs;
         protected List<CityDto>? _citiesDatabase;
-        protected List<WeatherForecast>? _datesDatabase;
+        protected List<WeatherForecast.WeatherData>? _forcasts;
 
-        public BaseFunctionsForQueriesAndCommands(IConfiguration config, IFactory factory)
+        public BaseFunctionsForQueriesAndCommands(CommonArgs commonArgs)
         {
-            _config = config;
-            _factory = factory;
+            _commonArgs = commonArgs;
         }
 
         protected async Task<List<CityDto>> GetCityData(string? citySearchedFor)
         {
-            IGetCityDataStrategy<CityDto> strategy = _factory.Build<IOpenWeatherStrategy>();
+            IGetCityDataStrategy<CityDto> strategy = _commonArgs.Factory.Build<IOpenWeatherStrategy>();
             var city = await strategy.GetCityDataFor(citySearchedFor!);
             GetCountryFromAbbreviation(city);
             
@@ -34,29 +32,21 @@ namespace WeatherWebAPI.DAL
 
         protected async Task AddCityToDatabase(List<CityDto> city)
         {
-            IAddCityToDatabaseStrategy addCityToDatabaseStrategy = _factory.Build<IAddCityToDatabaseStrategy>();
+            var addCityToDatabaseStrategy = _commonArgs.Factory.Build<IAddCityToDatabaseStrategy>();
             await addCityToDatabaseStrategy.Add(city);
-        }
-
-        protected async Task GetWeatherDataAndUpdateDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecast> weatherStrategy, CityDto city)
-        {
-            var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
-
-            IUpdateWeatherDataToDatabaseStrategy updateDatabaseStrategy = _factory.Build<IUpdateWeatherDataToDatabaseStrategy>();
-            await updateDatabaseStrategy.Update(weatherData, city, date);
         }
 
         protected async Task GetWeatherDataAndAddToDatabase(DateTime date, IGetWeatherDataStrategy<WeatherForecast> weatherStrategy, CityDto city)
         {
             var weatherData = await weatherStrategy.GetWeatherDataFrom(city, date);
 
-            IAddWeatherDataToDatabaseStrategy addToDatabaseStrategy = _factory.Build<IAddWeatherDataToDatabaseStrategy>();
+            var addToDatabaseStrategy = _commonArgs.Factory.Build<IAddWeatherDataToDatabaseStrategy>();
             await addToDatabaseStrategy.Add(weatherData, city);
         }
 
         protected async Task AddScoreToDatabase(double score, double  weightedScore, int weatherDataId)
         {
-            IAddScoreToDatabaseStrategy addScoreToDatabaseStrategy = _factory.Build<IAddScoreToDatabaseStrategy>();
+            var addScoreToDatabaseStrategy = _commonArgs.Factory.Build<IAddScoreToDatabaseStrategy>();
             await addScoreToDatabaseStrategy.Add(score, weightedScore, weatherDataId);
         }
 
@@ -70,14 +60,14 @@ namespace WeatherWebAPI.DAL
             return _citiesDatabase!.Where(c => c.Name!.Equals(cityName)).First();
         }
 
-        //protected bool DateExistsInDatabase(DateTime date) // DateExist()
-        //{
-        //    return _datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
-        //}
+        protected bool AnyForcast(DateTime date) // DateExist()
+        {
+            return _forcasts!.Any(i => i.Date.Date.Equals(date));
+        }
 
-        //protected bool DateDoesNotExistInDatabase(DateTime date) // !DateExists()
+        //protected bool NotAnyForcast(DateTime date) // !DateExists()
         //{
-        //    return !_datesDatabase!.ToList().Any(d => d.Date.Date.Equals(date.Date));
+        //    return !_forcasts!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         //}
 
         protected IEnumerable<DateTime> EachDay(DateTime from, DateTime thru) // Between dates
@@ -120,21 +110,20 @@ namespace WeatherWebAPI.DAL
             city[0].Country = countryName.EnglishName;
         }
 
-        protected static double CalculateAverageScore(double sum, List<WeatherForecast> data)
+        protected static double CalculateAverageScore(double sum, List<WeatherForecastDto> data)
         {
             var average = !double.IsNaN(sum / data.Count) ? Math.Round((sum / data.Count), 2) : 0;
             return average;
         }
 
-        protected async Task MakeWeatherForecastDto(List<WeatherForecastDto> dtoList, WeatherForecastMapping contract, string queryString)
+        protected async Task MakeWeatherForecastDto(IMapper mapper, List<WeatherForecastDto> dtoList, string queryString)
         {
-            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+            var getWeatherDataFromDatabaseStrategy = _commonArgs.Factory.Build<IGetWeatherDataFromDatabaseStrategy>();
             var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);
 
             foreach (var weather in weatherForecasts)
             {
-                contract.Get();
-                var forecastDto = contract.MapperConfig.CreateMapper().Map<WeatherForecastDto>(weather);
+                var forecastDto = mapper.Map<WeatherForecastDto>(weather);
                 dtoList.Add(forecastDto);
             }
         }

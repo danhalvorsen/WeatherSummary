@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL.Query;
@@ -15,29 +16,17 @@ namespace WeatherWebAPI.Controllers
     public class CompanyRatingController : ControllerBase
     {
         private readonly ILogger<CompanyRatingController> _logger;
-        
-        private readonly IConfiguration _config;
-        private readonly IFactory _factory;
-
-        private readonly CityQueryValidator _cityQueryValidator;
-        private readonly DaysQueryValidator _daysQueryValidator;
-        private readonly DaysQueryAndCityValidator _daysQueryAndCityValidator;
-
+   
+        private readonly Args _arguments;
         private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _strategies = new();
 
-        public CompanyRatingController(IConfiguration config, IFactory factory, ILogger<CompanyRatingController> logger, 
-            CityQueryValidator cityQueryValidator, DaysQueryValidator daysQueryValidator, DaysQueryAndCityValidator daysQueryAndCityValidator)
+        public CompanyRatingController(Args args, ILogger<CompanyRatingController> logger)
         {
-            _config = config;
-            _factory = factory;
+            _arguments = args;
             _logger = logger;
-            _cityQueryValidator = cityQueryValidator;
-            _daysQueryValidator = daysQueryValidator;
-            _daysQueryAndCityValidator = daysQueryAndCityValidator;
-
-            _strategies.Add(this._factory.Build<IYrStrategy>());
-            _strategies.Add(this._factory.Build<IOpenWeatherStrategy>());
-            _strategies.Add(_factory.Build<IWeatherApiStrategy>());
+            _strategies.Add(args.Common.Factory.Build<IYrStrategy>());
+            _strategies.Add(args.Common.Factory.Build<IOpenWeatherStrategy>());
+            _strategies.Add(args.Common.Factory.Build<IWeatherApiStrategy>());
         }
 
 
@@ -48,7 +37,7 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ScoresAverageDto>>> GetAverageScoreForWeatherProvider()
         {
-            var command = new GetAvgScoresWeatherProviderQuery(_config, _factory);
+            var command = new GetAvgScoresWeatherProviderQuery(_arguments.Common);
 
             return await command.CalculateAverageScores(_strategies);
         }
@@ -60,11 +49,11 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ScoresAverageDto>>> GetAverageScoreSelectedPredictionLength([FromQuery]DaysQuery query)
         {
-            var validationResult = _daysQueryValidator.Validate(query);
+            var validationResult = _arguments.DaysQueryValidator.Validate(query);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresForSelectedPredictionLengthQuery(_config, _factory);
+            var command = new GetAvgScoresForSelectedPredictionLengthQuery(_arguments.Common);
 
             return await command.CalculateAverageScoresForSelectedPredictionLength(query, _strategies);
         }
@@ -76,11 +65,11 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ScoresAverageForCityDto>>> GetAverageScoreCity([FromQuery]CityQuery query)
         {
-            var validationResult = _cityQueryValidator.Validate(query);
+            var validationResult = _arguments.CityQueryValidator.Validate(query);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresWeatherProviderForCityQuery(_config, _factory);
+            var command = new GetAvgScoresWeatherProviderForCityQuery(_arguments.Common);
 
             return await command.CalculateAverageScoresFor(query, _strategies);
         }
@@ -92,11 +81,11 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ScoresAverageForCityDto>>> GetAverageScoreSelectedPredictionLengthForCity([FromQuery]DaysQueryAndCity query)
         {
-            var validationResult = _daysQueryAndCityValidator.Validate(query);
+            var validationResult = _arguments.DaysQueryAndCityValidator.Validate(query);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new GetAvgScoresForSelectedPredictionLengthForCityQuery(_config, _factory);
+            var command = new GetAvgScoresForSelectedPredictionLengthForCityQuery(_arguments.Common);
 
             return await command.CalculateAverageScoresForSelectedPredictionLengthAndCity(query, _strategies);
         }

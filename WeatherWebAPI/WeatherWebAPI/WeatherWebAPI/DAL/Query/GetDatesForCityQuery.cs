@@ -13,7 +13,7 @@ namespace WeatherWebAPI.Query
             this.config = config;
         }
 
-        public async Task<List<WeatherForecast>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
+        public async Task<List<WeatherForecast.WeatherData>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
         {
             string queryString = $"SELECT [Date] FROM WeatherData " +
                                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
@@ -27,15 +27,15 @@ namespace WeatherWebAPI.Query
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
 
-                var list = new List<WeatherForecast>();
+                var list = new List<WeatherForecast.WeatherData>();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)
                     {
-                        //list.Add(new WeatherForecast
-                        //{
-                        //    Date = Convert.ToDateTime(reader["Date"])
-                        //});
+                        list.Add(new WeatherForecast.WeatherData
+                        {
+                            Date = Convert.ToDateTime(reader["Date"])
+                        });
                     }
                 }
 

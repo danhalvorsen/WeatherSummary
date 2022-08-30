@@ -7,12 +7,13 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Automapper
 {
+    public enum eDataSource { Yr, OpenWeather, WeatherApi }
+
     public class AutomapperProfile : Profile
     {
-        public string? DataSource { get; }
-
         public AutomapperProfile()
         {
+            CreateMap<WeatherForecast.WeatherData, WeatherForecast>();
             CreateMap<ApplicationYr, WeatherForecast>();
             CreateMap<ApplicationOpenWeather, WeatherForecast>();
             CreateMap<ApplicationOpenWeather, CityDto>();
