@@ -1,6 +1,6 @@
 # Summary
 
-- We need to system where customers can by products from us
+- We need to system where customers can buy products from us
 - We need a system where we can have control over what we have in store and what we need to order from suppliers
 - We need a bonus program for our "best" customers
 - We need control over 3rd parties suppliers prices (We have to avoid paying more than we need.)
@@ -50,32 +50,13 @@ Create a React or more to completed US2
 
 # Backlog Technical
 
-React
-Json file (temporary database in this phase
-)
-functionality should be done in this phase (without styling)
+### Task
 
-## <!-- IndexedDB (Browser) -->
-
-<!-- MongoDb (Backend) -->
-
-### Create Mocks for routes by using Json-server mock
-
-- As a frontend developer I need “Fack data for products”
-- Create mock route for GET /api/products/data - Make some fake data
-- Create mock route for POST / api/products/data - Get data from user in website
-
-### Create Tests for necessary functions
-
-- As a frontend developer I need to make tests for necessary functions
-
-### Search box component feature
-
-- As a user, I want to be able to search for products so that I can reach the specific product.
-  - Search component
-  - Create a result page to show result of searched text
-  - Create two kinds of result based on success search or failed search
-  - Show result of data like items in the product list page
+- Create structure of date that we need to keep products
+- Create structure of date that we need to store each order
+- Create Json files regarding our data structures
+- Design blue print of each page and component
+-
 
 ## EPICS
 
@@ -84,3 +65,60 @@ functionality should be done in this phase (without styling)
 ## User Stories
 
 ## Task
+
+<!-- -------------------------------------------------- -->
+
+# Order Products
+
+# Backlog Technical
+
+### Setup DB
+
+- As a frontend developer I need “ Fake data for products”
+  - Create mock route for GET /api/products/data - Make some fake data
+  - Create mock route for POST / api/products/data - post data to update products
+  - Create mock route for POST / api/order/data - post data to store an order
+
+### Search box component feature
+
+- As a user, I want to be able to search for products name so that I can reach the specific product.
+  - Search component
+  - Load the search component in product list page to be able to search items.
+  - Display two kinds of result to show, based on find item(partial list) or not find any item (empty view)
+
+### Navigation feature
+
+- As a user I want to be able to go back to the Home screen (List items) so that I can see all the products
+
+### Products feature
+
+- As a User I want to see all product in the first page.
+  - Create a component to show a box to show product.
+  - Create all products in a one page named Product List.
+- As a User I want see the name, image of product and price for each product so I can click on it.
+  - make an appropriate size for preview image.
+- As a User I want click on 'Show More' button on each product so that the next page will show detail of product
+
+### Detail feature
+
+- As a User I want to see the product details like bigger image, title, description, price , availability and brand.
+- As a User I need to add a product to my shopping list.
+- As a User I want to increase or decrease number of products.
+
+### Shopping list feature
+
+- As a User I want to navigate to my shopping list
+  - create an icon in the toolbar
+- As a User I want to see my shopping list.
+- As a User I want to be able to increase or decrease number of each item.
+- As a User I want to be able to remove some of items from the shopping list.
+- As a User I want to see the total price.
+
+### Checkout feature
+
+- As a User I want to submit my order.
+
+
+### Comment feature (Phase 2)
+
+- As a User I want comment for a product so that I can give my comment and read other comments for each product - Should validate for appropriate input text
