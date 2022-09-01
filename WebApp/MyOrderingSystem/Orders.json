@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "date": "2022-07-02T00:00:00.000Z",
+    "ordererName": [
+      {
+        "firstname": "Dan",
+        "lastname": "Edvard Halvorsen"
+      }
+    ],
+    "ordererNationalId": 12017212345,
+    "ordererPhoneNumber": 93862541,
+    "ordererAddress": "Stavanger - Laberget",
+    "items": [
+      {
+        "productId": 2,
+        "productTitle": "iPhone 13 Pro",
+        "amount": 2,
+        "price": 13450
+      },
+      {
+        "productId": 3,
+        "productTitle": "JBL Tune 510BT Headphone",
+        "amount": 1,
+        "price": 3500
+      }
+    ],
+    "couponSum": 200
+  },
+  {
+    "id": 1,
+    "date": "2022-08-02T00:00:00.000Z",
+    "ordererName": [
+      {
+        "name": "Mohammad",
+        "family": "Ghasempour"
+      }
+    ],
+    "ordererNationalId": 21098412317,
+    "ordererPhoneNumber": 93828281,
+    "ordererAddress": "Stavanger - Eiganes 41",
+    "items": [
+      {
+        "productId": 1,
+        "productTitle": "Microsoft Surface Laptop 4",
+        "amount": 2,
+        "price": 1499
+      },
+      {
+        "productId": 2,
+        "productTitle": "Apple Laptop",
+        "amount": 1,
+        "price": 2500
+      }
+    ],
+    "couponSum": 100
+  }
+]
