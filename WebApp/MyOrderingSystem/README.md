@@ -14,15 +14,55 @@ We want well designed web pages (In React)
 
 ## EPICS
 
-Ordering system
+Order
+
+- predict products for a given customer
+- Basket
+- Buy it
+- Order history
+- track order
+
+Product
+
+- See product details
+- Customer wants to search for products
+- administrator wants to see details
+- administrator wants to search for products
+- Administrator wants to change product details (price, title, description)
+
+Inventory
+
+- Register product
+- Search products
+- Inventory notification
+
+Customer profile
+
+- my page
+- see order history
+- Edit information
+
+Reports
+
+- see sales by date
+- see orders completion
+- see orders status
+- see orderer information
+- search for orders (date / orderer)
+-
+-
+
+Campaigns
+
+- see customers that given more 100 points
+- bones
+
+---
+
+administrator should change the status of order (prepare / sent / delivered )
+show the newts added products on the first page (separate part of page)
 
 ### Features
-
-- Products page
-- Products detail
-- Shopping list
-- Search functionality for products
-- Orders
 
 ## User Stories
 
@@ -87,8 +127,6 @@ As a frontend developer I need “ Fake data for products”
 
 ## EPICS (Phase2)
 
-Inventory system
-
 ### Features
 
 - Inventory
@@ -106,7 +144,7 @@ Inventory system
 
 - As an admin I want to see the report of orders so that I can see all the orders.
 - As an admin I want to see the remaining Products.
-- As an admin I want to see stock of products so that I can get a list to order to supplier.
+- As an admin I want to see stock of products so that I can get a list to order to suppliers.
 
 # Backlog Functional
 
