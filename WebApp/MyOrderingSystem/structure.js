@@ -1,1 +1,10 @@
-Start to write test code for ordering system
+<Form>
+  <NavigationBar />
+  <ProductsState>
+    <Products>
+      <Product>
+        <ProductInfo></ProductInfo>
+      </Product>
+    </Products>
+  </ProductsState>
+</Form>;
