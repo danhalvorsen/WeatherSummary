@@ -1,10 +1,11 @@
 ﻿using System.Data.SqlClient;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetDatesForCityQuery : IGetDatesQuery
+    public class GetDatesForCityQuery : IGetDatesForCityQuery
     {
         private readonly IConfiguration config;
 
@@ -13,7 +14,7 @@ namespace WeatherWebAPI.Query
             this.config = config;
         }
 
-        public async Task<List<WeatherForecast.WeatherData>> GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
+        public async Task<List<WeatherForecast.WeatherData>> GetDatesForCity(string cityName, IGetWeatherDataStrategy strategy)
         {
             string queryString = $"SELECT [Date] FROM WeatherData " +
                                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +

@@ -14,6 +14,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
+        public StrategyType StrategyType => StrategyType.GetWeatherDataFromDatabase;
+
         public async Task<List<WeatherForecast.WeatherData>> Get(string queryString)
         {
             using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
@@ -38,8 +40,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         var score = new Scores
                         {
                             WeatherDataId = reader["FK_WeatherDataId"] != System.DBNull.Value ? Convert.ToInt32(reader["FK_WeatherDataId"]) : 0,
-                            Value = reader["Score"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Score"]), 2) : 0,
-                            ValueWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
+                            Value = reader["Value"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Value"]), 2) : 0,
+                            ValueWeighted = reader["ValueWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ValueWeighted"]), 2) : 0
                         };
 
                         WeatherForecasts.Add(new WeatherForecast.WeatherData

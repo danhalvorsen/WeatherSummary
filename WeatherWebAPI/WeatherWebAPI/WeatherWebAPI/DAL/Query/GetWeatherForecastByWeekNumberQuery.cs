@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Query;
 
@@ -8,7 +7,7 @@ namespace WeatherWebAPI.DAL.Query
     public class GetWeatherForecastByWeekNumberQuery : BaseFunctionsForQueriesAndCommands
     {
 
-        public GetWeatherForecastByWeekNumberQuery(CommonArgs commonArgs) : base(commonArgs)
+        public GetWeatherForecastByWeekNumberQuery() : base()
         {
 
         }
@@ -21,7 +20,7 @@ namespace WeatherWebAPI.DAL.Query
             DateTime sunday = monday.AddDays(6);
 
             var dtoList = new List<WeatherForecastDto>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
             var datesInWeek = new List<DateTime>();
 
             try
@@ -50,7 +49,7 @@ namespace WeatherWebAPI.DAL.Query
 
                 string queryString = $"SET DATEFIRST 1 " +
                               $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                    $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                                    $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Value, Score.ValueWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                                         $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                             $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                 $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
@@ -58,7 +57,7 @@ namespace WeatherWebAPI.DAL.Query
                                                         $"WHERE CAST([DateForecast] as date) = CAST([Date] as date) AND DATEPART(week, [DateForecast]) = {query.Week} AND City.Name = '{cityName}' " +
                                                             $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper!, dtoList, queryString);
             }
             catch (Exception e)
             {

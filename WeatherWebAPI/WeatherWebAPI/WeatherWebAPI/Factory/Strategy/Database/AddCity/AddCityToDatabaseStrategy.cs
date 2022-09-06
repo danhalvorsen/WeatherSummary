@@ -12,6 +12,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
+        public WeatherWebAPI.StrategyType StrategyType => WeatherWebAPI.StrategyType.AddCityToDatabase;
+
         public async Task Add(List<CityDto> city)
         {
             string queryString = $"INSERT INTO City ([Name], Country, Altitude, Longitude, Latitude) " +

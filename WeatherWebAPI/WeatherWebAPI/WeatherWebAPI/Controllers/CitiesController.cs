@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.DAL.Commands;
 using WeatherWebAPI.Query;
 
@@ -9,12 +8,12 @@ namespace WeatherWebAPI.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
-        private readonly CommonArgs _commonArgs;
+        private readonly IGetCitiesQuery _query;
         private readonly CityQueryValidator _cityQueryValidator;
 
-        public CitiesController(CommonArgs commonArgs, CityQueryValidator cityQueryValidator)
+        public CitiesController(IGetCitiesQuery query, CityQueryValidator cityQueryValidator)
         {
-            _commonArgs = commonArgs;
+            _query = query;
             _cityQueryValidator = cityQueryValidator;
         }
 
@@ -29,7 +28,7 @@ namespace WeatherWebAPI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new AddCityCommand(_commonArgs);
+            var command = new AddCityCommand(IGetCitiesQuery);
 
             await command.AddCity(query);
 
@@ -43,7 +42,7 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CityDto>>> GetCitiesFromDatabase()
         {
-            var command = new GetCitiesQuery(_commonArgs.Config);
+            var command = new GetCitiesQuery(_config);
 
             return await command.GetAllCities();
         }

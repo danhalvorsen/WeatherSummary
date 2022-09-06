@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.Database;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
@@ -11,16 +9,16 @@ namespace WeatherWebAPI.DAL.Query
     public class GetAvgScoresWeatherProviderForCityQuery : BaseFunctionsForQueriesAndCommands
     {
 
-        public GetAvgScoresWeatherProviderForCityQuery(CommonArgs commonArgs) : base(commonArgs)
+        public GetAvgScoresWeatherProviderForCityQuery() : base()
         {
 
         }
 
-        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresFor(CityQuery query, List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
+        public async Task<List<ScoresAverageForCityDto>> CalculateAverageScoresFor(CityQuery query, IEnumerable<IStrategy> weatherDataStrategies)
         {
             var avgScoreForCityList = new List<ScoresAverageForCityDto>();
             string? citySearchedFor = query?.City;
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
 
             try
             {
@@ -42,19 +40,19 @@ namespace WeatherWebAPI.DAL.Query
                     cityName = citySearchedFor;
                 }
 
-                foreach (var strategy in weatherDataStrategies)
+                foreach (IGetWeatherDataStrategy strategy in weatherDataStrategies)
                 {
                     string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                                            $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                                            $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Value, Score.ValueWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                                                 $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                                                     $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                                                         $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
                                                             $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
                                                                 $"WHERE[Source].Name = '{strategy.GetDataSource}' AND City.[Name] = '{cityName}' AND Score.FK_WeatherDataId IS NOT null";
 
-                    IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy = _commonArgs.Factory.Build<IGetWeatherDataFromDatabaseStrategy>();
+                    var getWeatherDataFromDatabaseStrategy = (IGetWeatherDataFromDatabaseStrategy)_commonArgs!.Factory!.Build(StrategyType.GetWeatherDataFromDatabase);
                     var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);
-                    var weatherForecastsDto = _commonArgs.Mapper.Map<List<WeatherForecastDto>>(weatherForecasts);
+                    var weatherForecastsDto = _commonArgs.Mapper!.Map<List<WeatherForecastDto>>(weatherForecasts);
 
                     float sumScore = 0;
                     float sumScoreWeighted = 0;
@@ -79,7 +77,6 @@ namespace WeatherWebAPI.DAL.Query
             }
             catch (Exception e)
             {
-
                 Console.WriteLine(e.Message);
             }
             return avgScoreForCityList;

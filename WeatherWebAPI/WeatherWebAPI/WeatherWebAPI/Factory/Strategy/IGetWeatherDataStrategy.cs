@@ -3,11 +3,16 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory
 {
-    public enum eDataSource { Yr, OpenWeather, WeatherApi }
+    public interface IStrategy
+    {
+        public StrategyType StrategyType { get; }
+    }
 
-    public interface IGetWeatherDataStrategy<T>
+    public interface IGetWeatherDataStrategy : IStrategy
     {
         public Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate);
+
+        public WeatherProvider WeatherProvider { get; }
 
         public string GetDataSource();
     }

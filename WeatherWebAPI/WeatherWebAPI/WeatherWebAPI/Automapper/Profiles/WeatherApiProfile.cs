@@ -10,7 +10,7 @@ namespace WeatherWebAPI.Automapper.Profiles
         private const int MAX_VALUE_VISIBILITY = 10;
         private const int PERCENTAGE_FACTOR = 10;
 
-        eDataSource eDataSource => eDataSource.WeatherApi;
+        static WeatherProvider WeatherProvider => WeatherProvider.WeatherApi;
 
         public WeatherApiProfile()
         {
@@ -28,7 +28,7 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.CloudAreaFraction, opt => opt.MapFrom(src => src.cloud))
                 .ForMember(dest => dest.FogAreaFraction, opt => opt.MapFrom(src => VisibilityConvertedToFogAreaFraction(src.vis_km)))
                 .AfterMap((src, dest) => dest.Date = DateTime.UtcNow.Date)
-                .AfterMap((src, dest) => dest.Source.DataProvider = eDataSource.ToString());
+                .AfterMap((src, dest) => dest.Source.DataProvider = WeatherProvider.ToString());
             // WeatherApi doesn't have prob of thunder
 
             CreateMap<ApplicationWeatherApi, WeatherForecast>()

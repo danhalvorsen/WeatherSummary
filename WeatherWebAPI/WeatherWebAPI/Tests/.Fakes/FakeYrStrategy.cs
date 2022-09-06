@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherWebAPI;
 using WeatherWebAPI.Automapper;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
@@ -10,7 +11,7 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests.Fakes
 {
-    public class FakeYrStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IYrStrategy
+    public class FakeYrStrategy : IGetWeatherDataStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -29,6 +30,10 @@ namespace Tests.Fakes
         private const string STAVANGER = "Stavanger";
         private const string OSLO = "Oslo";
         private const string WEATHERTYPE = "sunny";
+
+        public WeatherProvider WeatherProvider => WeatherProvider.Yr;
+
+        public StrategyType StrategyType => StrategyType.Yr;
 
         public Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
@@ -63,7 +68,7 @@ namespace Tests.Fakes
 
         public string GetDataSource()
         {
-            return "Yr";
+            return WeatherProvider.Yr.ToString();
         }
     }
 }

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherWebAPI;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.Fakes
 {
-    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy, IGetCityDataStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -29,9 +31,8 @@ namespace Tests.Fakes
         private const string OSLO = "Oslo";
         private const string WEATHERTYPE = "sunny";
 
-
-        public enum eDataSource { Yr, OpenWeather, WeatherApi }
-        public eDataSource DataSource => eDataSource.OpenWeather;
+        public StrategyType StrategyType => StrategyType.OpenWeather;
+        public WeatherProvider WeatherProvider => WeatherProvider.OpenWeather;
 
         public Task<List<CityDto>> GetCityDataFor(string city)
         {
@@ -91,7 +92,7 @@ namespace Tests.Fakes
 
         public string GetDataSource()
         {
-            return eDataSource.OpenWeather.ToString();
+            return WeatherProvider.OpenWeather.ToString();
         }
     }
 }

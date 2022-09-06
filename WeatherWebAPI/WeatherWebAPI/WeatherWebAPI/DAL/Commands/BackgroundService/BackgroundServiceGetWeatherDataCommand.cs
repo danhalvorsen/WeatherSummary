@@ -1,32 +1,30 @@
-﻿using WeatherWebAPI.Arguments;
-using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.DAL.Commands.BackgroundService;
-using WeatherWebAPI.Factory;
+﻿using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
 {
-
-    public class BackgroundServiceGetWeatherDataCommandConfiguration : IMyConfiguration 
+    public class BackgroundServiceGetWeatherDataCommand : BaseFunctionsForQueriesAndCommands, IBackgroundServiceGetWeatherDataCommand
     {
+        private readonly List<IStrategy> _strategies = new();
+        private readonly ILogger<BackgroundServiceGetWeatherDataCommand> _logger;
+        private readonly IYrStrategy _yrStrategy;
+        private readonly IOpenWeatherStrategy _openWeatherStrategy;
 
-    }
-
-    public class BackgroundServiceGetWeatherDataCommand : BaseFunctionsForQueriesAndCommands
-    {
-        public BackgroundServiceGetWeatherDataCommand(CommonArgs commonArgs) : base(commonArgs) 
+        public BackgroundServiceGetWeatherDataCommand(ILogger<BackgroundServiceGetWeatherDataCommand> logger, IYrStrategy yrStrategy, IOpenWeatherStrategy openWeatherStrategy) : base()
         {
-
+            _logger = logger;
+            _yrStrategy = yrStrategy;
+            _openWeatherStrategy = openWeatherStrategy;
         }
 
-        public async Task GetOneWeekWeatherForecastForAllCities(List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
+        public async Task GetOneWeekWeatherForecastForAllCities()
         {
             DateTime fromDate = DateTime.UtcNow;
             DateTime toDate = fromDate.AddDays(7);
             var datesQuery = new List<DateTime>();
 
-            var getCitiesQuery = new GetCitiesQuery(_commonArgs.Config);
-            var getDatesQueryDatabase = new GetDatesForCityQuery(_commonArgs.Config);
+            var getCitiesQuery = new GetCitiesQuery(Config!);
+            var getDatesQueryDatabase = new GetDatesForCityQuery(Config!);
 
             foreach (DateTime day in EachDay(fromDate, toDate))
             {
@@ -37,24 +35,28 @@ namespace WeatherWebAPI.DAL
             {
                 _citiesDatabase = await getCitiesQuery.GetAllCities();
 
-                foreach (var weatherStrategy in weatherDataStrategies)
+                foreach (IGetWeatherDataStrategy strategy in _strategies)
                 {
-                    foreach (var city in _citiesDatabase)
-                    {
-                        _forcasts = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, weatherStrategy);
+                    //foreach (var city in _citiesDatabase)
+                    //{
+                    _forecasts = await getDatesQueryDatabase.GetDatesForCity(/*city.*/_citiesDatabase[0].Name!, strategy);
 
-                        if (!AnyForcast(fromDate))
+                    if (!ForecastExist(fromDate))
+                    {
+                        foreach (DateTime date in datesQuery)
                         {
-                            foreach (DateTime date in datesQuery)
-                            {
-                                await GetWeatherDataAndAddToDatabase(date, weatherStrategy, /*city*/_citiesDatabase[0]);
-                            }
-                        }
-                        if (AnyForcast(fromDate))
-                        {
-                            Console.WriteLine($"Weather forecast already fetched from {weatherStrategy.GetDataSource()} for {_citiesDatabase[0].Name}\t\tDate: {fromDate.Date}");
+                            var weatherData = await strategy.GetWeatherDataFrom(_citiesDatabase[0] /*city*/, date);
+                            await AddWeatherToDatabaseFor(/*city*/_citiesDatabase[0], weatherData);
                         }
                     }
+                    if (ForecastExist(fromDate))
+                    {
+                        _logger.LogInformation("Weather forecast already fetched from {dataprovider} for {city}\t\tDate: {date}",
+                            strategy.GetDataSource(),
+                            _citiesDatabase[0].Name,
+                            fromDate.Date);
+                    }
+                    //}
                 }
             }
             catch (Exception e)

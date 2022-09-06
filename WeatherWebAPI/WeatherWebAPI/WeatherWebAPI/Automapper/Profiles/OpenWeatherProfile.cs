@@ -9,7 +9,7 @@ namespace WeatherWebAPI.Automapper.Profiles
     {
         private const int PERCENTAGE_FACTOR = 100;
 
-        eDataSource eDataSource => eDataSource.OpenWeather;
+        static WeatherProvider WeatherProvider => WeatherProvider.OpenWeather;
 
         public OpenWeatherProfile()
         {
@@ -33,7 +33,7 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.AmountRain, opt => opt.MapFrom(src => src.rain))
                 .ForMember(dest => dest.CloudAreaFraction, opt => opt.MapFrom(src => src.clouds))
                 .AfterMap((src, dest) => dest.Date = DateTime.UtcNow.Date)
-                .AfterMap((src, dest) => dest.Source.DataProvider = eDataSource.ToString());
+                .AfterMap((src, dest) => dest.Source.DataProvider = WeatherProvider.ToString());
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
             // OpenWeather doesn't show fog area fraction or thunder for dailiy forecasts.
 

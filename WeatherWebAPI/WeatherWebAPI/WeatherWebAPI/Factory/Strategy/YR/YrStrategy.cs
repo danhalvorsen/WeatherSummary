@@ -6,12 +6,13 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.YR
 {
-    public class YrStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IYrStrategy
+    public class YrStrategy : IGetWeatherDataStrategy
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
-
-        eDataSource eDataSource => eDataSource.Yr;
+        
+        public WeatherProvider WeatherProvider => WeatherProvider.Yr;
+        public WeatherWebAPI.StrategyType StrategyType => WeatherWebAPI.StrategyType.Yr;
 
         public YrStrategy(IMapper mapper, YrConfig config, HttpClient httpClient)
         {
@@ -56,7 +57,7 @@ namespace WeatherWebAPI.Factory.Strategy.YR
 
         public string GetDataSource()
         {
-            return eDataSource.ToString();
+            return WeatherProvider.ToString();
         }
     }
 }

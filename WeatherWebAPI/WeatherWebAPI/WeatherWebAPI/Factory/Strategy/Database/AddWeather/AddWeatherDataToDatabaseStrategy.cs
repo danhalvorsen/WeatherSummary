@@ -13,6 +13,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             this._config = config;
         }
 
+        public WeatherWebAPI.StrategyType StrategyType => WeatherWebAPI.StrategyType.AddWeatherToDatabase;
+
         public async Task Add(WeatherForecast.WeatherData weatherData, CityDto city)
         {
             string queryString = $"DECLARE @city_id INT " +

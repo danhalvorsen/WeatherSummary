@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
@@ -17,23 +18,19 @@ namespace Tests.OpenWeather
     public class OpenWeatherGetCityDataStrategyTest
     {
         
-        private IGetCityDataStrategy<CityDto>? _strategy;
-        private ServiceProvider? _serviceProvider;
-        private IMapper? _mapper;
+        private IGetCityDataStrategy? _strategy;
+        //private ServiceProvider? _serviceProvider;
         private readonly string _city = "Oslo";
 
         [SetUp]
         public void SetUp()
         {
-            IServiceCollection servicecollection = new ServiceCollection();
-            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
-            servicecollection.AddAutoMapper(assembly);
-            _serviceProvider = servicecollection.BuildServiceProvider();
+            //IServiceCollection servicecollection = new ServiceCollection();
+            //var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
+            //servicecollection.AddAutoMapper(assembly);
+            //_serviceProvider = servicecollection.BuildServiceProvider();
 
-
-            _mapper = _serviceProvider.GetService<IMapper>();
-
-            _strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
+            _strategy = new OpenWeatherFetchCityStrategy(new OpenWeatherConfig(), new HttpClient());
         }
 
 

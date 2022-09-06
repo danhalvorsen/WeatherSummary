@@ -1,10 +1,12 @@
 ﻿using System.Data.SqlClient;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.DAL.Commands.BackgroundService;
+using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetCitiesQuery : IGetCityQuery
+    public class GetCitiesQuery : IGetCitiesQuery
+
     {
         private readonly IConfiguration _config;
         private const string _queryString = $"SELECT * FROM City";

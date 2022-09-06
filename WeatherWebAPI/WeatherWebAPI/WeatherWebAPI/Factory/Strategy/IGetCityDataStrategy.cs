@@ -1,8 +1,8 @@
 ﻿using WeatherWebAPI.Controllers;
 
-namespace WeatherWebAPI.Factory
+namespace WeatherWebAPI.Factory.Strategy
 {
-    public interface IGetCityDataStrategy<T>
+    public interface IGetCityDataStrategy : IStrategy
     {
         public Task<List<CityDto>> GetCityDataFor(string city);
     }

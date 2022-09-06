@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.DAL.Query;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
-using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.Controllers
@@ -16,17 +11,15 @@ namespace WeatherWebAPI.Controllers
     public class CompanyRatingController : ControllerBase
     {
         private readonly ILogger<CompanyRatingController> _logger;
-   
-        private readonly Args _arguments;
-        private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _strategies = new();
+        private readonly List<IStrategy> _strategies = new();
 
-        public CompanyRatingController(Args args, ILogger<CompanyRatingController> logger)
+        public CompanyRatingController(ILogger<CompanyRatingController> logger)
         {
-            _arguments = args;
+            
             _logger = logger;
-            _strategies.Add(args.Common.Factory.Build<IYrStrategy>());
-            _strategies.Add(args.Common.Factory.Build<IOpenWeatherStrategy>());
-            _strategies.Add(args.Common.Factory.Build<IWeatherApiStrategy>());
+            _strategies.Add(args.Common.Factory!.Build(StrategyType.Yr));
+            _strategies.Add(args.Common.Factory!.Build(StrategyType.OpenWeather));
+            //_strategies.Add(args.Common.Factory.Build(StrategyType.WeatherApi));
         }
 
 
@@ -38,9 +31,9 @@ namespace WeatherWebAPI.Controllers
         public async Task<ActionResult<List<ScoresAverageDto>>> GetAverageScoreForWeatherProvider()
         {
             var command = new GetAvgScoresWeatherProviderQuery(_arguments.Common);
-
-            return await command.CalculateAverageScores(_strategies);
+            return await command.CalculateAverageScores(GetWeatherDataStrategies());
         }
+
 
         [Route("avgScorePredictionLength/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -55,7 +48,7 @@ namespace WeatherWebAPI.Controllers
 
             var command = new GetAvgScoresForSelectedPredictionLengthQuery(_arguments.Common);
 
-            return await command.CalculateAverageScoresForSelectedPredictionLength(query, _strategies);
+            return await command.CalculateAverageScoresForSelectedPredictionLength(query, GetWeatherDataStrategies());
         }
 
         [Route("avgScoreWeatherProviderForCity/")]
@@ -71,7 +64,7 @@ namespace WeatherWebAPI.Controllers
 
             var command = new GetAvgScoresWeatherProviderForCityQuery(_arguments.Common);
 
-            return await command.CalculateAverageScoresFor(query, _strategies);
+            return await command.CalculateAverageScoresFor(query, GetWeatherDataStrategies());
         }
 
         [Route("avgScorePredictionLengthAndCity/")]
@@ -87,7 +80,16 @@ namespace WeatherWebAPI.Controllers
 
             var command = new GetAvgScoresForSelectedPredictionLengthForCityQuery(_arguments.Common);
 
-            return await command.CalculateAverageScoresForSelectedPredictionLengthAndCity(query, _strategies);
+            return await command.CalculateAverageScoresForSelectedPredictionLengthAndCity(query, GetWeatherDataStrategies());
         }
+
+
+        private IEnumerable<IStrategy> GetWeatherDataStrategies()
+        {
+            return _strategies.Where(s =>
+                s.StrategyType.Equals(StrategyType.Yr) ||
+                s.StrategyType.Equals(StrategyType.OpenWeather));
+        }
+
     }
 }

@@ -1,14 +1,15 @@
 ﻿using System.Globalization;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Commands
 {
     public class AddCityCommand : BaseFunctionsForQueriesAndCommands
     {
-        public AddCityCommand(CommonArgs commonArgs) : base(commonArgs)
-        {
+        private readonly IGetCitiesQuery _getCitiesQuery;
 
+        public AddCityCommand(IGetCitiesQuery getCitiesQuery) : base()
+        {
+            _getCitiesQuery = getCitiesQuery;
         }
 
         public async Task AddCity(CityQuery query)
@@ -16,11 +17,9 @@ namespace WeatherWebAPI.DAL.Commands
             string? citySearchedFor = query.City;
             string? cityName;
 
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
-
             try
             {
-                _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                _citiesDatabase = await _getCitiesQuery.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
@@ -38,22 +37,10 @@ namespace WeatherWebAPI.DAL.Commands
                             await AddCityToDatabase(cityData);
                         }
                     }
-
-                    //return new HttpResponseMessage(HttpStatusCode.OK)
-                    //{
-                    //    Content = new StringContent(
-                    //        $"The city {cityName} has been added.")
-                    //};
                 }
                 else
                 {
                     cityName = citySearchedFor;
-
-                    //return new HttpResponseMessage(HttpStatusCode.Found)
-                    //{
-                    //    Content = new StringContent(
-                    //        $"The city {cityName} is already saved to the database.")
-                    //};
                 }
             }
             catch(Exception e)

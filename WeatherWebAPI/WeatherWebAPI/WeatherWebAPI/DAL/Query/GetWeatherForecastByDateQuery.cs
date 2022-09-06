@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
-using WeatherWebAPI.Arguments;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
@@ -9,18 +7,18 @@ namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastByDateQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetWeatherForecastByDateQuery(CommonArgs commonArgs) : base(commonArgs)
+        public GetWeatherForecastByDateQuery() : base()
         {
             
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IGetWeatherDataStrategy<WeatherForecast>> weatherDataStrategies)
+        public async Task<List<WeatherForecastDto>> GetWeatherForecastByDate(DateQueryAndCity query, List<IStrategy> weatherDataStrategies)
         {
             string? citySearchedFor = query?.CityQuery?.City;
             string? cityName;
             DateTime date = query!.DateQuery!.Date.ToUniversalTime();
 
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
             var dtoList = new List<WeatherForecastDto>();
 
             try
@@ -48,7 +46,7 @@ namespace WeatherWebAPI.DAL.Query
                     now = DateTime.UtcNow;
 
                 string queryString = $"SELECT TOP {weatherDataStrategies.Count} WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Value, Score.ValueWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                         $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                             $"INNER JOIN [Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
@@ -56,7 +54,7 @@ namespace WeatherWebAPI.DAL.Query
                                     $"WHERE CAST([DateForecast] as date) = '{date}' AND CAST([Date] as date) = '{now}'  AND City.Name = '{cityName}' " +
                                         $"ORDER BY DateForecast";
 
-                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper!, dtoList, queryString);
 
             }
             catch (Exception e)

@@ -9,6 +9,7 @@ using Tests.Fakes;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 
 namespace Tests.Endpoints.Logic
 {
@@ -17,7 +18,7 @@ namespace Tests.Endpoints.Logic
         private DateTime _date;
 
         private List<CityDto>? _cities;
-        private List<IGetWeatherDataStrategy<WeatherForecast.WeatherData>>? _weatherDataStrategies;
+        private List<IStrategy>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -49,7 +50,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
 
                 cityInfo[0].Name = "Bergen";
@@ -103,7 +104,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
 
                 cityInfo[0].Name = "Stavanger";
@@ -157,7 +158,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
                 cityInfo[0].Name = "Stavanger";
                 cityName = cityInfo[0].Name;
@@ -210,7 +211,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy<CityDto> strategy = new FakeOpenWeatherStrategy();
+                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
                 cityInfo[0].Name = "";
                 cityName = cityInfo[0].Name;

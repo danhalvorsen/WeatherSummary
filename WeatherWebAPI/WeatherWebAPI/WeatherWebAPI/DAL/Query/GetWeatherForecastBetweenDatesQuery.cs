@@ -1,15 +1,12 @@
-﻿using AutoMapper;
-using System.Globalization;
-using WeatherWebAPI.Arguments;
+﻿using System.Globalization;
 using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Factory;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastBetweenDatesQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetWeatherForecastBetweenDatesQuery(CommonArgs commonArgs) : base(commonArgs)
+        public GetWeatherForecastBetweenDatesQuery() : base()
         {
 
         }
@@ -22,7 +19,7 @@ namespace WeatherWebAPI.DAL.Query
             DateTime toDate = betweenDateQueryAndCity!.BetweenDateQuery.To!.ToUniversalTime();
 
             var datesQuery = new List<DateTime>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs.Config);
+            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
             var dtoList = new List<WeatherForecastDto>();
 
             try
@@ -49,7 +46,7 @@ namespace WeatherWebAPI.DAL.Query
                 }
 
                 string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
-                $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Score, Score.ScoreWeighted, Score.FK_WeatherDataId FROM WeatherData " +
+                $"City.[Name] as CityName, [Source].[Name] as SourceName, Score.Value, Score.ValueWeighted, Score.FK_WeatherDataId FROM WeatherData " +
                     $"INNER JOIN City ON City.Id = WeatherData.FK_CityId " +
                         $"INNER JOIN SourceWeatherData ON SourceWeatherData.FK_WeatherDataId = WeatherData.Id " +
                             $"INNER JOIN[Source] ON SourceWeatherData.FK_SourceId = [Source].Id " +
@@ -57,7 +54,7 @@ namespace WeatherWebAPI.DAL.Query
                                     $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
                                         $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(_commonArgs.Mapper, dtoList, queryString);
+                await MakeWeatherForecastDto(_commonArgs.Mapper!, dtoList, queryString);
             }
             catch (Exception e)
             {

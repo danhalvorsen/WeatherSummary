@@ -6,7 +6,8 @@ namespace WeatherWebAPI.Automapper.Profiles
 {
     public class YrProfile : Profile
     {
-        eDataSource eDataSource => eDataSource.Yr;
+        static WeatherProvider WeatherProvider => WeatherProvider.Yr;
+
         public YrProfile()
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -26,7 +27,7 @@ namespace WeatherWebAPI.Automapper.Profiles
                 .ForMember(dest => dest.FogAreaFraction, opt => opt.MapFrom(src => src.data.instant.details.fog_area_fraction))
                 .ForMember(dest => dest.ProbOfThunder, opt => opt.MapFrom(src => src.data.next_1_hours.details.probability_of_thunder))
                 .AfterMap((src, dest) => dest.Date = DateTime.UtcNow.Date)
-                .AfterMap((src, dest) => dest.Source.DataProvider = eDataSource.ToString());
+                .AfterMap((src, dest) => dest.Source.DataProvider = WeatherProvider.ToString());
 
             CreateMap<ApplicationYr, WeatherForecast>()
                 .ForMember(dest => dest.Forecast, opt => opt.MapFrom(src => src.properties.timeseries));

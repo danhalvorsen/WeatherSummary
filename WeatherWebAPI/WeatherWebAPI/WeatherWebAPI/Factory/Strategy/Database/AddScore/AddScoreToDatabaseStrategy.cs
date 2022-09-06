@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
 {
@@ -11,16 +12,30 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             _config = config;
         }
 
-        public async Task Add(double score, double weightedScore, int weatherDataId)
+        public StrategyType StrategyType => StrategyType.AddScoreToDatabase;
+
+        public async Task Add(List<Scores> scores)
         {
-            string queryString = $"INSERT INTO Score(Score, ScoreWeighted, FK_WeatherDataId) " +
-                                    $"VALUES({score}, {weightedScore}, {weatherDataId})";
+            try
+            {
+                using SqlConnection connection = new(_config.ConnectionString);
 
-            using SqlConnection connection = new(_config.ConnectionString);
-            SqlCommand command = new(queryString, connection);
-            connection.Open();
+                foreach (var score in scores)
+                {
+                    string queryString = $"INSERT INTO Score(Value, ValueWeighted, FK_WeatherDataId) " +
+                            $"VALUES({score.Value}, {score.ValueWeighted}, {score.WeatherDataId})";
 
-            await command.ExecuteNonQueryAsync();
+                    SqlCommand command = new(queryString, connection);
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

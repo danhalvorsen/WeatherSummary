@@ -1,32 +1,17 @@
-﻿using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.DAL;
-using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
-using WeatherWebAPI.Factory.Strategy.YR;
+﻿using WeatherWebAPI.DAL;
 
 namespace WeatherWebAPI
 {
     public class BackgroundServiceGetWeatherData : BackgroundService
     {
-        private readonly IFactory _factory;
-        private readonly IConfiguration _config;
         private readonly BackgroundServiceGetWeatherDataCommand _command;
-        private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _weatherDataStrategies = new();
+        private readonly ILogger<BackgroundServiceGetWeatherData> _logger;
         private const int HOUR_DELAY = 24;
-        
 
-        public BackgroundServiceGetWeatherData(
-            IConfiguration config, 
-            IFactory factory, 
-            BackgroundServiceGetWeatherDataCommand command)
+        public BackgroundServiceGetWeatherData(BackgroundServiceGetWeatherDataCommand command, ILogger<BackgroundServiceGetWeatherData> logger)
         {
-            _config = config;
-            _factory = factory;
             _command = command;
-            _weatherDataStrategies.Add(_factory.Build<IYrStrategy>());
-            _weatherDataStrategies.Add(_factory.Build<IOpenWeatherStrategy>());
-            _weatherDataStrategies.Add(_factory.Build<IWeatherApiStrategy>());
+            _logger = logger;
         }
 
 
@@ -34,13 +19,10 @@ namespace WeatherWebAPI
         {
             try
             {
-                while (!stoppingToken.IsCancellationRequested)
-                {
                     DateTime start = DateTime.UtcNow.Date + new TimeSpan(06, 0, 0);
                     DateTime stop = DateTime.UtcNow.Date + new TimeSpan(18, 0, 0);
 
-                    await StartWork(start, stop, stoppingToken);
-                }
+                    await DoWork(start, stop, stoppingToken);
             }
             catch (Exception e)
             {
@@ -48,19 +30,22 @@ namespace WeatherWebAPI
             }
         }
 
-        private async Task StartWork(DateTime StartTime, DateTime StopTime, CancellationToken stoppingToken)
+        private async Task DoWork(DateTime StartTime, DateTime StopTime, CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (DateTime.UtcNow > StartTime && DateTime.UtcNow < StopTime)
                 {
-                    Console.WriteLine($"{this.GetType().Name} DOING WORK");
+                    _logger.LogInformation("{BackgroundServiceGetWeatherData} DOING WORK",
+                        this.GetType().Name);
 
-                    await _command.GetOneWeekWeatherForecastForAllCities(_weatherDataStrategies);
+                    await _command.GetOneWeekWeatherForecastForAllCities();
 
-                    Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");
+                    _logger.LogInformation("{BackgroundServiceGetWeatherData} DONE. Waiting {HOUR_DELAY} hours to do work again..",
+                        this.GetType().Name,
+                        HOUR_DELAY);
 
-                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0)); // 24 hours delay
+                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0), stoppingToken); // 24 hours delay
                 }
             }
         }

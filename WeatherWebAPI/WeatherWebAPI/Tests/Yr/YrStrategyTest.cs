@@ -19,7 +19,7 @@ namespace Tests.Yr
         private ServiceProvider? _serviceProvider;
         private IMapper? _mapper;
         private DateTime _date;
-        private IGetWeatherDataStrategy<WeatherData>? _strategy;
+        private IGetWeatherDataStrategy? _strategy;
 
         private readonly CityDto _city = new()
         {

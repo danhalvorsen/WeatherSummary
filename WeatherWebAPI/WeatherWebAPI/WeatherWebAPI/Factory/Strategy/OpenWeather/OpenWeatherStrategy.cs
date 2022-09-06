@@ -6,12 +6,13 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class OpenWeatherStrategy : IGetWeatherDataStrategy
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        eDataSource eDataSource => eDataSource.OpenWeather;
+        public StrategyType StrategyType => StrategyType.OpenWeather;
+        public WeatherProvider WeatherProvider => WeatherProvider.OpenWeather;
 
         public OpenWeatherStrategy(IMapper mapper, OpenWeatherConfig config, HttpClient httpClient)
         {
@@ -42,28 +43,9 @@ namespace WeatherWebAPI.Factory.Strategy.OpenWeather
             return new WeatherForecast.WeatherData();
         }
 
-        public async Task<List<CityDto>> GetCityDataFor(string city) // Have to use list when using streamasync
-        {
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-
-            var response = await _httpClient.GetAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
-
-            if (response.IsSuccessStatusCode)
-            {
-                var streamTask = await _httpClient.GetStreamAsync($"geo/1.0/direct?q={city}&appid=7397652ad9c5f55e36782bb22811ca43");
-                var cityData = await JsonSerializer.DeserializeAsync<List<CityDto>>(streamTask);
-
-                if (cityData != null)
-                    return cityData;
-                throw new Exception();
-            }
-
-            return new List<CityDto>();
-        }
-
         public string GetDataSource()
         {
-            return eDataSource.ToString();
+            return WeatherProvider.ToString();
         }
     }
 }

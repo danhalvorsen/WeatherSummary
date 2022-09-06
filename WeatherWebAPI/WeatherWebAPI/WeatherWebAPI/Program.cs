@@ -2,18 +2,17 @@ using FluentValidation.AspNetCore;
 using System.Reflection;
 using WeatherWebAPI;
 using WeatherWebAPI.DAL;
-using WeatherWebAPI.Factory;
+using WeatherWebAPI.DAL.Query;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
 using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-builder.Services.AddConfig(builder.Configuration);
+builder.Services.AddConfig();
+
 builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
 builder.Services.AddHostedService<BackgroundServiceGetScore>();
 builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
@@ -23,16 +22,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddSingleton<IFactory, StrategyBuilderFactory>();
-//builder.Services.AddSingleton<IMyConfiguration>(new BackgroundServiceGetWeatherDataCommandConfiguration());
-
-builder.Services.AddTransient<BackgroundServiceGetWeatherDataCommand>();
-builder.Services.AddTransient<BackgroundServiceCalculateScoreCommand>();
-
-
 builder.Services.AddHttpClient<YrStrategy>();
 builder.Services.AddHttpClient<OpenWeatherStrategy>();
-builder.Services.AddHttpClient<WeatherApiStrategy>();
+
+//builder.Services.AddSingleton<IFactory<IStrategy, StrategyType>, StrategyBuilderFactory>();
+//builder.Services.AddSingleton<IFactory<IStrategy, StrategyType>, CommandFactory>();
+//builder.Services.AddSingleton<IFactory<IStrategy, StrategyType>, QueryFactory>();
+//builder.Services.AddSingleton<IMyConfiguration>(new BackgroundServiceGetWeatherDataCommandConfiguration());
+
+builder.Services.AddCommonArgs(builder.Configuration);
+
+
+builder.Services.AddTransient<IGetCitiesQuery, GetCitiesQuery>();
+builder.Services.AddTransient<IGetWeatherDataForRatingQuery, GetWeatherDataForRatingQuery>();
+
+
+builder.Services.AddTransient<BackgroundServiceGetWeatherDataCommand>();
+builder.Services.AddTransient<BackgroundServiceCalculateScoreQuery>();
+//builder.Services.AddHttpClient<WeatherApiStrategy>();
 
 var app = builder.Build();
 
@@ -49,22 +56,37 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
-
-
-public static class MyConfigServiceCollectionExtensions
+try
 {
-    public static IServiceCollection AddConfig(
-         this IServiceCollection services, IConfiguration config)
+    app.Run();
+}
+catch (Exception e)
+{
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    var logger = serviceProvider.GetService<ILogger<Program>>();
+
+    logger?.LogError(e.Message);
+}
+
+
+
+public static class RegisterValidatorsExtensions
+{
+    public static IServiceCollection AddConfig(this IServiceCollection Services)
     {
-        services.AddTransient(typeof(IFactory), typeof(StrategyBuilderFactory));
-        services.AddFluentValidation(options =>
+        Services.AddFluentValidation(options =>
         {
             options.RegisterValidatorsFromAssemblyContaining<DateQueryAndCityValidator>();
             options.RegisterValidatorsFromAssemblyContaining<BetweenDateQueryAndCityValidator>();
             options.RegisterValidatorsFromAssemblyContaining<WeekQueryAndCity>();
         });
 
-        return services;
+        return Services;
     }
 }
+
+
+
+
+
+

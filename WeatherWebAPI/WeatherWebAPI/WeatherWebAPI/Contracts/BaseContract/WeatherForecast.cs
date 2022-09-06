@@ -7,7 +7,6 @@
             Forecast = new List<WeatherData>();
         }
 
-
         public List<WeatherData> Forecast { get; set; }
 
         public WeatherData GetByDate(DateTime date)

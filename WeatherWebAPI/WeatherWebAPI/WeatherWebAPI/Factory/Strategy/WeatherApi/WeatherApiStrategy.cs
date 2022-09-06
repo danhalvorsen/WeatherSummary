@@ -6,12 +6,14 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 {
-    public class WeatherApiStrategy : IGetWeatherDataStrategy<WeatherForecast.WeatherData>, IWeatherApiStrategy
+    public class WeatherApiStrategy : IGetWeatherDataStrategy
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        eDataSource eDataSource => eDataSource.WeatherApi;
+        public WeatherProvider WeatherProvider => WeatherProvider.WeatherApi;
+
+        public WeatherWebAPI.StrategyType StrategyType => WeatherWebAPI.StrategyType.WeatherApi;
 
         public WeatherApiStrategy(IMapper mapper, WeatherApiConfig config, HttpClient httpClient)
         {
@@ -28,7 +30,7 @@ namespace WeatherWebAPI.Factory.Strategy.WeatherApi
             _httpClient.DefaultRequestHeaders.Accept.Clear();
 
             //var httpClient = _httpClientFactory.CreateClient("Yr");
-            var response = await _httpClient.GetAsync($"v1/forecast.json?key=27c1ef24ebc84fe5a8e81359221608&q={city.Name}&days=8&aqi=no&alerts=no");
+            var response = await _httpClient.GetAsync($"v1/forecast.json?key=4be235a3168f4de281b80126223108&q={city.Name}&days=8&aqi=no&alerts=no");
 
             if (response.IsSuccessStatusCode)
             {
@@ -44,7 +46,7 @@ namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 
         public string GetDataSource()
         {
-            return eDataSource.ToString();
+            return WeatherProvider.ToString();
         }
     }
 }

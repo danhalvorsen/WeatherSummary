@@ -12,6 +12,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
             _config = config;
         }
 
+        public StrategyType StrategyType => StrategyType.GetScoreFromDatabase;
+
         public async Task<List<Scores>> Get()
         {
             string queryString = "SELECT * FROM Score";
@@ -29,8 +31,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         scores.Add(new Scores
                         {
                             WeatherDataId = Convert.ToInt32(reader["FK_WeatherDataId"]),
-                            Value = (float)Convert.ToDouble(reader["Score"]),
-                            ValueWeighted = (float)Convert.ToDouble(reader["ScoreWeighted"]),
+                            Value = (float)Convert.ToDouble(reader["Value"]),
+                            ValueWeighted = (float)Convert.ToDouble(reader["ValueWeighted"])
                         });
                     }
                 }

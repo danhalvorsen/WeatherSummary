@@ -23,7 +23,7 @@ namespace Tests.Endpoints.Logic
         private int _weatherUpdated;
         private int _weatherDatabase;
 
-        private List<IGetWeatherDataStrategy<WeatherForecast.WeatherData>>? _weatherDataStrategies;
+        private List<IGetWeatherDataStrategy>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -371,7 +371,7 @@ namespace Tests.Endpoints.Logic
             return !_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
-        public List<WeatherForecast>? GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
+        public List<WeatherForecast>? GetDatesForCity(string cityName, IGetWeatherDataStrategy strategy)
         {
             return (List<WeatherForecast>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source!.Equals(strategy.GetType().Name));
         }
