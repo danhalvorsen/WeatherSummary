@@ -17,11 +17,25 @@ We want well designed web pages (In React)
 Order
 
 - Basket (1)
-  - As a customer, I want to navigate to my basket so that I can go to my shopping list.
-  - As a customer, I want to see the contents of my basket so that I can see the products I wanted to buy
-  - As a customer, I want to be able to increase or decrease the number of each item so that I can change the number of each product I am going to buy.
-  - As a customer, I want to be able to remove items from the basket so that if I regret buying them, I can remove them.
-  - As a customer, I want to see the total price so that before finalizing the order I can see how much should I pay
+
+  - As a customer, I want to navigate to my basket so that I can go to my shopping list. (3d)
+
+  - As a customer, I want to see how many items are in my basket so that I can see the number of products in my basket (1d)
+    <!-- - We need to put a badge to show numbers of products in the basket and sync it with state.
+    - after buying items, this badge should be clean up.
+    - number of items in badge should be state on browser local storage(a solution). -->
+  - As a customer, I want to see the contents of my basket so that I can see the products I wanted to buy (1d)
+    <!-- - by click on basket it should go to shopping list so we need a shopping list component
+    - show another product view in shopping list and calculate its amount -->
+    -
+  - As a customer, I want to be able to increase or decrease the number of each item so that I can change the number of each product I am going to buy. (1d)
+    <!-- - create + and - icon and show the number of product.
+    - update data follow stream  -->
+  - As a customer, I want to be able to remove items from the basket so that if I regret buying them, I can remove them. (6h)
+  <!-- - create 'Remove' icon to manage it
+  - -->
+  - As a customer, I want to see the total price so that before finalizing the order I can see how much should I pay (4h)
+
 - Buy it (2)
 - Order history (3)
 - track order (3)
@@ -31,28 +45,30 @@ Product
 
 - See product (1)
 
-  - As a customer, I want to see products in the home page so that I can find product directly.
+  - As a customer, I want to see products in the home page so that I can find product directly.(3d)
+    - connect to database(mock data) and get data'
+    -
   - As a customer, I want to see the title, image and price for each product so that I have an overall concept of each product
-  - As a customer, I want click on product so that the next page will show detail of product.
+  - As a customer, I want click on product so that the next page will show detail of product.(2d)
   - As a customer, I want to navigate to the home page from any pages I am on, so that I can reach the home page directly
 
 - see details (1)
 
-  - As a customer, I want to see the product details with a title, description, price, availability, brand and bigger image.
+  - As a customer, I want to see the product details with a title, description, price, availability, brand and bigger image. (3d)
   - As a customer, I want to add a product to my basket so that I can aggregate the products I am going to buy them in one place
-  - As a customer, I want to increase or decrease the number of products so that I can change the number of items I want to buy.
+  - As a customer, I want to increase or decrease the number of products so that I can change the number of items I want to buy. (2d)
 
 - search for products (1)
 
-  - As a customer, I want to see a search box on top of the products list so that I can easily search for products.
+  - As a customer, I want to see a search box on top of the products list so that I can easily search for products. (3d)
   - As a customer, I want to be able to search for products name so that I can reach the specific product.
 
 Inventory
 
 - Register product (1)
 
-  - As an admin, I want to register new products so that I can add a new product to the store
-  - As an admin, I want to edit products, so that I can change the specifics of products
+  - As an admin, I want to register new products so that I can add a new product to the store (3d)
+  - As an admin, I want to edit products, so that I can change the specifics of products (2d)
 
 - Inventory notification (3)
 
@@ -60,8 +76,8 @@ Reports
 
 - see sales (1)
 
-  - As an admin, I want to see the list of orders so that I can find out how many orders I've got
-  - As an admin, I want to click on each item of order and see its detail so that I can see more of details.
+  - As an admin, I want to see the list of orders so that I can find out how many orders I've got. (2d)
+  - As an admin, I want to click on each item of order and see its detail so that I can see more of details.(1d)
 
 - see orders completion (3)
 - see orders status (3)
@@ -70,15 +86,15 @@ Reports
 
 Customer profile
 
-- my page (1)
+- my page (1) (??)
 
   - As a customer I want to see my page so that I can (???????)
 
-- create profile (1)
+- create profile (1) (??)
 
   - As a customer I want to register as a new customer so that I have a profile in the store.
 
-- Delete profile (1)
+- Delete profile (1)(??)
 
   - As a customer I want to be able to delete my profile so that I can decided to have profile in this system or not.
   - As an admin I want to be able to delete a profile so that I can delete the fake profiles
