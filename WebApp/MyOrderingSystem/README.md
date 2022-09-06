@@ -16,85 +16,86 @@ We want well designed web pages (In React)
 
 Order
 
-- predict products for a given customer
-- Basket
-- Buy it
-- Order history
-- track order
+- Basket (1)
+  - As a customer, I want to navigate to my basket so that I can go to my shopping list.
+  - As a customer, I want to see the contents of my basket so that I can see the products I wanted to buy
+  - As a customer, I want to be able to increase or decrease the number of each item so that I can change the number of each product I am going to buy.
+  - As a customer, I want to be able to remove items from the basket so that if I regret buying them, I can remove them.
+  - As a customer, I want to see the total price so that before finalizing the order I can see how much should I pay
+- Buy it (2)
+- Order history (3)
+- track order (3)
+- predict products for a given customer (3)
 
 Product
 
-- See product details
-- Customer wants to search for products
-- administrator wants to see details
-- administrator wants to search for products
-- Administrator wants to change product details (price, title, description)
+- See product (1)
+
+  - As a customer, I want to see products in the home page so that I can find product directly.
+  - As a customer, I want to see the title, image and price for each product so that I have an overall concept of each product
+  - As a customer, I want click on product so that the next page will show detail of product.
+  - As a customer, I want to navigate to the home page from any pages I am on, so that I can reach the home page directly
+
+- see details (1)
+
+  - As a customer, I want to see the product details with a title, description, price, availability, brand and bigger image.
+  - As a customer, I want to add a product to my basket so that I can aggregate the products I am going to buy them in one place
+  - As a customer, I want to increase or decrease the number of products so that I can change the number of items I want to buy.
+
+- search for products (1)
+
+  - As a customer, I want to see a search box on top of the products list so that I can easily search for products.
+  - As a customer, I want to be able to search for products name so that I can reach the specific product.
 
 Inventory
 
-- Register product
-- Search products
-- Inventory notification
+- Register product (1)
 
-Customer profile
+  - As an admin, I want to register new products so that I can add a new product to the store
+  - As an admin, I want to edit products, so that I can change the specifics of products
 
-- my page
-- see order history
-- Edit information
+- Inventory notification (3)
 
 Reports
 
-- see sales by date
-- see orders completion
-- see orders status
-- see orderer information
-- search for orders (date / orderer)
--
--
+- see sales (1)
+
+  - As an admin, I want to see the list of orders so that I can find out how many orders I've got
+  - As an admin, I want to click on each item of order and see its detail so that I can see more of details.
+
+- see orders completion (3)
+- see orders status (3)
+- see orderer information (3)
+- search for orders (date / orderer) (3)
+
+Customer profile
+
+- my page (1)
+
+  - As a customer I want to see my page so that I can (???????)
+
+- create profile (1)
+
+  - As a customer I want to register as a new customer so that I have a profile in the store.
+
+- Delete profile (1)
+
+  - As a customer I want to be able to delete my profile so that I can decided to have profile in this system or not.
+  - As an admin I want to be able to delete a profile so that I can delete the fake profiles
+
+- see order history (2)
+- Edit information (3)
 
 Campaigns
 
-- see customers that given more 100 points
-- bones
+- see customers that given more 100 points (2)
+- bones (2)
 
----
-
-administrator should change the status of order (prepare / sent / delivered )
-show the newts added products on the first page (separate part of page)
+- roles
 
 ### Features
 
 ## User Stories
-
-### Products feature
-
-- As a User I want to see all product in the first page.
-  - Create all products in a one page named Product List.
-- As a User I want see the title, image and price for each product.
-  - make an appropriate size for preview image.
-- As a User I want click on product so that the next page will show detail of product
-
-### Product detail feature
-
-- As a User I want to see the product details like bigger image, title, description, price , availability and brand.
-- As a User I need to add a product to my shopping list.
-- As a User I want to increase or decrease number of products.
-
-### Shopping list feature
-
-- As a User I want to navigate to my shopping list
-  - create an icon in the navigation bar
-- As a User I want to see my shopping list.
-- As a User I want to be able to increase or decrease number of each item.
-- As a User I want to be able to remove some of items from the shopping list.
-- As a User I want to see the total price.
-
-### Search feature
-
-- As a user, I want to be able to search for products name so that I can reach the specific product.
-  - Search component
-  - Load the search component in product list page to be able to search items.
-  - Display two kinds of result to show, based on find item(partial list) or not find any item (empty view)
 
 ### Checkout feature
 
@@ -107,6 +108,9 @@ show the newts added products on the first page (separate part of page)
   - Use 'replace technic' in React router
 
 # Backlog Technical
+
+Load the search component in product list page to be able to search items.
+Display two kinds of result to show, based on find item(partial list) or not find any item (empty view)
 
 ### Task
 
@@ -139,7 +143,6 @@ As a frontend developer I need “ Fake data for products”
 
 ## Inventory management by Admin feature (Phase 2)
 
-- As an Admin I want to see, add, edit and delete products
 - ### Reporting feature (Phase 2)
 
 - As an admin I want to see the report of orders so that I can see all the orders.
