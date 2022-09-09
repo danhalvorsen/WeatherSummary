@@ -14,7 +14,13 @@ export default function ProductItem(props: Props) {
       </div>
       <div>
         <img src={imageurl} height="200" width="300"></img>{' '}
-        <span> Price: {price}</span>{' '}
+        <span style={{ fontSize: 18, fontWeight: 700 }}> Price: {price}</span>{' '}
+        <span>
+          {' '}
+          <a href="#" style={{ fontWeight: 700, backgroundColor: 'lightblue' }}>
+            Show More
+          </a>
+        </span>
       </div>
     </div>
   );

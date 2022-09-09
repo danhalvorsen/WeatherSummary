@@ -2,6 +2,8 @@
   <NavigationBar />
 
   <ProductsState>
+    <SearchBar />
+
     <Products>
       <Product1 />
       <Product2 />

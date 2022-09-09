@@ -3,7 +3,7 @@ function NavigationBar() {
   return (
     <>
       <div className=" border border-primary p-3">
-        <a>Home</a> || <a>Link1</a> | <a>Link2</a> | <a>Link3</a>
+        <a href="#">Home</a> || <a href="#">Link1</a> | <a href="#">Link2</a> | <a href="#">Link3</a>
         <div style={styles.leftButton}>
           <button>Basket {basketNumber}</button>{' '}
         </div>

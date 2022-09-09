@@ -1,21 +1,10 @@
-import React, { useState, useEffect } from 'react';
 import Product from './Product';
 import { ProductsType } from '../../productType';
 
-export default function Products() {
-  const [products, setProducts] = useState<ProductsType[]>();
+type Props = {
+  products: ProductsType[] | undefined;
+};
 
-  useEffect(() => {
-    const resourceUrl = 'http://localhost:3002/products';
-    async function fetchProducts<T>(resourceUrl: string): Promise<T> {
-      return await fetch(resourceUrl).then((response) => {
-        return response.json();
-      });
-    }
-    fetchProducts<ProductsType[]>(resourceUrl).then((productItems) => {
-      setProducts(productItems);
-    });
-  }, []);
-
-  return <Product products={products} />;
+export default function Products(props: Props) {
+  return <Product products={props.products} />;
 }

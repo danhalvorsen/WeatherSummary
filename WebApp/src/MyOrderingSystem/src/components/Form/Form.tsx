@@ -1,19 +1,14 @@
 import React from "react";
 import NavigationBar from "./NavigationBar";
-import ProductsState from "./ProductsState/ProductsState";
+import Detail from "./ProductsState/Products/Detail";
 
 function Form() {
     return (
       <>
       
        <NavigationBar />
-      <ProductsState/>
-      
-       {/* 
-
-       <ProductsState>
-        
-       </ProductsState> */}
+      {/* <ProductsState/> */}
+      <Detail/>
       </>
     );
   }
