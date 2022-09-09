@@ -22,9 +22,9 @@ namespace Tests.Endpoints.Logic
         private int _weatherDatabase;
 
         private List<CityDto>? _cities;
-        private List<WeatherForecast>? _dates;
+        private List<WeatherForecast.WeatherData>? _dates;
 
-        private List<IGetWeatherDataStrategy<WeatherForecast>>? _weatherDataStrategies;
+        private List<IGetWeatherDataStrategy>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -37,13 +37,13 @@ namespace Tests.Endpoints.Logic
 
             _dates = new()
             {
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(-1) },
-                new WeatherForecast { Date = DateTime.UtcNow },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(1) },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(3) },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(5) },
-                new WeatherForecast { Date = new DateTime(2022, 05, 25, 12, 0, 0, DateTimeKind.Utc) },
-                new WeatherForecast { Date = new DateTime(2022, 05, 28, 12, 0, 0, DateTimeKind.Utc) }
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(-1) },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(1) },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(3) },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(5) },
+                new WeatherForecast.WeatherData { Date = new DateTime(2022, 05, 25, 12, 0, 0, DateTimeKind.Utc) },
+                new WeatherForecast.WeatherData { Date = new DateTime(2022, 05, 28, 12, 0, 0, DateTimeKind.Utc) }
             };
 
             _weatherDatabase = 0;

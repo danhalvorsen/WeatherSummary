@@ -1,60 +1,87 @@
-﻿using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.DAL;
+﻿using WeatherWebAPI.DAL;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
-using WeatherWebAPI.Factory.Strategy.YR;
+using WeatherWebAPI.Factory.Strategy;
+using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI
 {
-    public class BackgroundServiceGetWeatherData : BackgroundService
+    public partial class BackgroundServiceGetWeatherData : BackgroundService
     {
-        private readonly IFactory _factory;
-        private readonly IConfiguration _config;
-        private readonly WeatherForecastMapping _contract;
-        private readonly List<IGetWeatherDataStrategy<WeatherForecast>> _weatherDataStrategies = new();
         private const int HOUR_DELAY = 24;
+        private readonly List<IGetWeatherDataStrategy>? _weatherDataStrategies = new();
 
-        public BackgroundServiceGetWeatherData(IConfiguration config, IFactory factory, WeatherForecastMapping contract)
+        private readonly ILogger<BackgroundServiceGetWeatherData> _logger;
+        private readonly IGetCitiesQuery _getCitiesQuery;
+        private readonly IAddWeatherDataToDatabaseStrategy _addWeatherDataToDatabaseStrategy;
+        private readonly IBackgroundServiceFetchWeatherDataQuery _query;
+        private readonly SetTimeHourValidator _setTimeHourValidator;
+        private readonly SetTimeHour _setTime;
+
+        public BackgroundServiceGetWeatherData(
+            ILogger<BackgroundServiceGetWeatherData> logger,
+            IGetCitiesQuery getCitiesQuery, 
+            IAddWeatherDataToDatabaseStrategy addWeatherDataToDatabaseStrategy,
+            IBackgroundServiceFetchWeatherDataQuery query,
+            SetTimeHourValidator setTimeHourValidator,
+            SetTimeHour setTime,
+            StrategyResolver strategyPicker
+            )
         {
-            _config = config;
-            _factory = factory;
-            _contract = contract;
-            _weatherDataStrategies.Add(_factory.Build<IYrStrategy>());
-            _weatherDataStrategies.Add(_factory.Build<IOpenWeatherStrategy>());
-            _weatherDataStrategies.Add(_factory.Build<IWeatherApiStrategy>());
+            _logger = logger;
+            _getCitiesQuery = getCitiesQuery;
+            _addWeatherDataToDatabaseStrategy = addWeatherDataToDatabaseStrategy;
+            _query = query;
+            _setTimeHourValidator = setTimeHourValidator;
+            _setTime = setTime;
+            _weatherDataStrategies?.Add(strategyPicker(WeatherProvider.Yr));
+            _weatherDataStrategies?.Add(strategyPicker(WeatherProvider.OpenWeather));
         }
-
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _setTime.StartHour = 06;
+            _setTime.StopHour = 18;
+
             try
             {
-                if(DateTime.UtcNow.Hour <= 12)
-                { 
+                var validationResult = _setTimeHourValidator.Validate(_setTime);
+                if (!validationResult.IsValid)
+                    _logger.LogError("{Errors}", validationResult.Errors);
 
-                }
+                DateTime start = _setTime.SetHour(_setTime.StartHour);
+                DateTime stop = _setTime.SetHour(_setTime.StopHour);
 
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    Console.WriteLine($"{this.GetType().Name}: DOING WORK");
-                    
-                    var command = new BackgroundServiceGetWeatherDataCommand(_config, _factory);
-                    await command.GetOneWeekWeatherForecastForAllCities(_weatherDataStrategies);
-
-                    Console.WriteLine($"{this.GetType().Name} DONE. Waiting {HOUR_DELAY} hours to do work again..");
-
-                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0)); // 24 hours delay
-                    //await Task.Delay(1000);
-                }
-                //await Task.CompletedTask;
+                await DoWork(start, stop, stoppingToken);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e.Message);
+                throw;
             }
+        }
 
+        private async Task DoWork(DateTime StartTime, DateTime StopTime, CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                if (DateTime.UtcNow > StartTime && DateTime.UtcNow < StopTime)
+                {
+                    _logger.LogInformation("{BackgroundServiceGetWeatherData} DOING WORK", this.GetType().Name);
+
+                    var cities = await _getCitiesQuery.GetAllCities();
+
+                    foreach (var strategy in _weatherDataStrategies!)
+                    {
+                        var weatherForecasts = await _query.GetOneWeekWeatherForecastForAllCitiesFor(strategy, cities);
+                        await _addWeatherDataToDatabaseStrategy.Add(weatherForecasts);
+                    }
+
+                    _logger.LogInformation("{BackgroundServiceGetWeatherData} DONE. Waiting {HOUR_DELAY} hours to do work again..",
+                        this.GetType().Name,
+                        HOUR_DELAY);
+
+                    await Task.Delay(new TimeSpan(HOUR_DELAY, 0, 0), stoppingToken); // 24 hours delay
+                }
+            }
         }
     }
 }

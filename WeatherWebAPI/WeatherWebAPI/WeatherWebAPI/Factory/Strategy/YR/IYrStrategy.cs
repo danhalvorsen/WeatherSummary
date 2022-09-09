@@ -1,10 +1,7 @@
-﻿using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.Controllers;
-
-namespace WeatherWebAPI.Factory.Strategy.YR
+﻿namespace WeatherWebAPI.Factory.Strategy.YR
 {
-    public interface IYrStrategy
+    public interface IYrStrategy : IGetWeatherDataStrategy
     {
-        Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate);
+
     }
 }

@@ -1,11 +1,7 @@
-﻿using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.Controllers;
-
-namespace WeatherWebAPI.Factory.Strategy.OpenWeather
+﻿namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public interface IOpenWeatherStrategy
+    public interface IOpenWeatherStrategy : IGetWeatherDataStrategy
     {
-        Task<List<CityDto>> GetCityDataFor(string city);
-        Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate);
+
     }
 }

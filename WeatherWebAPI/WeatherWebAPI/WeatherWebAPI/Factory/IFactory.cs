@@ -1,7 +1,7 @@
 ﻿namespace WeatherWebAPI.Factory
 {
-    public interface IFactory
+    public interface IFactory<T,StrategyEnumType> where StrategyEnumType : struct, IConvertible
     {
-        dynamic Build<IGetWeatherDataStrategy>();
+        T Build(StrategyEnumType Type);
     }
 }

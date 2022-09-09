@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherWebAPI;
+using WeatherWebAPI.Automapper;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
@@ -8,7 +11,7 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace Tests.Fakes
 {
-    public class FakeYrStrategy : IGetWeatherDataStrategy<WeatherForecast>, IYrStrategy
+    public class FakeYrStrategy : IGetWeatherDataStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -28,16 +31,20 @@ namespace Tests.Fakes
         private const string OSLO = "Oslo";
         private const string WEATHERTYPE = "sunny";
 
-        public Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public WeatherProvider WeatherProvider => WeatherProvider.Yr;
+
+        public StrategyType StrategyType => StrategyType.Yr;
+
+        public Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             return Task.FromResult(CreateTestData(city.Name!, queryDate));
         }
 
-        private static WeatherForecast CreateTestData(string cityName, DateTime date)
+        private static WeatherForecast.WeatherData CreateTestData(string cityName, DateTime date)
         {
             if (cityName == STAVANGER || cityName == OSLO)
             {
-                return new WeatherForecast
+                return new WeatherForecast.WeatherData
                 {
                     Date = date,
                     Temperature = TEMP,
@@ -53,7 +60,7 @@ namespace Tests.Fakes
                     ProbOfThunder = PROB_OF_THUNDER,
                     City = cityName,
                     WeatherType = WEATHERTYPE,
-                    Source = new WeatherSourceDto { DataProvider = "Yr"}
+                    Source = new WeatherSourceDto { DataProvider = "Yr" }
                 };
             }
             throw new ArgumentException("City name doesn't match test constants");
@@ -61,7 +68,7 @@ namespace Tests.Fakes
 
         public string GetDataSource()
         {
-            return "Yr";
+            return WeatherProvider.Yr.ToString();
         }
     }
 }

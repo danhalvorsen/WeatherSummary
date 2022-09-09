@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeatherWebAPI.DAL.Commands;
-using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.Controllers
@@ -9,15 +9,23 @@ namespace WeatherWebAPI.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        private readonly IFactory _factory;
-
+        private readonly ILogger<CitiesController> _logger;
+        private readonly IGetCitiesQuery _query;
+        private readonly IFetchCityCommand _fetchCommand;
+        private readonly IAddCityToDatabaseStrategy _strategy;
         private readonly CityQueryValidator _cityQueryValidator;
 
-        public CitiesController(IConfiguration config, IFactory factory, CityQueryValidator cityQueryValidator)
+        public CitiesController(
+            ILogger<CitiesController> logger,
+            IGetCitiesQuery query,
+            IFetchCityCommand fetchCommand,
+            IAddCityToDatabaseStrategy strategy, 
+            CityQueryValidator cityQueryValidator)
         {
-            _config = config;
-            _factory = factory;
+            _logger = logger;
+            _query = query;
+            _fetchCommand = fetchCommand;
+            _strategy = strategy;
             _cityQueryValidator = cityQueryValidator;
         }
 
@@ -32,8 +40,7 @@ namespace WeatherWebAPI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var command = new AddCityCommand(_config, _factory);
-
+            var command = new AddCityCommand(_fetchCommand, _strategy);
             await command.AddCity(query);
 
             return Ok(command);
@@ -46,9 +53,7 @@ namespace WeatherWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CityDto>>> GetCitiesFromDatabase()
         {
-            var command = new GetCitiesQuery(_config);
-
-            return await command.GetAllCities();
+            return await _query.GetAllCities();
         }
     }
 }

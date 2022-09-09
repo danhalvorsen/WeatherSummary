@@ -1,16 +1,4 @@
-Controller
-- Contracts
-    - SQL commands
-        - Mapping
-    - SQL queries
-        - GetWeatherForecast -> mapping between WeatherForecast and WeatherForecastDto
-        - Get Cities
-        - Get AverageScores
-
-Background Services
-- CalculateScore
-- GetWeatherData from Weather Sources (rename?? because of the other query names?)
----
+# Overview
 ```mermaid
 sequenceDiagram
 autonumber
@@ -64,3 +52,13 @@ end
 
 Contracts ->>+ SQL Commands : Add city to database
 ```
+
+# Setup
+[Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/Documentation/README_VisualStudioSetup.md)
+
+[SQL Server Management Studio](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SQLServerManagementStudioSetup.md)
+
+[Make Self Signed HTTPS Certificate](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SelfSignedHttpsCertificate.md)
+
+---
+[Go back](/README.md#backend-1)

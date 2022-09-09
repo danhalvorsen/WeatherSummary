@@ -1,30 +1,25 @@
-using FluentValidation.AspNetCore;
 using System.Reflection;
-using WeatherWebAPI;
-using WeatherWebAPI.Contracts;
-using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.WeatherApi;
-using WeatherWebAPI.Factory.Strategy.YR;
-using WeatherWebAPI.Query;
+using WeatherWebAPI.StartUp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-builder.Services.AddConfig(builder.Configuration);
-builder.Services.AddHostedService<BackgroundServiceGetWeatherData>();
-builder.Services.AddHostedService<BackgroundServiceGetScore>();
 builder.Services.AddAutoMapper(new List<Assembly> { Assembly.GetExecutingAssembly() });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient<YrStrategy>();
-builder.Services.AddHttpClient<OpenWeatherStrategy>();
-builder.Services.AddHttpClient<WeatherApiStrategy>();
+// Register extension methods
+
+builder.Services.RegisterValidators();
+builder.Services.RegisterHttpClients();
+builder.Services.RegisterConfigurations();
+builder.Services.RegisterStrategies();
+builder.Services.RegisterServices();
+builder.Services.RegisterBackgroundServices();
 
 var app = builder.Build();
 
@@ -43,21 +38,18 @@ app.MapControllers();
 
 app.Run();
 
+//try
+//{
+//    app.Run();
+//}
+//catch (Exception e)
+//{
+//    var servicecollection = new ServiceCollection();
+//    var serviceProvider = servicecollection.BuildServiceProvider();
+//    var logger = serviceProvider.GetService<ILogger<Program>>();
 
-public static class MyConfigServiceCollectionExtensions
-{
-    public static IServiceCollection AddConfig(
-         this IServiceCollection services, IConfiguration config)
-    {
-        services.AddTransient(typeof(IFactory), typeof(StrategyBuilderFactory));
-        services.AddTransient<WeatherForecastMapping>();
-        services.AddFluentValidation(options =>
-        {
-            options.RegisterValidatorsFromAssemblyContaining<DateQueryAndCityValidator>();
-            options.RegisterValidatorsFromAssemblyContaining<BetweenDateQueryAndCityValidator>();
-            options.RegisterValidatorsFromAssemblyContaining<WeekQueryAndCity>();
-        });
+//    //app.Logger.LogError("{Error}", e.Message);
 
-        return services;
-    }
-}
+//    logger?.LogError("{Error}", e);
+//}
+

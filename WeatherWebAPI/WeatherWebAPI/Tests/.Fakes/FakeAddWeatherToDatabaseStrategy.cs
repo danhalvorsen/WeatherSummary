@@ -7,14 +7,14 @@ namespace Tests.Fakes
 {
     public class FakeAddWeatherToDatabaseStrategy /*: IAddWeatherDataToDatabaseStrategy*/
     {
-        public async Task<WeatherForecast> Add(WeatherForecast weatherData, CityDto city)
+        public async Task<WeatherForecast.WeatherData> Add(WeatherForecast.WeatherData weatherData, CityDto city)
         {
             return await Task.FromResult(CreateTestData(weatherData, city));
         }
 
-        private static WeatherForecast CreateTestData(WeatherForecast weatherData, CityDto city)
+        private static WeatherForecast.WeatherData CreateTestData(WeatherForecast.WeatherData weatherData, CityDto city)
         {
-            return new WeatherForecast
+            return new WeatherForecast.WeatherData
             {
                 Date = weatherData.Date,
                 Temperature = weatherData.Temperature,

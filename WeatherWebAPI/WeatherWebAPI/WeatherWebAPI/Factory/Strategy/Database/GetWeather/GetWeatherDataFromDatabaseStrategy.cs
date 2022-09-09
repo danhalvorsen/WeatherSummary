@@ -7,21 +7,23 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class GetWeatherDataFromDatabaseStrategy : IGetWeatherDataFromDatabaseStrategy
     {
-        private readonly IDatabaseConfig _config;
+        private readonly IConfiguration _config;
 
-        public GetWeatherDataFromDatabaseStrategy(IDatabaseConfig config)
+        public GetWeatherDataFromDatabaseStrategy(IConfiguration config)
         {
-            this._config = config;
+            _config = config;
         }
 
-        public async Task<List<WeatherForecast>> Get(string queryString)
+        public StrategyType StrategyType => StrategyType.GetWeatherDataFromDatabase;
+
+        public async Task<List<WeatherForecast.WeatherData>> Get(string queryString)
         {
-            using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("WeatherForecastDatabase")))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
 
-                var WeatherForecasts = new List<WeatherForecast>();
+                var WeatherForecasts = new List<WeatherForecast.WeatherData>();
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -38,11 +40,11 @@ namespace WeatherWebAPI.Factory.Strategy.Database
                         var score = new Scores
                         {
                             WeatherDataId = reader["FK_WeatherDataId"] != System.DBNull.Value ? Convert.ToInt32(reader["FK_WeatherDataId"]) : 0,
-                            Score = reader["Score"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Score"]), 2) : 0,
-                            ScoreWeighted = reader["ScoreWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ScoreWeighted"]), 2) : 0
+                            Value = reader["Value"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["Value"]), 2) : 0,
+                            ValueWeighted = reader["ValueWeighted"] != System.DBNull.Value ? (float)Math.Round(Convert.ToDouble(reader["ValueWeighted"]), 2) : 0
                         };
 
-                        WeatherForecasts.Add(new WeatherForecast
+                        WeatherForecasts.Add(new WeatherForecast.WeatherData
                         {
                             WeatherForecastId = Convert.ToInt32(reader["Id"]),
                             City = reader["CityName"].ToString(),

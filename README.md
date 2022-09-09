@@ -59,17 +59,44 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourPassword" -p 1433:1433 -d mcr.
 ```
 
 #### **Create Docker Network**
-For docker compose to work, we need to create a network that both the docker containers share.
+For docker compose to work, we need to create a network that all our docker containers share.
 ```docker
 docker network create YourNetworkName
 ```
 
-# Backend setup
-[Visual Studio w/ docker-compose](/WeatherWebAPI/WeatherWebAPI/Documentation/README_VisualStudioSetup.md)
+#### **Create seperate docker-compose.yml file**
+Why? Because then you can run one development, and one production docker container for your application.
 
-[SQL Server Management Studio](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SQLServerManagementStudioSetup.md)
+***Remember*** to create two different databases aswell (inside your SQL Database image. You don't need to pull two images). You don't want production mixed up with development.
+```yml
+version: '3.4'
 
-[Make Self Signed HTTPS Certificate](/WeatherWebAPI/WeatherWebAPI/Documentation/README_SelfSignedHttpsCertificate.md)
+services:
+  db:
+    container_name: SqlServer
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    ports:
+        - "1433:1433"
+    volumes:
+        - Sql-server-storage:/var/opt/mssql
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=123456a@
+    networks:
+        - weather
+
+networks:
+    weather:
+      external: true
+
+volumes:
+  Sql-server-storage:
+    external: true
+```
+
+# Backend
+[README](/WeatherWebAPI/WeatherWebAPI/Documentation/README.md)
 
 # Backlog
 ### Backend
@@ -90,6 +117,8 @@ docker network create YourNetworkName
 
 **Cities**
 ```
+POST api/Cities/addCity
+
 GET /api/Cities/getCitiesInDatabase
 ```
 **CompanyRating**

@@ -1,26 +1,41 @@
 ﻿using System.Data.SqlClient;
+using WeatherWebAPI.Contracts.BaseContract;
 
 namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class AddScoreToDatabaseStrategy : IAddScoreToDatabaseStrategy
     {
-        private readonly IDatabaseConfig _config;
+        private readonly IConfiguration _config;
 
-        public AddScoreToDatabaseStrategy(IDatabaseConfig config)
+        public AddScoreToDatabaseStrategy(IConfiguration config)
         {
             _config = config;
         }
 
-        public async Task Add(double score, double weightedScore, int weatherDataId)
+        public StrategyType StrategyType => StrategyType.AddScoreToDatabase;
+
+        public async Task Add(List<Scores> scores)
         {
-            string queryString = $"INSERT INTO Score(Score, ScoreWeighted, FK_WeatherDataId) " +
-                                    $"VALUES({score}, {weightedScore}, {weatherDataId})";
+            try
+            {
+                foreach (var score in scores)
+                {
+                    string queryString = $"INSERT INTO Score(Value, ValueWeighted, FK_WeatherDataId) " +
+                            $"VALUES({score.Value}, {score.ValueWeighted}, {score.WeatherDataId})";
 
-            using SqlConnection connection = new(_config.ConnectionString);
-            SqlCommand command = new(queryString, connection);
-            connection.Open();
+                    using SqlConnection connection = new(_config.GetConnectionString("WeatherForecastDatabase"));
 
-            await command.ExecuteNonQueryAsync();
+                    SqlCommand command = new(queryString, connection);
+                    connection.Open();
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

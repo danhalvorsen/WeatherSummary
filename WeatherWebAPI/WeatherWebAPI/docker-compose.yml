@@ -2,24 +2,24 @@ version: '3.4'
 
 services:
   weatherwebapi:
-    container_name: WeatherWebAPI
+    container_name: WeatherWebAPI_Dev
     image: ${DOCKER_REGISTRY-}weatherwebapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=5000
+      - ASPNETCORE_HTTPS_PORT=1337
       - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
     ports:
-      - "80:80"
-      - "5000:443"
+      - "81:80"
+      - "1337:443"
 
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
-    networks: 
+    networks:
+          - weather
 
-        - default
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro #<- cant find file
@@ -27,24 +27,6 @@ services:
       #- ./docker.cert/https/:/root/.aspnet/https:ro <- Doesnt add asdf.pfx to destination but the APPDATA/Roaming/ASP.NET/https/ certificates are both there..?
       - ./docker.cert/https/:/https
 
-  db:
-    container_name: SqlServer
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    user: root
-    ports:
-        - "1433:1433"
-    volumes:
-        - Sql-server-storage:/var/opt/mssql
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=SqlServerAdminPassword
-    networks:
-        - default
 networks:
-  default:
-    external:
-      name: weather
-
-volumes:
-  Sql-server-storage:
-    external: true
+    weather:
+      external: true

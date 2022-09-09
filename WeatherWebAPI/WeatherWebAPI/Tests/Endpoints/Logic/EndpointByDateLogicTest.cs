@@ -18,12 +18,12 @@ namespace Tests.Endpoints.Logic
         private string? _cityName;
         private DateTime _date;
         private List<CityDto>? _cities;
-        private List<WeatherForecast>? _dates;
+        private List<WeatherForecast.WeatherData>? _dates;
         private int _weatherAdded;
         private int _weatherUpdated;
         private int _weatherDatabase;
 
-        private List<IGetWeatherDataStrategy<WeatherForecast>>? _weatherDataStrategies;
+        private List<IGetWeatherDataStrategy>? _weatherDataStrategies;
 
         [SetUp]
         public void Setup()
@@ -36,12 +36,12 @@ namespace Tests.Endpoints.Logic
 
             _dates = new()
             {
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
-                new WeatherForecast { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecast { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
-                new WeatherForecast { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(-1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow, Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "Yr" } },
+                new WeatherForecast.WeatherData { Date = DateTime.UtcNow.AddDays(1), Source = new WeatherSourceDto { DataProvider = "OpenWeather" } },
             };
 
             _weatherDatabase = 0;
@@ -93,7 +93,7 @@ namespace Tests.Endpoints.Logic
                         var fakeAddWeather = await fakeAddWeatherDataToDatabaseStrategy.Add(weatherData, city);
 
                         // Add(WeatherForecast weatherData, CityDto city)
-                        Console.WriteLine($"{weatherData.Source.DataProvider} {weatherData.Date} -> {fakeAddWeather.Source.DataProvider} {fakeAddWeather.Date} -- ADDED");
+                        Console.WriteLine($"{weatherData.Source?.DataProvider} {weatherData.Date} -> {fakeAddWeather.Source?.DataProvider} {fakeAddWeather.Date} -- ADDED");
                         _weatherAdded++;
                     }
                     if (UpdateWeatherDataBy(_date))
@@ -256,7 +256,7 @@ namespace Tests.Endpoints.Logic
 
 
                         // Update(WeatherForecast weatherData, CityDto city, DateTime dateToBeUpdated)
-                        Console.WriteLine($"{weatherData.Source.DataProvider} {weatherData.Date} -> {fakeUpdateWeather.Source.DataProvider} {fakeUpdateWeather.Date} -- UPDATED");
+                        Console.WriteLine($"{weatherData.Source?.DataProvider} {weatherData.Date} -> {fakeUpdateWeather.Source?.DataProvider} {fakeUpdateWeather.Date} -- UPDATED");
                         _weatherUpdated++;
                         _weatherDatabase++;
                     }
@@ -371,9 +371,9 @@ namespace Tests.Endpoints.Logic
             return !_dates!.ToList().Any(d => d.Date.Date.Equals(date.Date));
         }
 
-        public List<WeatherForecast>? GetDatesForCity(string cityName, IGetWeatherDataStrategy<WeatherForecast> strategy)
+        public List<WeatherForecast>? GetDatesForCity(string cityName, IGetWeatherDataStrategy strategy)
         {
-            return (List<WeatherForecast>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source.Equals(strategy.GetDataSource()));
+            return (List<WeatherForecast>?)_dates!.ToList().Where(d => d.City!.Equals(cityName) && d.Source!.Equals(strategy.GetType().Name));
         }
     }
 }

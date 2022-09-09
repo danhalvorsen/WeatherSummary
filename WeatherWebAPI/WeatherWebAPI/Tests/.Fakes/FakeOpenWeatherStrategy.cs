@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WeatherWebAPI;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
@@ -9,7 +10,7 @@ using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.Fakes
 {
-    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy<WeatherForecast>, IGetCityDataStrategy<CityDto>, IOpenWeatherStrategy
+    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy, IOpenWeatherFetchCityStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;
@@ -28,6 +29,9 @@ namespace Tests.Fakes
         private const string STAVANGER = "Stavanger";
         private const string OSLO = "Oslo";
         private const string WEATHERTYPE = "sunny";
+
+        public StrategyType StrategyType => StrategyType.OpenWeather;
+        public WeatherProvider WeatherProvider => WeatherProvider.OpenWeather;
 
         public Task<List<CityDto>> GetCityDataFor(string city)
         {
@@ -50,7 +54,7 @@ namespace Tests.Fakes
             };
         }
 
-        public Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             if (city != null && !string.IsNullOrEmpty(city.Name))
             {
@@ -59,11 +63,11 @@ namespace Tests.Fakes
             throw new ArgumentException("Should not have a city without a name");
         }
 
-        private static WeatherForecast CreateTestWeatherData(string cityName, DateTime date)
+        private static WeatherForecast.WeatherData CreateTestWeatherData(string cityName, DateTime date)
         {
             if (cityName == STAVANGER || cityName == OSLO)
             {
-                return new WeatherForecast
+                return new WeatherForecast.WeatherData
                 {
                     Date = date,
                     Temperature = TEMP,
@@ -87,7 +91,7 @@ namespace Tests.Fakes
 
         public string GetDataSource()
         {
-            return "OpenWeather";
+            return WeatherProvider.OpenWeather.ToString();
         }
     }
 }

@@ -5,7 +5,7 @@
 ```json
 {
   "ConnectionStrings": {
-    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=DB;User ID=sa; Password=123456a@;Connect Timeout=99999;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=WeatherForecast;User ID=sa; Password=123456a@;Connect Timeout=20;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
   },
 
   "Logging": {
@@ -34,31 +34,19 @@ services:
     ports:
       - "80:80"
       - "5000:443"
+
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
     networks: 
-        - default
+        - weather
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ./docker.cert/https/:/https
-  db:
-    container_name: SqlServer
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    user: root
-    ports:
-        - "1433:1433"
-    volumes:
-        - Sql-server-storage:/var/opt/mssql
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=SqlServerAdminPassword
-    networks:
-        - default
+
 networks:
-  default:
-    external:
-      name: weather
+    weather:
+      external: true
 
 volumes:
   Sql-server-storage:
@@ -66,9 +54,13 @@ volumes:
     
 ```
 #### **docker-compose.override.yml**
-The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "YourSelfMadeCertificate.pdx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed).
+The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "YourSelfMadeCertificate.pfx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed).
 
-The SA_PASSWORD: "SqlServerAdminPassword" is not really the password. The real password is set in the usersecrets file: C:\Users\UserName\AppData\Roaming\Microsoft\UserSecrets
+To hide passwords to the public, you could add it to your UserSecrets file; ie: 
+```csharp
+"SQLServerPassword": "123456a@",
+"Password": "superpassword123",
+```
 
 ***Remember*** to set the port for your swagger API in the override file (used by Visual Studio). If you set this **ONLY** in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
 ```yml
@@ -89,6 +81,7 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ./docker.cert/https/:/https
 
+
 ```
 ---
-[Go back](/README.md/#Diagrams)
+[Go back](/WeatherWebAPI/WeatherWebAPI/Documentation/README.md)

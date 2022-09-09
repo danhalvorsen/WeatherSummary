@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: SqlServer
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    ports:
+        - "1433:1433"
+    volumes:
+        - Sql-server-storage:/var/opt/mssql
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=123456a@
+    networks:
+        - weather
+
+networks:
+    weather:
+      external: true
+
+volumes:
+  Sql-server-storage:
+    external: true

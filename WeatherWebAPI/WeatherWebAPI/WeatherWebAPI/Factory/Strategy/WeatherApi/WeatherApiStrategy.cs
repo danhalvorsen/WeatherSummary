@@ -1,53 +1,51 @@
-﻿using Microsoft.Net.Http.Headers;
-using System.Net.Http.Headers;
+﻿using AutoMapper;
+using Microsoft.Net.Http.Headers;
 using System.Text.Json;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 {
-    public class WeatherApiStrategy : IGetWeatherDataStrategy<WeatherForecast>, IWeatherApiStrategy
+    public class WeatherApiStrategy : IGetWeatherDataStrategy // Not in use -> Free period over.
     {
-        private readonly WeatherApiConfig _weatherApiConfig;
+        private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        public WeatherApiStrategy(WeatherApiConfig config, HttpClient httpClient)
-        {
-            _weatherApiConfig = config;
-            _httpClient = httpClient;
+        public WeatherProvider WeatherProvider => throw new NotImplementedException(); // WeatherProvider.WeatherApi;
 
-            _httpClient.BaseAddress = new Uri("https://api.weatherapi.com/");
+        public StrategyType StrategyType => throw new NotImplementedException(); // StrategyType.WeatherApi;
+
+        public WeatherApiStrategy(IMapper mapper, WeatherApiConfig config, HttpClient httpClient)
+        {
+            _mapper = mapper;
+            _httpClient = httpClient;
+            _httpClient.BaseAddress = config.BaseUrl;
 
             httpClient.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             httpClient.DefaultRequestHeaders.Add(HeaderNames.UserAgent, "Mozilla/5.0 (Windows 10, Win64; x64; rv: 100.0) Gecko/20100101 FireFox /100.0");
         }
 
-        public async Task<WeatherForecast> GetWeatherDataFrom(CityDto city, DateTime queryDate)
+        public async Task<WeatherForecast.WeatherData> GetWeatherDataFrom(CityDto city, DateTime queryDate)
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
 
-            //var httpClient = _httpClientFactory.CreateClient("Yr");
-            var response = await _httpClient.GetAsync($"v1/forecast.json?key=27c1ef24ebc84fe5a8e81359221608&q={city.Name}&days=8&aqi=no&alerts=no");
+            var response = await _httpClient.GetAsync($"v1/forecast.json?key=4be235a3168f4de281b80126223108&q={city.Name}&days=8&aqi=no&alerts=no");
 
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var weatherData = JsonSerializer.Deserialize<ApplicationWeatherApi>(responseBody);
 
-                // Mapper
-                _weatherApiConfig.Get(queryDate);
-
-                var resultWeatherData = _weatherApiConfig.MapperConfig.CreateMapper().Map<WeatherForecast>(weatherData);
-                return resultWeatherData;
+                var resultWeatherData = _mapper.Map<WeatherForecast>(weatherData);
+                return resultWeatherData.GetByDate(queryDate.Date + new TimeSpan(12, 0, 0));
             }
 
-            return new WeatherForecast();
+            return new WeatherForecast.WeatherData();
         }
 
         public string GetDataSource()
         {
-            return _weatherApiConfig.DataSource!;
+            return WeatherProvider.ToString();
         }
     }
 }

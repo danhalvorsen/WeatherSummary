@@ -53,6 +53,8 @@ namespace WeatherWebAPI.Query
 
             RuleFor(p => p.To).NotEmpty().WithMessage("{PropertyName} can't be empty, null or whitespace");
             RuleFor(p => p.To).GreaterThan(valueToCompare).WithMessage("{PropertyName} should be higher than the lower limit: " + $"{valueToCompare.Date}");
+            RuleFor(p => p.To).Must((p, m, x) => { return p.From <= p.To; }).WithMessage("{PropertyName} should be higher than or equal to From-date");
+                //GreaterThan(s => s.From).WithMessage("{PropertyName} should be higher than the From-date");
         }
     }
 

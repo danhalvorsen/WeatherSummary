@@ -3,26 +3,27 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Query
 {
-    public class GetCitiesQuery : IGetCityQuery
+    public class GetCitiesQuery : IGetCitiesQuery
+
     {
         private readonly IConfiguration _config;
         private const string _queryString = $"SELECT * FROM City";
 
         public GetCitiesQuery(IConfiguration config)
         {
-            this._config = config;
+            _config = config;
         }
 
         public async Task<List<CityDto>> GetAllCities()
         {
-            var connectionString = _config.GetConnectionString("WeatherForecastDatabase");
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("WeatherForecastDatabase")))
             {
                 SqlCommand command = new SqlCommand(_queryString, connection);
                 connection.Open();
 
                 var list = new List<CityDto>();
-                
+
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)
