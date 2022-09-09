@@ -10,12 +10,6 @@
       "brand": "Microsoft",
       "category": "Laptops",
       "imageurl": "https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg",
-      "comments": [
-        {
-          "name": "Dan",
-          "comment": "this is a good laptop"
-        }
-      ],
       "coupon": 50
     },
     {
@@ -27,12 +21,6 @@
       "brand": "Apple",
       "category": "Phones",
       "imageurl": "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-13-01.jpg",
-      "comments": [
-        {
-          "name": "Tørbjorn",
-          "comment": "I have it"
-        }
-      ],
       "coupon": 45
     },
     {
@@ -44,12 +32,7 @@
       "brand": "JBL",
       "category": "Headphones",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61yjoRgptdL._AC_SX425_.jpg",
-      "comments": [
-        {
-          "name": "Hakoon",
-          "comment": "it has a big cushion and comfortable"
-        }
-      ],
+
       "coupon": 10
     },
     {
@@ -61,7 +44,6 @@
       "brand": "Apple",
       "category": "Headphones",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71bhWgQK-cL._AC_SX466_.jpg",
-      "comments": [{}],
       "coupon": 10
     },
 
@@ -74,12 +56,6 @@
       "brand": "Amazonbasics",
       "category": "Mouse&Keyboard",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61i0CV-tKpL._AC_SX425_.jpg",
-      "comments": [
-        {
-          "name": "Jack",
-          "comment": "it's nice"
-        }
-      ],
       "coupon": 5
     },
     {
@@ -91,16 +67,6 @@
       "brand": "Lovaky",
       "category": "Mouse&Keyboard",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61fie1u7QAL._AC_SX679_.jpg",
-      "comments": [
-        {
-          "name": "Jack",
-          "comment": "light weight keyboard"
-        },
-        {
-          "name": "Marta",
-          "comment": "I want to buy it"
-        }
-      ],
       "coupon": 10
     },
 
@@ -113,12 +79,6 @@
       "brand": "Acer",
       "category": "Laptops",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/81bc8mA3nKL._AC_SX425_.jpg",
-      "comments": [
-        {
-          "name": "Mohammad",
-          "comment": "Nice laptop for gaming"
-        }
-      ],
       "coupon": 60
     },
     {
@@ -130,7 +90,6 @@
       "brand": "Acer",
       "category": "Laptops",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71RK6+rx-xL._AC_SX679_.jpg",
-      "comments": [{}],
       "coupon": 50
     },
     {
@@ -142,7 +101,6 @@
       "brand": "Gigabyte",
       "category": "Laptops",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71RK6+rx-xL._AC_SX679_.jpg",
-      "comments": [{}],
       "coupon": 50
     },
     {
@@ -154,7 +112,6 @@
       "brand": "HP",
       "category": "Printer",
       "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71w39ba633L._AC_SX425_.jpg",
-      "comments": [{}],
       "coupon": 20
     }
   ]
