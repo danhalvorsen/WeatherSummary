@@ -1,6 +1,6 @@
 export type Children = JSX.Element | JSX.Element[];
 
-export type productsType = {
+export type ProductsType = {
   id: number;
   title: string;
   description: string;
