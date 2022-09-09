@@ -51,9 +51,14 @@ networks:
       external: true
 ```
 #### **docker-compose.override.yml**
-The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "YourSelfMadeCertificate.pdx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed).
+The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "asdf.pdx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed).
 
-The SA_PASSWORD: "SqlServerAdminPassword" is not really the password. The real password is set in the usersecrets file: C:\Users\UserName\AppData\Roaming\Microsoft\UserSecrets
+To hide passwords to the public, you could add it to your UserSecrets file; ie: 
+```csharp
+"SQLServerPassword": "123456a@",
+"Password": "superpassword123",
+```
+User secrets is normally located at: C:\Users\UserName\AppData\Roaming\Microsoft\UserSecrets
 
 ***Remember*** to set the port for your swagger API in the override file (used by Visual Studio). If you set this **ONLY** in the docker-compose.yml file it will be overriden either way. Port set to 5000 below:
 ```yml
@@ -76,5 +81,6 @@ services:
 
 
 ```
+
 ---
 [Go back](/WeatherWebAPI/WeatherWebAPI/Documentation/README.md)

@@ -59,9 +59,40 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourPassword" -p 1433:1433 -d mcr.
 ```
 
 #### **Create Docker Network**
-For docker compose to work, we need to create a network that both the docker containers share.
+For docker compose to work, we need to create a network that all our docker containers share.
 ```docker
 docker network create YourNetworkName
+```
+
+#### **Create seperate docker-compose.yml file**
+Why? Because then you can run one development, and one production docker container for your application.
+
+***Remember*** to create two different databases aswell (inside your SQL Database image. You don't need to pull two images). You don't want production mixed up with development.
+```yml
+version: '3.4'
+
+services:
+  db:
+    container_name: SqlServer
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    ports:
+        - "1433:1433"
+    volumes:
+        - Sql-server-storage:/var/opt/mssql
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=123456a@
+    networks:
+        - weather
+
+networks:
+    weather:
+      external: true
+
+volumes:
+  Sql-server-storage:
+    external: true
 ```
 
 # Backend
