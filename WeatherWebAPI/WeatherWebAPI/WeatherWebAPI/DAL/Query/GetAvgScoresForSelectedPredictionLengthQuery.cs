@@ -1,4 +1,5 @@
-﻿using WeatherWebAPI.Contracts;
+﻿using AutoMapper;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Query;
@@ -7,18 +8,26 @@ namespace WeatherWebAPI.DAL.Query
 {
     public class GetAvgScoresForSelectedPredictionLengthQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetAvgScoresForSelectedPredictionLengthQuery() : base()
-        {
+        private readonly IMapper _mapper;
+        private readonly IGetWeatherDataFromDatabaseStrategy _getWeatherDataFromDatabaseStrategy;
 
+        public GetAvgScoresForSelectedPredictionLengthQuery(
+            IMapper mapper,
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy
+            ) : base()
+        {
+            _mapper = mapper;
+            _getWeatherDataFromDatabaseStrategy = getWeatherDataFromDatabaseStrategy;
         }
 
-        public async Task<List<ScoresAverageDto>> CalculateAverageScoresForSelectedPredictionLength(DaysQuery query, IEnumerable<IStrategy> weatherDataStrategies)
+        public async Task<List<ScoresAverageDto>> CalculateAverageScoresForSelectedPredictionLength(DaysQuery query, IEnumerable<IGetWeatherDataStrategy> weatherDataStrategies)
         {
             var days = query.Days;
             var avgScoreList = new List<ScoresAverageDto>();
+            
             try
             {
-                foreach (IGetWeatherDataStrategy strategy in weatherDataStrategies)
+                foreach (var strategy in weatherDataStrategies)
                 {
 
                     string queryString = $"SELECT WeatherData.Id, [Date], WeatherType, Temperature, Windspeed, WindspeedGust, WindDirection, Pressure, Humidity, ProbOfRain, AmountRain, CloudAreaFraction, FogAreaFraction, ProbOfThunder, DateForecast, " +
@@ -29,10 +38,8 @@ namespace WeatherWebAPI.DAL.Query
                                                             $"LEFT JOIN Score ON WeatherData.Id = Score.FK_WeatherDataId " +
                                                                 $"WHERE[Source].Name = '{strategy.GetDataSource()}' AND Score.FK_WeatherDataId IS NOT null AND CAST([DateForecast] as Date) = [Date] + {days}";
 
-                    var getWeatherDataFromDatabaseStrategy = (IGetWeatherDataFromDatabaseStrategy)_commonArgs!.Factory!.Build(StrategyType.GetWeatherDataFromDatabase);
-
-                    var weatherForecasts = await getWeatherDataFromDatabaseStrategy.Get(queryString);
-                    var weatherForecastsDto = _commonArgs.Mapper!.Map<List<WeatherForecastDto>>(weatherForecasts);
+                    var weatherForecasts = await _getWeatherDataFromDatabaseStrategy.Get(queryString);
+                    var weatherForecastsDto = _mapper!.Map<List<WeatherForecastDto>>(weatherForecasts);
 
                     float sumScore = 0;
                     float sumScoreWeighted = 0;

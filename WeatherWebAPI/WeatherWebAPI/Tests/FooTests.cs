@@ -28,7 +28,7 @@ namespace Tests
 
             public float DoWork()
             {
-                return this.foo.calc();
+                return this.foo.Calc();
             }
         }
 
@@ -37,22 +37,22 @@ namespace Tests
         {
 
             var fooMock = new Mock<IFoo>();
-            fooMock.Setup(m => m.calc()).Returns(4);
+            fooMock.Setup(m => m.Calc()).Returns(4);
 
             var sut = new ABC(fooMock.Object);
 
-            sut.DoWork().Should().Be(20000);
+            sut.DoWork().Should().Be(4);
         }
 
 
         public interface IFoo
         {
-            float calc();
+            float Calc();
         }
 
         public class Foo : IFoo
         {
-            virtual public float calc()
+            virtual public float Calc()
             {
                 return 1 + 1;
             }
@@ -60,9 +60,9 @@ namespace Tests
 
         public class Bla : Foo
         {
-            public override float calc()
+            public override float Calc()
             {
-                return base.calc();
+                return base.Calc();
             }
         }
     }

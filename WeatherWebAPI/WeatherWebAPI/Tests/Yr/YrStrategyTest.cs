@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.YR;
-using static WeatherWebAPI.Contracts.BaseContract.WeatherForecast;
 
 namespace Tests.Yr
 {
@@ -34,7 +33,7 @@ namespace Tests.Yr
         public void Setup()
         {
             IServiceCollection servicecollection = new ServiceCollection();
-            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
+            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") };
             servicecollection.AddAutoMapper(assembly);
             _serviceProvider = servicecollection.BuildServiceProvider();
 
@@ -43,11 +42,6 @@ namespace Tests.Yr
             _strategy = new YrStrategy(_mapper!, new YrConfig(), new HttpClient());
 
             _date = DateTime.UtcNow;
-
-            //if (DateTime.UtcNow.Hour < 12)
-            //    _date = DateTime.UtcNow.Date + new TimeSpan(12, 0, 0);
-            //else
-            //    _date = DateTime.UtcNow.Date + new TimeSpan(DateTime.UtcNow.Hour, 0, 0);
         }
 
 

@@ -5,7 +5,7 @@
 ```json
 {
   "ConnectionStrings": {
-    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=WeatherForecast;User ID=sa; Password=123456a@;Connect Timeout=20;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+    "WeatherForecastDatabase": "Data Source=SqlServer,1433;Initial Catalog=WeatherForecast_dev;User ID=sa; Password=123456a@;Connect Timeout=120;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
   },
 
   "Logging": {
@@ -16,6 +16,7 @@
   },
   "AllowedHosts": "*"
 }
+
 ```
 #### **docker-compose.yml**
 ```yml
@@ -23,23 +24,24 @@ version: '3.4'
 
 services:
   weatherwebapi:
-    container_name: WeatherWebAPI
+    container_name: WeatherWebAPI_Dev
     image: ${DOCKER_REGISTRY-}weatherwebapi
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=5000
+      - ASPNETCORE_HTTPS_PORT=1337
       - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
     ports:
-      - "80:80"
-      - "5000:443"
+      - "81:80"
+      - "1337:443"
 
     build:
       context: .
       dockerfile: WeatherWebAPI/Dockerfile
-    networks: 
-        - weather
+    networks:
+          - weather
+
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ./docker.cert/https/:/https
@@ -47,11 +49,6 @@ services:
 networks:
     weather:
       external: true
-
-volumes:
-  Sql-server-storage:
-    external: true
-    
 ```
 #### **docker-compose.override.yml**
 The Kestrel Certificate has to be made and put into the root folder of the project. Follow the instructions on the README.md file. "YourSelfMadeCertificate.pdx" and password is the name and password of your choosing when [creating the certificate](/WeatherWebAPI/WeatherWebAPI/README_SelfSignedHttpsCertificate.md) (Self Signed).
@@ -67,12 +64,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=5000
+      - ASPNETCORE_HTTPS_PORT=1337
       - ASPNETCORE_Kestrel__Certificates__Default__Password=asdf
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/asdf.pfx
     ports:
-      - "80:80"
-      - "5000:443"
+      - "81:80"
+      - "1337:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ./docker.cert/https/:/https

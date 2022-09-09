@@ -6,5 +6,4 @@ namespace WeatherWebAPI.DAL.Query
     {
         Task<WeatherTuple> Get(CityDto city);
     }
-
 }

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using static WeatherWebAPI.Contracts.BaseContract.WeatherForecast;
 
 namespace Tests.OpenWeather
 {
@@ -34,11 +33,11 @@ namespace Tests.OpenWeather
         public void SetUp()
         {
             IServiceCollection servicecollection = new ServiceCollection();
-            var whatafouck = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
-            servicecollection.AddAutoMapper(whatafouck);
+            var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") };
+            servicecollection.AddAutoMapper(assembly);
             _serviceProvider = servicecollection.BuildServiceProvider();
             _date = DateTime.UtcNow;
-
+            
             _mapper = _serviceProvider.GetService<IMapper>();
             _strategy = new OpenWeatherStrategy(_mapper!, new OpenWeatherConfig(), new HttpClient());
         }

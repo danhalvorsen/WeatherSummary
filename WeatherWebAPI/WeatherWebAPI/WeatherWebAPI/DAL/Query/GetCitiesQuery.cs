@@ -1,7 +1,5 @@
 ﻿using System.Data.SqlClient;
 using WeatherWebAPI.Controllers;
-using WeatherWebAPI.DAL.Commands.BackgroundService;
-using WeatherWebAPI.Factory.Strategy.Database;
 
 namespace WeatherWebAPI.Query
 {
@@ -18,14 +16,14 @@ namespace WeatherWebAPI.Query
 
         public async Task<List<CityDto>> GetAllCities()
         {
-            var connectionString = _config.GetConnectionString("WeatherForecastDatabase");
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("WeatherForecastDatabase")))
             {
                 SqlCommand command = new SqlCommand(_queryString, connection);
                 connection.Open();
 
                 var list = new List<CityDto>();
-                
+
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     foreach (object o in reader)

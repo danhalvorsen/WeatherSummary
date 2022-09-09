@@ -6,12 +6,11 @@ using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.Fakes
 {
-    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy, IGetCityDataStrategy
+    public class FakeOpenWeatherStrategy : IGetWeatherDataStrategy, IOpenWeatherFetchCityStrategy
     {
         public const int YEAR = 2002;
         public const int MONTH = 02;

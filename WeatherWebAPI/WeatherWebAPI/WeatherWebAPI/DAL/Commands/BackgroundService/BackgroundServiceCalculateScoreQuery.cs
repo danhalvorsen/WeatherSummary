@@ -40,14 +40,13 @@ namespace WeatherWebAPI.DAL
             {
                 var cities = await _getCitiesQuery.GetAllCities();
 
-                foreach (var city in cities)
-                {
+                //foreach (var city in cities)
+                //{
+                    var getWeatherDataToScoreForCity = await _getWeatherDataForRating.Get(cities[0]/*city*/);
 
-                    var getWeatherToScoreForCity = await _getWeatherDataForRating.Get(city);
-
-                    foreach (var actual in getWeatherToScoreForCity.ActualWeather)
+                    foreach (var actual in getWeatherDataToScoreForCity.ActualWeather)
                     {
-                        foreach (var predicted in getWeatherToScoreForCity.PredictedWeather)
+                        foreach (var predicted in getWeatherDataToScoreForCity.PredictedWeather)
                         {
                             if (actual.Date.Date == predicted.DateForecast.Date && actual.Source?.DataProvider == predicted.Source?.DataProvider && actual.City == predicted.City)
                             {
@@ -79,20 +78,21 @@ namespace WeatherWebAPI.DAL
                                     ValueWeighted = (float)weightedScore,
                                     WeatherDataId = predicted.WeatherForecastId
                                 });
-                                //await AddScoreToDatabase(score, weightedScore, predicted.WeatherForecastId);
                             }
                         }
                     }
-                }
+                //}
                 return scoresList;
             }
             catch (OperationCanceledException ex)
             {
-                _logger.LogError("{Error}", ex.Message);
+                _logger.LogError("{Error}", ex);
+                throw;
             }
             catch (Exception e)
             {
-                _logger.LogError("{Error}", e.Message);
+                _logger.LogError("{Error}", e);
+                throw;
             }
 
             throw new Exception("Error fetching data from database");

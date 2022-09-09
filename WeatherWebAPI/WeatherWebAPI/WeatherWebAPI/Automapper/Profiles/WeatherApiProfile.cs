@@ -10,7 +10,7 @@ namespace WeatherWebAPI.Automapper.Profiles
         private const int MAX_VALUE_VISIBILITY = 10;
         private const int PERCENTAGE_FACTOR = 10;
 
-        static WeatherProvider WeatherProvider => WeatherProvider.WeatherApi;
+        static WeatherProvider WeatherProvider; /*=> WeatherProvider.WeatherApi;*/
 
         public WeatherApiProfile()
         {
@@ -37,9 +37,8 @@ namespace WeatherWebAPI.Automapper.Profiles
 
         private static DateTime UnixTimeStampToDateTime(int unixTimeStamp)
         {
-            // Unix timestamp is seconds past epoch
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp);/*ToLocalTime();*/
+            dateTime = dateTime.AddSeconds(unixTimeStamp);
             return dateTime;
         }
 

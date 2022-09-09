@@ -7,18 +7,18 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class GetWeatherDataFromDatabaseStrategy : IGetWeatherDataFromDatabaseStrategy
     {
-        private readonly IDatabaseConfig _config;
+        private readonly IConfiguration _config;
 
-        public GetWeatherDataFromDatabaseStrategy(IDatabaseConfig config)
+        public GetWeatherDataFromDatabaseStrategy(IConfiguration config)
         {
-            this._config = config;
+            _config = config;
         }
 
         public StrategyType StrategyType => StrategyType.GetWeatherDataFromDatabase;
 
         public async Task<List<WeatherForecast.WeatherData>> Get(string queryString)
         {
-            using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("WeatherForecastDatabase")))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
@@ -27,8 +27,8 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    Debug.Assert(reader != null, "Reader should not be null");
-                    Debug.Assert(reader.HasRows != false, "Reader should have rows");
+                    //Debug.Assert(reader != null, "Reader should not be null");
+                    //Debug.Assert(reader.HasRows != false, "Reader should have rows");
 
                     foreach (object o in reader)
                     {

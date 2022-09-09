@@ -6,10 +6,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Tests.Fakes;
-using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.Endpoints.Logic
 {
@@ -50,7 +49,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
+                IOpenWeatherFetchCityStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
 
                 cityInfo[0].Name = "Bergen";
@@ -104,7 +103,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
+                IOpenWeatherFetchCityStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
 
                 cityInfo[0].Name = "Stavanger";
@@ -158,7 +157,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
+                IOpenWeatherFetchCityStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
                 cityInfo[0].Name = "Stavanger";
                 cityName = cityInfo[0].Name;
@@ -211,7 +210,7 @@ namespace Tests.Endpoints.Logic
 
             if (!CityExists(cityInput!))
             {
-                IGetCityDataStrategy strategy = new FakeOpenWeatherStrategy();
+                IOpenWeatherFetchCityStrategy strategy = new FakeOpenWeatherStrategy();
                 var cityInfo = strategy.GetCityDataFor(cityInput).Result;
                 cityInfo[0].Name = "";
                 cityName = cityInfo[0].Name;

@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using WeatherWebAPI.Contracts.BaseContract;
-
-namespace WeatherWebAPI.Factory.Strategy.YR
+﻿namespace WeatherWebAPI.Factory.Strategy.YR
 {
     public class YrConfig : IHttpConfig
     {

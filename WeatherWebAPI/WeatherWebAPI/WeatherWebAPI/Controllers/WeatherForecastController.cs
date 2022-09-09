@@ -1,43 +1,46 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WeatherWebAPI;
 using WeatherWebAPI.Contracts;
 using WeatherWebAPI.DAL.Query;
+using WeatherWebAPI.Factory;
+using WeatherWebAPI.Factory.Strategy;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Query;
 
 [Route("api/[controller]")]
 [ApiController]
 public partial class WeatherForecastController : ControllerBase
 {
+    private readonly List<IGetWeatherDataStrategy>? _weatherDataStrategies = new();
+    private readonly IMapper _mapper;
+    private readonly IGetCitiesQuery _getCitiesQuery;
+    private readonly IOpenWeatherFetchCityStrategy _openWeatherFetchCityStrategy;
+    private readonly IGetWeatherDataFromDatabaseStrategy _getWeatherDataFromDatabaseStrategy;
     private readonly DateQueryAndCityValidator _dateQueryAndCityValidator;
-    private readonly CityQueryValidator _cityQueryValidator;
-    private readonly DaysQueryValidator _daysQueryValidator;
     private readonly BetweenDateQueryAndCityValidator _beetweenDateQueryAndCityValidator;
     private readonly WeekQueryAndCityValidator _weekQueryAndCityValidator;
-    private readonly DaysQueryAndCityValidator _daysQueryAndCityValidator;
-    private readonly IYrStrategy _yrStrategy;
-    private readonly IOpenWeatherStrategy _openWeatherStrategy;
 
     public WeatherForecastController(
+        IMapper mapper,
+        IGetCitiesQuery getCitiesQuery,
+        IOpenWeatherFetchCityStrategy openWeatherFetchCityStrategy,
+        IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy,
         DateQueryAndCityValidator dateQueryAndCityValidator,
-        CityQueryValidator cityQueryValidator,
-        DaysQueryValidator daysQueryValidator,
         BetweenDateQueryAndCityValidator beetweenDateQueryAndCityValidator,
         WeekQueryAndCityValidator weekQueryAndCityValidator,
-        DaysQueryAndCityValidator daysQueryAndCityValidator,
-        IYrStrategy yrStrategy,
-        IOpenWeatherStrategy openWeatherStrategy)
+        StrategyResolver strategyPicker)
     {
+        _mapper = mapper;
+        _getCitiesQuery = getCitiesQuery;
+        _openWeatherFetchCityStrategy = openWeatherFetchCityStrategy;
+        _getWeatherDataFromDatabaseStrategy = getWeatherDataFromDatabaseStrategy;
         _dateQueryAndCityValidator = dateQueryAndCityValidator;
-        _cityQueryValidator = cityQueryValidator;
-        _daysQueryValidator = daysQueryValidator;
         _beetweenDateQueryAndCityValidator = beetweenDateQueryAndCityValidator;
         _weekQueryAndCityValidator = weekQueryAndCityValidator;
-        _daysQueryAndCityValidator = daysQueryAndCityValidator;
-        _yrStrategy = yrStrategy;
-        _openWeatherStrategy = openWeatherStrategy;
 
-        //_strategies.Add(args.Common.Factory!.Build(StrategyType.Yr));
-        //_strategies.Add(args.Common.Factory!.Build(StrategyType.OpenWeather));
-        //_strategies.Add(args.Common.Factory.Build(StrategyType.WeatherApi));
+        _weatherDataStrategies?.Add(strategyPicker(WeatherProvider.Yr));
+        _weatherDataStrategies?.Add(strategyPicker(WeatherProvider.OpenWeather));
     }
 
 
@@ -53,7 +56,7 @@ public partial class WeatherForecastController : ControllerBase
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastPredictionByDateQuery();
+        var command = new GetWeatherForecastPredictionByDateQuery(_mapper, _getCitiesQuery, _openWeatherFetchCityStrategy, _getWeatherDataFromDatabaseStrategy);
 
         return await command.GetWeatherForecastPredictionByDateForOneWeek(query);
     }
@@ -70,9 +73,9 @@ public partial class WeatherForecastController : ControllerBase
             return BadRequest(validationResult.Errors);
 
 
-        var command = new GetWeatherForecastByDateQuery();
+        var command = new GetWeatherForecastByDateQuery(_mapper, _getCitiesQuery, _openWeatherFetchCityStrategy, _getWeatherDataFromDatabaseStrategy);
 
-        return await command.GetWeatherForecastByDate(query, _strategies);
+        return await command.GetWeatherForecastByDate(query, _weatherDataStrategies);
     }
 
     [Route("between/")]
@@ -86,7 +89,7 @@ public partial class WeatherForecastController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastBetweenDatesQuery(_arguments.Common);
+        var command = new GetWeatherForecastBetweenDatesQuery(_mapper, _getCitiesQuery, _openWeatherFetchCityStrategy, _getWeatherDataFromDatabaseStrategy);
 
         return await command.GetWeatherForecastBetweenDates(query);
     }
@@ -101,7 +104,7 @@ public partial class WeatherForecastController : ControllerBase
         if (!validationResult.IsValid)
             return BadRequest(validationResult.Errors);
 
-        var command = new GetWeatherForecastByWeekNumberQuery(_arguments.Common);
+        var command = new GetWeatherForecastByWeekNumberQuery(_mapper, _getCitiesQuery, _openWeatherFetchCityStrategy, _getWeatherDataFromDatabaseStrategy);
 
         return await command.GetWeatherForecastByWeek(query);
     }

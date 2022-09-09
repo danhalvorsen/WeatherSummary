@@ -5,9 +5,9 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class GetScoreFromDatabaseStrategy : IGetScoreFromDatabaseStrategy
     {
-        private readonly IDatabaseConfig _config;
+        private readonly IConfiguration _config;
 
-        public GetScoreFromDatabaseStrategy(IDatabaseConfig config)
+        public GetScoreFromDatabaseStrategy(IConfiguration config)
         {
             _config = config;
         }
@@ -18,27 +18,25 @@ namespace WeatherWebAPI.Factory.Strategy.Database
         {
             string queryString = "SELECT * FROM Score";
 
-            using (SqlConnection connection = new SqlConnection(_config.ConnectionString))
-            {
-                SqlCommand command = new SqlCommand(queryString, connection);
-                connection.Open();
+            using SqlConnection connection = new(_config.GetConnectionString("WeatherForecastDatabase"));
+            SqlCommand command = new(queryString, connection);
+            connection.Open();
 
-                var scores = new List<Scores>();
-                using (SqlDataReader reader = command.ExecuteReader())
+            var scores = new List<Scores>();
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                foreach (object o in reader)
                 {
-                    foreach (object o in reader)
+                    scores.Add(new Scores
                     {
-                        scores.Add(new Scores
-                        {
-                            WeatherDataId = Convert.ToInt32(reader["FK_WeatherDataId"]),
-                            Value = (float)Convert.ToDouble(reader["Value"]),
-                            ValueWeighted = (float)Convert.ToDouble(reader["ValueWeighted"])
-                        });
-                    }
+                        WeatherDataId = Convert.ToInt32(reader["FK_WeatherDataId"]),
+                        Value = (float)Convert.ToDouble(reader["Value"]),
+                        ValueWeighted = (float)Convert.ToDouble(reader["ValueWeighted"])
+                    });
                 }
-                await command.ExecuteNonQueryAsync();
-                return scores;
             }
+            await command.ExecuteNonQueryAsync();
+            return scores;
         }
     }
 }

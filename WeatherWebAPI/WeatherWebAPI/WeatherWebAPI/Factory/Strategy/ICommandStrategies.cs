@@ -15,6 +15,6 @@ namespace WeatherWebAPI.Factory.Strategy
 
     public interface IAddWeatherDataToDatabaseStrategy : IStrategy
     {
-        Task Add(WeatherForecast.WeatherData weatherData, CityDto city);
+        Task Add(List<WeatherForecast.WeatherData> weatherData);
     }
 }

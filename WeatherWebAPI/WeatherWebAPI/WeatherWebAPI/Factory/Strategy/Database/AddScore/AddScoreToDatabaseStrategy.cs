@@ -5,9 +5,9 @@ namespace WeatherWebAPI.Factory.Strategy.Database
 {
     public class AddScoreToDatabaseStrategy : IAddScoreToDatabaseStrategy
     {
-        private readonly IDatabaseConfig _config;
+        private readonly IConfiguration _config;
 
-        public AddScoreToDatabaseStrategy(IDatabaseConfig config)
+        public AddScoreToDatabaseStrategy(IConfiguration config)
         {
             _config = config;
         }
@@ -18,12 +18,12 @@ namespace WeatherWebAPI.Factory.Strategy.Database
         {
             try
             {
-                using SqlConnection connection = new(_config.ConnectionString);
-
                 foreach (var score in scores)
                 {
                     string queryString = $"INSERT INTO Score(Value, ValueWeighted, FK_WeatherDataId) " +
                             $"VALUES({score.Value}, {score.ValueWeighted}, {score.WeatherDataId})";
+
+                    using SqlConnection connection = new(_config.GetConnectionString("WeatherForecastDatabase"));
 
                     SqlCommand command = new(queryString, connection);
                     connection.Open();

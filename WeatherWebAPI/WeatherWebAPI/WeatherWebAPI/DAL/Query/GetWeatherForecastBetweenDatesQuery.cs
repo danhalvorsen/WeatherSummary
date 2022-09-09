@@ -1,14 +1,30 @@
-﻿using System.Globalization;
+﻿using AutoMapper;
+using System.Globalization;
 using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastBetweenDatesQuery : BaseFunctionsForQueriesAndCommands
     {
-        public GetWeatherForecastBetweenDatesQuery() : base()
-        {
+        private readonly IMapper _mapper;
+        private readonly IGetCitiesQuery _getCitiesQuery;
+        private readonly IOpenWeatherFetchCityStrategy _openWeatherFetchCityStrategy;
+        private readonly IGetWeatherDataFromDatabaseStrategy _getWeatherDataFromDatabaseStrategy;
 
+        public GetWeatherForecastBetweenDatesQuery(
+            IMapper mapper, 
+            IGetCitiesQuery getCitiesQuery,
+            IOpenWeatherFetchCityStrategy openWeatherFetchCityStrategy,
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy
+            ) : base()
+        {
+            _mapper = mapper;
+            _getCitiesQuery = getCitiesQuery;
+            _openWeatherFetchCityStrategy = openWeatherFetchCityStrategy;
+            _getWeatherDataFromDatabaseStrategy = getWeatherDataFromDatabaseStrategy;
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastBetweenDates(BetweenDateQueryAndCity betweenDateQueryAndCity)
@@ -19,15 +35,14 @@ namespace WeatherWebAPI.DAL.Query
             DateTime toDate = betweenDateQueryAndCity!.BetweenDateQuery.To!.ToUniversalTime();
 
             var datesQuery = new List<DateTime>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
             var dtoList = new List<WeatherForecastDto>();
 
             try
             {
-                _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                var cities = await _getCitiesQuery.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
-                TextInfo textInfo = new CultureInfo("no", true).TextInfo;
+                var textInfo = new CultureInfo("no", true).TextInfo;
                 citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
 
                 foreach (DateTime day in EachDay(fromDate, toDate))
@@ -35,9 +50,9 @@ namespace WeatherWebAPI.DAL.Query
                     datesQuery.Add(day);
                 }
 
-                if (!CityExists(citySearchedFor!))
+                if (!CityExists(citySearchedFor!, cities))
                 {
-                    var cityData = await GetCityData(citySearchedFor);
+                    var cityData = await GetCityData(citySearchedFor, _openWeatherFetchCityStrategy);
                     cityName = cityData[0].Name;
                 }
                 else
@@ -54,7 +69,7 @@ namespace WeatherWebAPI.DAL.Query
                                     $"WHERE CAST(DateForecast as date) = CAST([Date] as date) AND CAST([DateForecast] as Date) BETWEEN '{fromDate}' AND '{toDate}' AND City.Name = '{cityName}' " +
                                         $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(_commonArgs.Mapper!, dtoList, queryString);
+                await MakeWeatherForecastDto(_mapper, dtoList, queryString, _getWeatherDataFromDatabaseStrategy);
             }
             catch (Exception e)
             {

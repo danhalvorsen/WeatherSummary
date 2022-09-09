@@ -1,15 +1,30 @@
-﻿using System.Globalization;
+﻿using AutoMapper;
+using System.Globalization;
 using WeatherWebAPI.Contracts;
+using WeatherWebAPI.Factory.Strategy;
+using WeatherWebAPI.Factory.Strategy.OpenWeather;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Query
 {
     public class GetWeatherForecastByWeekNumberQuery : BaseFunctionsForQueriesAndCommands
     {
+        private readonly IMapper _mapper;
+        private readonly IGetCitiesQuery _getCitiesQuery;
+        private readonly IOpenWeatherFetchCityStrategy _openWeatherFetchCityStrategy;
+        private readonly IGetWeatherDataFromDatabaseStrategy _getWeatherDataFromDatabaseStrategy;
 
-        public GetWeatherForecastByWeekNumberQuery() : base()
+        public GetWeatherForecastByWeekNumberQuery(
+            IMapper mapper, 
+            IGetCitiesQuery getCitiesQuery,
+            IOpenWeatherFetchCityStrategy openWeatherFetchCityStrategy,
+            IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy
+            ) : base()
         {
-
+            _mapper = mapper;
+            _getCitiesQuery = getCitiesQuery;
+            _openWeatherFetchCityStrategy = openWeatherFetchCityStrategy;
+            _getWeatherDataFromDatabaseStrategy = getWeatherDataFromDatabaseStrategy;
         }
 
         public async Task<List<WeatherForecastDto>> GetWeatherForecastByWeek(WeekQueryAndCity query)
@@ -20,13 +35,11 @@ namespace WeatherWebAPI.DAL.Query
             DateTime sunday = monday.AddDays(6);
 
             var dtoList = new List<WeatherForecastDto>();
-            var getCitiesQueryDatabase = new GetCitiesQuery(_commonArgs!.Config!);
             var datesInWeek = new List<DateTime>();
 
             try
             {
-
-                _citiesDatabase = await getCitiesQueryDatabase.GetAllCities();
+                var cities = await _getCitiesQuery.GetAllCities();
 
                 // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
                 TextInfo textInfo = new CultureInfo("no", true).TextInfo;
@@ -37,9 +50,9 @@ namespace WeatherWebAPI.DAL.Query
                     datesInWeek.Add(day);
                 }
 
-                if (!CityExists(citySearchedFor!))
+                if (!CityExists(citySearchedFor, cities))
                 {
-                    var cityData = await GetCityData(citySearchedFor);
+                    var cityData = await GetCityData(citySearchedFor, _openWeatherFetchCityStrategy);
                     cityName = cityData[0].Name;
                 }
                 else
@@ -57,12 +70,11 @@ namespace WeatherWebAPI.DAL.Query
                                                         $"WHERE CAST([DateForecast] as date) = CAST([Date] as date) AND DATEPART(week, [DateForecast]) = {query.Week} AND City.Name = '{cityName}' " +
                                                             $"ORDER BY [DateForecast], [Date]";
 
-                await MakeWeatherForecastDto(_commonArgs.Mapper!, dtoList, queryString);
+                await MakeWeatherForecastDto(_mapper, dtoList, queryString, _getWeatherDataFromDatabaseStrategy);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
-                Console.WriteLine(e.Message);
+                throw;
             }
             return dtoList;
         }

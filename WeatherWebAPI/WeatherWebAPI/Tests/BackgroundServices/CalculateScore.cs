@@ -257,7 +257,6 @@ namespace Tests.BackgroundServices
         {
             //AAA - Arrange
             var configMock = new Mock<IConfiguration>();
-            var factoryMock = new Mock<IFactory<IStrategy, StrategyType>>();
             var mapperMock = new Mock<IMapper>();
             var loggerMock = new Mock<ILogger<BackgroundServiceCalculateScoreQuery>>();
 

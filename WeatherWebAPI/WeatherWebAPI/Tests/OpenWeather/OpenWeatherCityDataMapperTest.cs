@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Reflection;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
@@ -21,7 +20,7 @@ namespace Tests.OpenWeather
         [SetUp]
         public void Setup()
         {
-            IGetCityDataStrategy strategy = new OpenWeatherFetchCityStrategy(new OpenWeatherConfig(), new HttpClient());
+            IOpenWeatherFetchCityStrategy strategy = new OpenWeatherFetchCityStrategy(new OpenWeatherConfig(), new HttpClient());
 
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddAutoMapper(new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") });

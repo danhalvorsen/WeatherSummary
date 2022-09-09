@@ -3,28 +3,45 @@ using WeatherWebAPI.Factory.Strategy;
 
 namespace WeatherWebAPI
 {
-    public class BackgroundServiceGetScore : BackgroundService
+    public class BackgroundServiceCalculateScore : BackgroundService
     {
         private const int HOUR_DELAY = 24;
         private readonly IAddScoreToDatabaseStrategy _addScoreToDatabaseStrategy;
-        private readonly BackgroundServiceCalculateScoreQuery _query;
-        private readonly ILogger<BackgroundServiceGetScore> _logger;
+        private readonly IBackgroundServiceCalculateScoreQuery _query;
+        private readonly ILogger<BackgroundServiceCalculateScore> _logger;
+        private readonly SetTimeHour _setTime;
+        private readonly SetTimeHourValidator _setTimeHourValidator;
 
-        public BackgroundServiceGetScore(IAddScoreToDatabaseStrategy addScoreToDatabaseStrategy , BackgroundServiceCalculateScoreQuery query, ILogger<BackgroundServiceGetScore> logger)
+        public BackgroundServiceCalculateScore(
+            IAddScoreToDatabaseStrategy addScoreToDatabaseStrategy, 
+            IBackgroundServiceCalculateScoreQuery query, 
+            ILogger<BackgroundServiceCalculateScore> logger,
+            SetTimeHour setTime,
+            SetTimeHourValidator setTimeHourValidator
+            )
         {
             _addScoreToDatabaseStrategy = addScoreToDatabaseStrategy;
             _query = query;
             _logger = logger;
+            _setTime = setTime;
+            _setTimeHourValidator = setTimeHourValidator;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _setTime.StartHour = 06;
+            _setTime.StopHour = 18;
+
             try
             {
+                var validationResult = _setTimeHourValidator.Validate(_setTime);
+                if (!validationResult.IsValid)
+                    _logger.LogError("{Errors}", validationResult.Errors);
+
                 await Task.Delay(10000, CancellationToken.None);
 
-                DateTime start = DateTime.UtcNow.Date + new TimeSpan(06, 0, 0);
-                DateTime stop = DateTime.UtcNow.Date + new TimeSpan(18, 0, 0);
+                DateTime start = _setTime.SetHour(_setTime.StartHour);
+                DateTime stop = _setTime.SetHour(_setTime.StopHour);
                 
                 await DoWork(start, stop, stoppingToken);
             }
@@ -49,9 +66,6 @@ namespace WeatherWebAPI
                     
                     var scoreResults = await _query.CalculateScore();
                     await _addScoreToDatabaseStrategy.Add(scoreResults);
-
-                    //var addScoreToDatabaseStrategy = (IAddScoreToDatabaseStrategy)Factory.Build(StrategyType.AddScoreToDatabase);
-                    //await addScoreToDatabaseStrategy.Add(scoreResults);
 
                     _logger.LogInformation("{BackgroundServiceGetScore} DONE. Waiting {HOUR_DELAY} hours to do work again..", 
                         this.GetType().Name, 

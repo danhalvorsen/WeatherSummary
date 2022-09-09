@@ -1,51 +1,37 @@
-﻿using System.Globalization;
+﻿using WeatherWebAPI.Controllers;
+using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL.Commands
 {
-    public class AddCityCommand : BaseFunctionsForQueriesAndCommands
+    public class AddCityCommand : BaseFunctionsForQueriesAndCommands, IAddCityCommand
     {
-        private readonly IGetCitiesQuery _getCitiesQuery;
+        private readonly IFetchCityCommand _fetchCityCommand;
+        private readonly IAddCityToDatabaseStrategy _addCityToDatabaseStrategy;
 
-        public AddCityCommand(IGetCitiesQuery getCitiesQuery) : base()
+        public AddCityCommand(
+            IFetchCityCommand fetchCityCommand,
+            IAddCityToDatabaseStrategy addCityToDatabaseStrategy
+            ) : base()
         {
-            _getCitiesQuery = getCitiesQuery;
+            _fetchCityCommand = fetchCityCommand;
+            _addCityToDatabaseStrategy = addCityToDatabaseStrategy;
         }
 
         public async Task AddCity(CityQuery query)
         {
-            string? citySearchedFor = query.City;
-            string? cityName;
-
             try
             {
-                _citiesDatabase = await _getCitiesQuery.GetAllCities();
+                var city = await _fetchCityCommand.FetchCity(query);
 
-                // Making sure the city names are in the right format (Capital Letter + rest of name, eg: Stavanger, not StAvAngeR)
-                TextInfo textInfo = new CultureInfo("no", true).TextInfo;
-                citySearchedFor = textInfo.ToTitleCase(citySearchedFor!);
-
-                if (!CityExists(citySearchedFor!))
+                if (city != null)
                 {
-                    var cityData = await GetCityData(citySearchedFor);
-                    cityName = cityData[0].Name;
-
-                    if (cityName != "")
-                    {
-                        if (!CityExists(cityName!))
-                        {
-                            await AddCityToDatabase(cityData);
-                        }
-                    }
-                }
-                else
-                {
-                    cityName = citySearchedFor;
+                    await _addCityToDatabaseStrategy.Add(city);
                 }
             }
-            catch(Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e.Message);
+                throw;
             }
         }
     }

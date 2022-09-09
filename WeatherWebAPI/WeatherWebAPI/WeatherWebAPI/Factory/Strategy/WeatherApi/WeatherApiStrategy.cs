@@ -6,14 +6,14 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.WeatherApi
 {
-    public class WeatherApiStrategy : IGetWeatherDataStrategy
+    public class WeatherApiStrategy : IGetWeatherDataStrategy // Not in use -> Free period over.
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
 
-        public WeatherProvider WeatherProvider => WeatherProvider.WeatherApi;
+        public WeatherProvider WeatherProvider => throw new NotImplementedException(); // WeatherProvider.WeatherApi;
 
-        public WeatherWebAPI.StrategyType StrategyType => WeatherWebAPI.StrategyType.WeatherApi;
+        public StrategyType StrategyType => throw new NotImplementedException(); // StrategyType.WeatherApi;
 
         public WeatherApiStrategy(IMapper mapper, WeatherApiConfig config, HttpClient httpClient)
         {
@@ -29,7 +29,6 @@ namespace WeatherWebAPI.Factory.Strategy.WeatherApi
         {
             _httpClient.DefaultRequestHeaders.Accept.Clear();
 
-            //var httpClient = _httpClientFactory.CreateClient("Yr");
             var response = await _httpClient.GetAsync($"v1/forecast.json?key=4be235a3168f4de281b80126223108&q={city.Name}&days=8&aqi=no&alerts=no");
 
             if (response.IsSuccessStatusCode)

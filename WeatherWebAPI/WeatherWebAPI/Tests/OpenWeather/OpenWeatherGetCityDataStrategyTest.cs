@@ -1,35 +1,22 @@
-﻿using AutoMapper;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
-using WeatherWebAPI.Controllers;
-using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
 
 namespace Tests.OpenWeather
 {
     public class OpenWeatherGetCityDataStrategyTest
     {
-        
-        private IGetCityDataStrategy? _strategy;
+        private IOpenWeatherFetchCityStrategy? _strategy;
         //private ServiceProvider? _serviceProvider;
         private readonly string _city = "Oslo";
 
         [SetUp]
         public void SetUp()
         {
-            //IServiceCollection servicecollection = new ServiceCollection();
-            //var assembly = new List<Assembly> { Assembly.LoadFrom("WeatherWebAPI.dll") /*Assembly.GetExecutingAssembly() */}; //Assembly.LoadFrom("WeatherWebAPI.dll")
-            //servicecollection.AddAutoMapper(assembly);
-            //_serviceProvider = servicecollection.BuildServiceProvider();
-
             _strategy = new OpenWeatherFetchCityStrategy(new OpenWeatherConfig(), new HttpClient());
         }
 

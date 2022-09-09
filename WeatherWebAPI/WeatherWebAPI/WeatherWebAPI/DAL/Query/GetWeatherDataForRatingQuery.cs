@@ -1,25 +1,16 @@
-﻿using WeatherWebAPI.Contracts.BaseContract;
-using WeatherWebAPI.Controllers;
+﻿using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory.Strategy;
 
 namespace WeatherWebAPI.DAL.Query
 {
-    public class WeatherTuple : Tuple<
-        List<WeatherForecast.WeatherData>,
-        List<WeatherForecast.WeatherData>>
-    {
-        public WeatherTuple(List<WeatherForecast.WeatherData> a, List<WeatherForecast.WeatherData> b) : base(a, b)
-        {
-            ActualWeather = a;
-            PredictedWeather = b;
-        }
-
-        public List<WeatherForecast.WeatherData> ActualWeather { get; }
-        public List<WeatherForecast.WeatherData> PredictedWeather { get; }
-    }
-
     public class GetWeatherDataForRatingQuery : IGetWeatherDataForRatingQuery
     {
+        private readonly IGetWeatherDataFromDatabaseStrategy _getWeatherDataFromDatabaseStrategy;
+
+        public GetWeatherDataForRatingQuery(IGetWeatherDataFromDatabaseStrategy getWeatherDataFromDatabaseStrategy)
+        {
+            _getWeatherDataFromDatabaseStrategy = getWeatherDataFromDatabaseStrategy;
+        }
 
         public async Task<WeatherTuple> Get(CityDto city)
         {
@@ -43,11 +34,9 @@ namespace WeatherWebAPI.DAL.Query
                                                                 $"WHERE CAST(DateForecast as date) != CAST([Date] as date) AND City.Name = '{city.Name}' AND Score.FK_WeatherDataId IS null " +
                                                                     $"ORDER BY [Date]";
 
-            var currentStrategy = (IGetWeatherDataFromDatabaseStrategy)commonArgs.Factory!.Build(StrategyType.GetWeatherDataFromDatabase);
-
             return new WeatherTuple(
-                await currentStrategy.Get(getActualWeather),
-                await currentStrategy.Get(getPredictedWeather));
+                await _getWeatherDataFromDatabaseStrategy.Get(getActualWeather),
+                await _getWeatherDataFromDatabaseStrategy.Get(getPredictedWeather));
         }
 
     }

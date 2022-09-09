@@ -6,7 +6,7 @@ using WeatherWebAPI.Controllers;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherStrategy : IGetWeatherDataStrategy
+    public class OpenWeatherStrategy : IOpenWeatherStrategy
     {
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;

@@ -7,7 +7,7 @@ using WeatherWebAPI.Factory.Strategy.YR;
 
 namespace WeatherWebAPI.Factory.Strategy.OpenWeather
 {
-    public class OpenWeatherFetchCityStrategy : IGetCityDataStrategy
+    public class OpenWeatherFetchCityStrategy : IOpenWeatherFetchCityStrategy
     {
         private readonly HttpClient _httpClient;
         public StrategyType StrategyType => StrategyType.OpenWeatherGetCity;
