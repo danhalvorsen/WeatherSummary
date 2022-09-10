@@ -1,11 +1,12 @@
 import React from 'react';
 import { ProductsType } from '../../productType';
+import {Link} from 'react-router-dom'
 
 type Props = {
   data: ProductsType;
 };
 export default function ProductItem(props: Props) {
-  const { title, imageurl, price } = props.data;
+  const {id, title, imageurl, price } = props.data;
   return (
     <div className="border border-primary p-1 m-2 mb-5">
       <div>
@@ -17,9 +18,9 @@ export default function ProductItem(props: Props) {
         <span style={{ fontSize: 18, fontWeight: 700 }}> Price: {price}</span>{' '}
         <span>
           {' '}
-          <a href="#" style={{ fontWeight: 700, backgroundColor: 'lightblue' }}>
+          <Link to={"/detail/"+id} style={{ fontWeight: 700, backgroundColor: 'lightblue' }}>
             Show More
-          </a>
+          </Link>
         </span>
       </div>
     </div>
