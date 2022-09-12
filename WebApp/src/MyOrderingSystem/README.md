@@ -18,23 +18,31 @@ Order
 
 - Basket (1)
 
-  - As a customer, I want to navigate to my basket so that I can go to my shopping list. (3d)
+  - As a customer, I want to navigate to my basket so that I can go to my shopping list. (16h)
 
-  - As a customer, I want to see how many items are in my basket so that I can see the number of products in my basket (1d)
+    - create a navigation bar on the top of the page to place the basket
+    - create a basket icon in the navigation bar and make a link to proper page
+    - create a number of items count on the basket and its functionality
+
+  - As a customer, I want to see how many items are in my basket so that I can see the number of products in my basket (12h)
+    - make nested components to pass props and show products
     <!-- - We need to put a badge to show numbers of products in the basket and sync it with state.
     - after buying items, this badge should be clean up.
     - number of items in badge should be state on browser local storage(a solution). -->
-  - As a customer, I want to see the contents of my basket so that I can see the products I wanted to buy (1d)
+  - As a customer, I want to see the contents of my basket so that I can see the products I wanted to buy (12h)
     <!-- - by click on basket it should go to shopping list so we need a shopping list component
     - show another product view in shopping list and calculate its amount -->
-    -
-  - As a customer, I want to be able to increase or decrease the number of each item so that I can change the number of each product I am going to buy. (1d)
+  - As a customer, I want to be able to increase or decrease the number of each item so that I can change the number of each product I am going to buy. (12h)
+    - create + & - module to increase or decrease number of items and its functionality
+    - functionality for updating state
     <!-- - create + and - icon and show the number of product.
-    - update data follow stream  -->
+    - update data follow stream -->
   - As a customer, I want to be able to remove items from the basket so that if I regret buying them, I can remove them. (6h)
-  <!-- - create 'Remove' icon to manage it
-  - -->
-  - As a customer, I want to see the total price so that before finalizing the order I can see how much should I pay (4h)
+
+    - create remote functionality
+    <!-- create 'Remove' icon to manage it  -->
+
+  - As a customer, I want to see the total price so that before finalizing the order I can see how much should I pay (12h)
 
 - Buy it (2)
 - Order history (3)
@@ -45,30 +53,43 @@ Product
 
 - See product (1)
 
-  - As a customer, I want to see products in the home page so that I can find product directly.(3d)
-    - connect to database(mock data) and get data'
-    -
-  - As a customer, I want to see the title, image and price for each product so that I have an overall concept of each product
-  - As a customer, I want click on product so that the next page will show detail of product.(2d)
-  - As a customer, I want to navigate to the home page from any pages I am on, so that I can reach the home page directly
+  - As a customer, I want to see products in the home page so that I can find product directly.(20h)
+    - create functionality to get data from mock DB and store it in the state
+    - make nested components to show all products
+    - make link for each product to be able to navigate to it
+  - As a customer, I want to see the title, image and price for each product so that I have an overall concept of each product (8h)
+    - create a component to show a preview of each product
+  - As a customer, I want click on product so that the next page will show detail of product.(8h)
+    - make connection link with routing ( each product must have an unique page number)
+  - As a customer, I want to navigate to the home page from any pages I am on, so that I can reach the home page directly (8h)
+    - create a navigation bar and put Home link to reach the home page from every pages
 
 - see details (1)
 
-  - As a customer, I want to see the product details with a title, description, price, availability, brand and bigger image. (3d)
-  - As a customer, I want to add a product to my basket so that I can aggregate the products I am going to buy them in one place
-  - As a customer, I want to increase or decrease the number of products so that I can change the number of items I want to buy. (2d)
+  - As a customer, I want to see the product details with a title, description, price, availability, brand and bigger image. (12h)
+    - create some nested components and send data to them to create detail page
+  - As a customer, I want to add a product to my basket so that I can aggregate the products I am going to buy them in one place (16h)
+    - Add an item to basket functionality and keep data in page and store in mock DB
+  - As a customer, I want to increase or decrease the number of products so that I can change the number of items I want to buy. (6h)
+    - Reuse and customization of its functionality
 
 - search for products (1)
 
-  - As a customer, I want to see a search box on top of the products list so that I can easily search for products. (3d)
+  - As a customer, I want to see a search box on top of the products list so that I can easily search for products. (28h)
+    - create search box components and made its data stream to hold search text in state
   - As a customer, I want to be able to search for products name so that I can reach the specific product.
+    - make search functionality and its connection to mock DB
 
 Inventory
 
 - Register product (1)
 
-  - As an admin, I want to register new products so that I can add a new product to the store (3d)
-  - As an admin, I want to edit products, so that I can change the specifics of products (2d)
+  - As an admin, I want to register new products so that I can add a new product to the store (18h)
+    - create an admin link and put it in the navigation bar and link it to insert the product page
+    - create the insert product page and make its form to get data
+    - create functionality to get data and send them to insert to mock DB
+  - As an admin, I want to edit products, so that I can change the specifics of products (12h)
+    - create another page for admin to be able to see product and be able to edit them.
 
 - Inventory notification (3)
 
@@ -76,8 +97,11 @@ Reports
 
 - see sales (1)
 
-  - As an admin, I want to see the list of orders so that I can find out how many orders I've got. (2d)
-  - As an admin, I want to click on each item of order and see its detail so that I can see more of details.(1d)
+  - As an admin, I want to see the list of orders so that I can find out how many orders I've got. (26h)
+    - create components for the admin view
+    - create nested components and its functionality to get data and show them to the admin
+  - As an admin, I want to click on each item of order and see its detail so that I can see more of details.(12h)
+    - create functionality to get click and goes to detail page of product
 
 - see orders completion (3)
 - see orders status (3)
@@ -88,13 +112,13 @@ Customer profile
 
 - my page (1) (??)
 
-  - As a customer I want to see my page so that I can (???????)
+  - As a customer I want to see my page so that I can (24)
 
-- create profile (1) (??)
+- create profile (1) (24)
 
   - As a customer I want to register as a new customer so that I have a profile in the store.
 
-- Delete profile (1)(??)
+- Delete profile (1)(24)
 
   - As a customer I want to be able to delete my profile so that I can decided to have profile in this system or not.
   - As an admin I want to be able to delete a profile so that I can delete the fake profiles
