@@ -1,8 +1,8 @@
 import Product from './Product';
-import { ProductsType } from '../../productType';
+import { ProductType } from '../../productType';
 
 type Props = {
-  products: ProductsType[] | undefined;
+  products: ProductType[] | undefined;
 };
 
 export default function Products(props: Props) {

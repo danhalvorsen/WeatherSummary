@@ -1,49 +1,43 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProductsType } from '../../productType';
-import { productService } from '../../../../../Data/CommunicationService';
+import { ProductType } from '../../productType';
+import {
+  ProductQuery,
+  getProductById,
+} from '../../../../../Data/CommunicationService';
 
 export default function Detail() {
+  const [productDetail, setProductDetail] = useState<ProductType>();
   const params = useParams();
-  const id = params?.id;
+  const id = Number(params.id);
+  const baseUrl = 'http://localhost:3002/';
 
-  const [productDetail, setProductDetail] = useState<ProductsType[]>();
+  const productQuery = new ProductQuery();
+  productQuery.baseUrl = baseUrl;
+  productQuery.parameter = 'products/';
+  productQuery.id = id;
 
-  const baseUrl = 'http://localhost:3002/products';
   useEffect(() => {
-    productService
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      .getProductById<ProductsType[]>(baseUrl, id!)
-      .then((result) => {
-        setProductDetail(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const Data = getProductById(productQuery);
+    Data.then((res) => {
+      setProductDetail(res);
+    });
   }, []);
 
   return (
     <>
-      {productDetail?.map((row) => {
-        return row.id.toString() == id ? (
-          <div key={row.id}>
-            <div>
-              <img src={row.imageurl} width="40%" height="35%" />{' '}
-            </div>
-            <div style={{ width: '60%' }}>
-              <h1>{row.title}</h1>
-              <h5>{row.description}</h5>
-              <strong style={{ color: 'green', fontSize: 22 }}>
-                Price: {row.price}
-              </strong>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div>Page Not Found</div>
-          </>
-        );
-      })}
+      <div key={productDetail?.id}>
+        <div>
+          <img src={productDetail?.imageurl} width="40%" height="35%" />{' '}
+        </div>
+        <div style={{ width: '60%' }}>
+          <h1>{productDetail?.title}</h1>
+          <h5>{productDetail?.description}</h5>
+          <strong style={{ color: 'green', fontSize: 22 }}>
+            Price: {productDetail?.price}
+          </strong>
+        </div>
+      </div>
     </>
   );
 }

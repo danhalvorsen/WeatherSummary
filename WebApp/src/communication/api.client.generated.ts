@@ -31,6 +31,7 @@ export class Client {
     dateQuery_Date: Date,
     cityQuery_City: string,
   ): Promise<WeatherForecastDto[]> {
+    
     let url_ = this.baseUrl + '/api/weatherforecast/date?';
     if (dateQuery_Date === undefined || dateQuery_Date === null)
       throw new Error(

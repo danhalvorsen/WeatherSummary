@@ -1,19 +1,25 @@
 import Products from './Products/Products';
 import React, { useState, useEffect } from 'react';
-import { ProductsType } from '../productType';
+import { ProductType } from '../productType';
 import SearchBar from './SearchBar';
-import { productService } from '../../../../Data/CommunicationService';
+import {ProductQuery , getAllProducts } from '../../../../Data/CommunicationService';
 
 export default function ProductsState() {
-  const [products, setProducts] = useState<ProductsType[]>();
-  const baseUrl = 'http://localhost:3002/products';
+  const [products, setProducts] = useState<ProductType[]>();
+  const baseUrl = 'http://localhost:3002';
+
+  const productsQuery = new ProductQuery();
+  productsQuery.baseUrl = baseUrl;
+  productsQuery.parameter = '/products';
+
   useEffect(() => {
-    productService
-      .getProduct<ProductsType[]>(baseUrl)
-      .then((productResult) => {
-        setProducts(productResult);
-      });
+
+    const Data = getAllProducts(productsQuery);
+    Data.then(res =>{
+    setProducts(res);
+    })
   }, []);
+
 
   return (
     <>

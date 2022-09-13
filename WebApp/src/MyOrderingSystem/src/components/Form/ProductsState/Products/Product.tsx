@@ -1,12 +1,12 @@
-import { ProductsType } from '../../productType';
+import { ProductType } from '../../productType';
 import ProductItem from './ProductItem';
 
 type Props = {
-  products: ProductsType[] | undefined;
+  products: ProductType[] | undefined;
 };
 
 export default function Product(props: Props) {
-  const items = props.products?.map((row) => {
+    const items = props.products?.map((row) => {
     return <ProductItem key={row.id} data={row} />;
   });
 

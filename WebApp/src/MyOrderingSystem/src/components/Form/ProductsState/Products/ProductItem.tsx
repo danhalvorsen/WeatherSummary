@@ -1,12 +1,13 @@
 import React from 'react';
-import { ProductsType } from '../../productType';
-import {Link} from 'react-router-dom'
+import { ProductType } from '../../productType';
+import { Link } from 'react-router-dom';
 
 type Props = {
-  data: ProductsType;
+  data: ProductType;
 };
 export default function ProductItem(props: Props) {
-  const {id, title, imageurl, price } = props.data;
+  const { id, title, imageurl, price } = props.data;
+  const fontStyle = {fontWeight: 700 }
   return (
     <div className="border border-primary p-1 m-2 mb-5">
       <div>
@@ -15,10 +16,13 @@ export default function ProductItem(props: Props) {
       </div>
       <div>
         <img src={imageurl} height="200" width="300"></img>{' '}
-        <span style={{ fontSize: 18, fontWeight: 700 }}> Price: {price}</span>{' '}
+        <span style={{ fontWeight: 700 , fontSize: 18}}> Price: {price}</span>{' '}
         <span>
           {' '}
-          <Link to={"/detail/"+id} style={{ fontWeight: 700, backgroundColor: 'lightblue' }}>
+          <Link
+            to={'/detail/' + id}
+            style={{ fontWeight: 700, backgroundColor: 'lightblue' }}
+          >
             Show More
           </Link>
         </span>
