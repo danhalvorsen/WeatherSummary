@@ -23,7 +23,7 @@ export default function ProductItem(props: Props) {
             to={'/detail/' + id}
             style={{ fontWeight: 700, backgroundColor: 'lightblue' }}
           >
-            Show More
+            <span data-testid="custom-element">Show More</span>
           </Link>
         </span>
       </div>

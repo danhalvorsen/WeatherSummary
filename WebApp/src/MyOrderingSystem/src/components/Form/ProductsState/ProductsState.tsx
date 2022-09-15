@@ -2,7 +2,14 @@ import Products from './Products/Products';
 import React, { useState, useEffect } from 'react';
 import { ProductType } from '../productType';
 import SearchBar from './SearchBar';
-import {ProductQuery , getAllProducts } from '../../../../Data/CommunicationService';
+import {
+  ProductQuery,
+  getAllProducts,
+} from '../../../../Data/CommunicationService';
+import {
+  ProductValidator,
+  isValid,
+} from '../../../../Validator-OrderingSystem/Validator';
 
 export default function ProductsState() {
   const [products, setProducts] = useState<ProductType[]>();
@@ -13,13 +20,18 @@ export default function ProductsState() {
   productsQuery.parameter = '/products';
 
   useEffect(() => {
-
     const Data = getAllProducts(productsQuery);
-    Data.then(res =>{
-    setProducts(res);
-    })
-  }, []);
+    Data.then((res) => {
+      const productValidate = new ProductValidator();
+      const validProduct = productValidate.validate(res[0]);
 
+      if (isValid(validProduct)) {
+        setProducts(res);
+      } else {
+        console.log('We got Error about Price');
+      }
+    });
+  }, []);
 
   return (
     <>

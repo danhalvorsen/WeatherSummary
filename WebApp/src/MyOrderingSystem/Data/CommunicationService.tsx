@@ -9,9 +9,15 @@ export class ProductTypeQueryValidator {}
 
 export const getAllProducts = (query: ProductQuery): Promise<ProductType[]> => {
     const urlValidator = new UrlValidator();
+    const productValidator = new UrlValidator(); //////////////////////////
 
-  const result = urlValidator.validate(query);
-  if (isValid(result)){
+
+
+  const urlValidate = urlValidator.validate(query);
+  const productValidate = productValidator.validate(query); /////////////////////////
+
+
+  if (isValid(urlValidate)){
   return fetch(query.baseUrl + query.parameter)
     .then((response) => {
       return response.json();
