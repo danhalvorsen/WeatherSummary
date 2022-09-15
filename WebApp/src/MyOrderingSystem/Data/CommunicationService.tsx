@@ -1,4 +1,5 @@
 import { ProductType } from '../src/components/Form/productType';
+import {UrlValidator , isValid} from '../Validator-OrderingSystem/Validator'
 export class ProductQuery {
   baseUrl: string;
   parameter: string;
@@ -7,6 +8,10 @@ export class ProductQuery {
 export class ProductTypeQueryValidator {}
 
 export const getAllProducts = (query: ProductQuery): Promise<ProductType[]> => {
+    const urlValidator = new UrlValidator();
+
+  const result = urlValidator.validate(query);
+  if (isValid(result)){
   return fetch(query.baseUrl + query.parameter)
     .then((response) => {
       return response.json();
@@ -14,6 +19,9 @@ export const getAllProducts = (query: ProductQuery): Promise<ProductType[]> => {
     .catch((error) => {
       console.log(error);
     });
+  }
+  else throw('Error In validating the Url');
+  
 };
 
 
@@ -30,6 +38,8 @@ export const getProductById = (query: ProductQuery): Promise<ProductType> => {
 
 
 
+
+/////////////////////////////
 export const productService = {
   getProducts: async (query: ProductQuery): Promise<ProductType[]> => {
     const res = await fetch(query.baseUrl + query.parameter);

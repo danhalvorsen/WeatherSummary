@@ -1,5 +1,5 @@
 import { BetweenTwoDatesValidator, theObjectIsEmpty, twoDates } from '../communication/apiTypes';
-import { ResultBox } from './../components/newComponents/resultBox/ResultBox';
+import { ResultBox } from '../components/newComponents/resultBox/ResultBox';
 
 const validator = new BetweenTwoDatesValidator();
 
