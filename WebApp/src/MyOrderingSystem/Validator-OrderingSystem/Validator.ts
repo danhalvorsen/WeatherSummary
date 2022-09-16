@@ -10,10 +10,11 @@ export const isValid = <T>(object: ValidationErrors<T>): boolean => {
 export class UrlValidator extends Validator<ProductQuery> {
   constructor() {
     super();
-    this.ruleFor('parameter').notEmpty()
-    this.ruleFor('parameter').notEmpty()
+    this.ruleFor('parameter').notEmpty();
+    this.ruleFor('parameter')
+      .notEmpty()
 
-    .withMessage('There was an error on URL.');
+      .withMessage('There was an error on URL.');
   }
 }
 
@@ -27,15 +28,32 @@ export class IdValidator extends Validator<ProductQuery> {
 }
 
 export class ProductValidator extends Validator<ProductType> {
-    constructor() {
-      super();
-      this.ruleFor('price').greaterThan(0)
-    //   lessThanOrEqualTo(1)
-      .withMessage('price in invalid');
-    }
-        
-    }
+  constructor() {
+    super();
+    this.ruleFor('price')
+      .greaterThan(0)
+      .withMessage('The price should be greater than 0');
 
+    this.ruleFor('id')
+      .greaterThanOrEqualTo(1)
+      .withMessage('product id should greater than 1');
 
+    this.ruleFor('description')
+      .minLength(5)
+      .withMessage('description should have at least 5 character');
 
-  
+    this.ruleFor('brand')
+      .notEmpty()
+      .withMessage('brand field should not be empty');
+
+    this.ruleFor('title')
+      .notEmpty()
+      .withMessage('title field should not be empty');
+    this.ruleFor('category')
+      .notEmpty()
+      .withMessage('category field should not be empty');
+    this.ruleFor('imageurl')
+      .notEmpty()
+      .withMessage('image url field should not be empty');
+  }
+}

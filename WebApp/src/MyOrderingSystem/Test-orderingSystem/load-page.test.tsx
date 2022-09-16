@@ -7,7 +7,13 @@ import NavigationBar from '../src/components/Form/NavigationBar';
 import Detail from '../src/components/Form/ProductsState/Products/Detail';
 import ProductItem from '../src/components/Form/ProductsState/Products/ProductItem';
 import ProductsState from '../src/components/Form/ProductsState/ProductsState';
-import { UrlValidator } from '../Validator-OrderingSystem/Validator';
+import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
+import { ProductType } from '../src/components/Form/productType';
+import {
+  UrlValidator,
+  ProductValidator,
+  isValid,
+} from '../Validator-OrderingSystem/Validator';
 
 const validator = new UrlValidator();
 
@@ -107,19 +113,105 @@ test('Click on Show More should be goes to Detail page', () => {
   expect(screen.getByText(/Price/i)).toBeInTheDocument();
 });
 
-// test('DataTypes should be valid', () => {
+test('ProductValidator should accept received data ', () => {
+  const product: ProductType = {
+    id: 1,
+    title: 'Microsoft Surface Laptop 4',
+    description:
+      'Style and speed. Stand out on HD video calls backed by Studio Mics. Capture ideas on the vibrant touchscreen. Do it all with a perfect balance of sleek design, speed, immersive audio, and significantly longer battery life than before.',
+    price: 1900,
+    customerprice: 14900,
+    boughtprice: 14900,
+    stock: 18,
+    brand: 'Microsoft',
+    category: 'Laptops',
+    imageurl:
+      'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
+    coupon: 50,
+  };
+  const productValidator = new ProductValidator();
+  const result = productValidator.validate(product);
+  expect(result).toStrictEqual({});
+});
 
-// //render()
+test('ProductValidator should not pass with empty title ', () => {
+  const product: ProductType = {
+    id: 1,
+    title: '',
+    description:
+      'Style and speed. Stand out on HD video calls backed by Studio Mics. Capture ideas on the vibrant touchscreen. Do it all with a perfect balance of sleek design, speed, immersive audio, and significantly longer battery life than before.',
+    price: 1900,
+    customerprice: 14900,
+    boughtprice: 14900,
+    stock: 18,
+    brand: 'Microsoft',
+    category: 'Laptops',
+    imageurl:
+      'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
+    coupon: 50,
+  };
+  const productValidator = new ProductValidator();
+  const result = productValidator.validate(product);
+  expect(result).not.toStrictEqual({});
+});
 
-// const baseUrl = 'http://localhost:3002';
-// const productsQuery = new ProductQuery();
-// productsQuery.baseUrl = baseUrl;
-// productsQuery.parameter = '/products';
+test('ProductValidator should not pass with short description ', () => {
+  const product: ProductType = {
+    id: 1,
+    title: 'Apple watch',
+    description: 'Nice',
+    price: 1900,
+    customerprice: 14900,
+    boughtprice: 14900,
+    stock: 18,
+    brand: 'Microsoft',
+    category: 'Laptops',
+    imageurl:
+      'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
+    coupon: 50,
+  };
+  const productValidator = new ProductValidator();
+  const result = productValidator.validate(product);
+  expect(result).not.toStrictEqual({});
+});
 
-// const products = getAllProducts(productsQuery);
-// products.then((products)=>{
-//   const mytype= typeof(products)
-//   expect()
-//   })
+test('ProductValidator should not pass with price of 0', () => {
+  const product: ProductType = {
+    id: 1,
+    title: 'Apple watch',
+    description:
+      'Style and speed. Stand out on HD video calls backed by Studio Mics.',
+    price: 0,
+    customerprice: 14900,
+    boughtprice: 14900,
+    stock: 18,
+    brand: 'Microsoft',
+    category: 'Laptops',
+    imageurl:
+      'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
+    coupon: 50,
+  };
+  const productValidator = new ProductValidator();
+  const result = productValidator.validate(product);
+  expect(result).not.toStrictEqual({});
+});
 
-// });
+test('ProductValidator should not pass with empty Image', () => {
+  const product: ProductType = {
+    id: 1,
+    title: 'Apple watch',
+    description:
+      'Style and speed. Stand out on HD video calls backed by Studio Mics.',
+    price: 6500,
+    customerprice: 14900,
+    boughtprice: 14900,
+    stock: 18,
+    brand: 'Microsoft',
+    category: 'Laptops',
+    imageurl: '',
+    coupon: 50,
+  };
+  const productValidator = new ProductValidator();
+  const result = productValidator.validate(product);
+  expect(result).not.toStrictEqual({});
+});

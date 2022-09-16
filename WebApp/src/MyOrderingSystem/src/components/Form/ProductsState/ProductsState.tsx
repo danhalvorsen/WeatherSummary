@@ -21,15 +21,35 @@ export default function ProductsState() {
 
   useEffect(() => {
     const Data = getAllProducts(productsQuery);
-    Data.then((res) => {
-      const productValidate = new ProductValidator();
-      const validProduct = productValidate.validate(res[0]);
+    const productValidate = new ProductValidator();
 
-      if (isValid(validProduct)) {
-        setProducts(res);
-      } else {
-        console.log('We got Error about Price');
-      }
+    Data.then((res) => {
+      const validatedProducts: Array<ProductType> = [
+        {
+          id: 1,
+          title: 'Microsoft Surface Laptop 4',
+          description:
+            'Style and speed. Stand out on HD video calls backed by Studio Mics. Capture ideas on the vibrant touchscreen. Do it all with a perfect balance of sleek design, speed, immersive audio, and significantly longer battery life than before.',
+          price: 1900,
+          customerprice: 14900,
+          boughtprice: 14900,
+          stock: 18,
+          brand: 'Microsoft',
+          category: 'Laptops',
+          imageurl:
+            'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
+          coupon: 50,
+        },
+      ];
+      res.forEach((row, index) => {
+        const Product = productValidate.validate(res[index]);
+        if (isValid(Product)) {
+          validatedProducts[index] = row;
+        } else {
+          console.log('We have some issue on the received data');
+        }
+      });
+      setProducts(validatedProducts);
     });
   }, []);
 

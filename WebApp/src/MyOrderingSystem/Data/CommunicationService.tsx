@@ -1,5 +1,5 @@
 import { ProductType } from '../src/components/Form/productType';
-import {UrlValidator , isValid} from '../Validator-OrderingSystem/Validator'
+import { UrlValidator, isValid } from '../Validator-OrderingSystem/Validator';
 export class ProductQuery {
   baseUrl: string;
   parameter: string;
@@ -7,33 +7,26 @@ export class ProductQuery {
 }
 export class ProductTypeQueryValidator {}
 
-export const getAllProducts = (query: ProductQuery): Promise<ProductType[]> => {
-    const urlValidator = new UrlValidator();
-    const productValidator = new UrlValidator(); //////////////////////////
-
-
-
+export const getAllProducts = async (
+  query: ProductQuery,
+): Promise<ProductType[]> => {
+  const urlValidator = new UrlValidator();
   const urlValidate = urlValidator.validate(query);
-  const productValidate = productValidator.validate(query); /////////////////////////
 
-
-  if (isValid(urlValidate)){
-  return fetch(query.baseUrl + query.parameter)
-    .then((response) => {
-      return response.json();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-  else throw('Error In validating the Url');
-  
+  if (isValid(urlValidate)) {
+    const result = await fetch(query.baseUrl + query.parameter)
+      .then((response) => {
+        return response.json();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return result;
+  } else throw 'Error In validating the Url';
 };
-
 
 export const getProductById = (query: ProductQuery): Promise<ProductType> => {
   return fetch(query.baseUrl + query.parameter + query.id)
-  
     .then((response) => {
       return response.json();
     })
@@ -41,9 +34,6 @@ export const getProductById = (query: ProductQuery): Promise<ProductType> => {
       console.log(error);
     });
 };
-
-
-
 
 /////////////////////////////
 export const productService = {
@@ -54,12 +44,6 @@ export const productService = {
     } else {
       throw console.log('Error');
     }
-
-    // try {
-    //   return fetch(query.baseUrl + query.parameter);
-    // } catch (error) {
-    //   console.log('Error', error);
-    // }
   },
 
   // getProducts: async function fetchProducts<T>(
@@ -82,8 +66,6 @@ export const productService = {
       throw console.log('Error');
     }
   },
-
-
 };
 
 // if (res.ok) {
@@ -118,15 +100,14 @@ export const productService = {
 // };
 
 ////////////////////////
-  /////////////////////////
-  // getProductById: async function fetchProductsById<T>(
-  //   resourceUrl: string,
-  //   id: number,
-  // ): Promise<T> {
-  //   return fetch(resourceUrl + '/products?id=' + id)
-  //     .then((response) => response.json())
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // },
-
+/////////////////////////
+// getProductById: async function fetchProductsById<T>(
+//   resourceUrl: string,
+//   id: number,
+// ): Promise<T> {
+//   return fetch(resourceUrl + '/products?id=' + id)
+//     .then((response) => response.json())
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// },
