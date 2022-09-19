@@ -7,9 +7,18 @@ type Props = {
 };
 export default function ProductItem(props: Props) {
   const { id, title, imageurl, price } = props.data;
-  const fontStyle = {fontWeight: 700 }
+ 
+//Style
+const styles = {
+  border: {
+    padding: '15px',
+    margin: '12px',
+    border: '1px solid black',
+    
+  },
+};
   return (
-    <div className="border border-primary p-1 m-2 mb-5">
+    <div style={styles.border}>
       <div>
         <b>Title:</b> {'  '}
         {title}

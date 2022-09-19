@@ -53,12 +53,23 @@ export default function ProductsState() {
     });
   }, []);
 
+//Style
+  const styles = {
+    border: {
+      padding: '5px',
+      margin: '2px',
+      border: '1px solid black',
+      
+    },
+  };
   return (
     <>
       <SearchBar />
-      <div className="border border-secondary m-2">
+      <div style={styles.border}>
         <Products products={products} />
       </div>
     </>
   );
+
+ 
 }

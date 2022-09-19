@@ -5,8 +5,12 @@ import {
   ProductQuery,
   getProductById,
 } from '../../../../../Data/CommunicationService';
+import { Cart } from '../../../features/cart/Cart';
+import { Increment } from '../../../features/cart/CartSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Detail() {
+  const dispatch = useDispatch();
   const [productDetail, setProductDetail] = useState<ProductType>();
   const params = useParams();
   const id = Number(params.id);
@@ -36,6 +40,9 @@ export default function Detail() {
           <strong style={{ color: 'green', fontSize: 22 }}>
             Price: {productDetail?.price}
           </strong>
+          <br />
+          <button onClick={() => dispatch(Increment())}>Add to cart</button>
+          {/* <Cart /> */}
         </div>
       </div>
     </>

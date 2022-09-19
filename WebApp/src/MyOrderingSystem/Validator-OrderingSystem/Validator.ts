@@ -10,10 +10,8 @@ export const isValid = <T>(object: ValidationErrors<T>): boolean => {
 export class UrlValidator extends Validator<ProductQuery> {
   constructor() {
     super();
-    this.ruleFor('parameter').notEmpty();
     this.ruleFor('parameter')
       .notEmpty()
-
       .withMessage('There was an error on URL.');
   }
 }

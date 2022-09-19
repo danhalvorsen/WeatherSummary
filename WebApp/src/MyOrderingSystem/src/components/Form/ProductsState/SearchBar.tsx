@@ -1,8 +1,17 @@
 import React from 'react';
 
 export default function SearchBar() {
+  //Style
+  const styles = {
+    border: {
+      padding: '5px',
+      margin: '2px',
+      border: '1px solid blue',
+      
+    },
+  };
   return (
-    <div className="border border-secondary p-1 m-2 mb-5">
+    <div style={styles.border}>
       <label>Search:</label>{' '}
       <input type="text" placeholder="Insert product Name" />
     </div>
