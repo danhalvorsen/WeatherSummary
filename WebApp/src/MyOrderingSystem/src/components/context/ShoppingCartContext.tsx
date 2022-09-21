@@ -1,4 +1,15 @@
-import { useContext, createContext, ReactNode, useState } from 'react';
+import {
+  useContext,
+  createContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from 'react';
+import {
+  getAllProducts,
+  ProductQuery,
+} from '../../../Data/CommunicationService';
+import { ProductType } from '../Form/productType';
 type ShoppingCartProviderProps = {
   children: ReactNode | JSX.Element;
 };
@@ -8,27 +19,22 @@ type ShoppingCartContest = {
   addItemToCart: (id: number) => void;
   cartQuantity: number;
   myItems: CartItem[];
-  myData: sampledata;
+  productList: ProductType[] | undefined;
 };
 export type CartItem = {
   id: number;
   quantity: number;
 };
 
-type sampledata = {
-    id:number,
-    name: string,
-    price: number
-}
-
 const ShoppingCartContext = createContext({} as ShoppingCartContest);
-//const ShoppingCartContext = createContext<ShoppingCartContest | null>(null);
+//const ShoppingCartContext = createContext<ShoppingCartContest | {}>({});
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
 
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
+  const [products, setProducts] = useState<ProductType[]>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   function getItemQuantity(id: number) {
@@ -61,14 +67,31 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   });
   const cartQuantity = totalQuantity;
 
-  const myItems = cartItems
-  console.log(myItems)
+  const myItems = cartItems;
 
-  const myData = {id: 1, name: 'Iphone' , price: 13000}
+  const productsList = products;
+
+  //needs to have json data here
+  const baseUrl = 'http://localhost:3002';
+  const productsQuery = new ProductQuery();
+  productsQuery.baseUrl = baseUrl;
+  productsQuery.parameter = '/products';
+  useEffect(() => {
+    const Data = getAllProducts(productsQuery);
+    Data.then((result) => {
+      setProducts(result);
+    });
+  }, []);
 
   return (
     <ShoppingCartContext.Provider
-      value={{ getItemQuantity, addItemToCart, cartQuantity , myItems , myData  }}
+      value={{
+        getItemQuantity,
+        addItemToCart,
+        cartQuantity,
+        myItems,
+        productList: productsList,
+      }}
     >
       {children}
     </ShoppingCartContext.Provider>
