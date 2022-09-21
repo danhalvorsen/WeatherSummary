@@ -1,19 +1,21 @@
 import { useShoppingCart } from '../context/ShoppingCartContext';
+import { ItemInCart } from './ItemInCart';
 
 export const ShoppingCart = () => {
   const stateFunctionality = useShoppingCart();
   console.log('------');
-  console.log(stateFunctionality.myItems[0]);
+  const itemData = stateFunctionality.myData
   return (
     <>
       <h1>My shopping list</h1>
 
-      {stateFunctionality.myItems.map((item) => (
-        <div>
-          <p>{item.id}</p>
-          <p>{stateFunctionality.myItems[0].id}</p>
-        </div>
-      ))}
+      {stateFunctionality.myItems.map((item) => {
+        return (
+          
+            <ItemInCart item={item} />
+          
+        );
+      })}
     </>
   );
 };

@@ -7,14 +7,22 @@ type ShoppingCartContest = {
   getItemQuantity: (id: number) => number;
   addItemToCart: (id: number) => void;
   cartQuantity: number;
-   myItems: CartItem[];
+  myItems: CartItem[];
+  myData: sampledata;
 };
-type CartItem = {
+export type CartItem = {
   id: number;
   quantity: number;
 };
 
+type sampledata = {
+    id:number,
+    name: string,
+    price: number
+}
+
 const ShoppingCartContext = createContext({} as ShoppingCartContest);
+//const ShoppingCartContext = createContext<ShoppingCartContest | null>(null);
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
@@ -56,9 +64,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const myItems = cartItems
   console.log(myItems)
 
+  const myData = {id: 1, name: 'Iphone' , price: 13000}
+
   return (
     <ShoppingCartContext.Provider
-      value={{ getItemQuantity, addItemToCart, cartQuantity , myItems }}
+      value={{ getItemQuantity, addItemToCart, cartQuantity , myItems , myData  }}
     >
       {children}
     </ShoppingCartContext.Provider>
