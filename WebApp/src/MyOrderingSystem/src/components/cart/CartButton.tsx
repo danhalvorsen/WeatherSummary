@@ -1,5 +1,7 @@
 import React from 'react';
 import { useSelector} from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useShoppingCart } from '../context/ShoppingCartContext';
 import {
   decrement,
   selectCount,
@@ -8,6 +10,8 @@ import {
 
 
 export const CartButton = () => {
+  const stateFunctionality = useShoppingCart()
+
   const styles = {
     borderRound: {
       color: 'white',
@@ -18,12 +22,13 @@ export const CartButton = () => {
     },
   };
 
-  const basketNumber = useSelector(selectCount);
-
+  // const basketNumber = useSelector(selectCount);
+  const basketNumber = stateFunctionality.cartQuantity || 0
   return (
     <>
-      <button>Cart</button>
+     <Link to="/shoppingCart"><button>Cart</button></Link> 
       <span style={styles.borderRound}>{basketNumber}</span>
+      {/* <span style={styles.borderRound}>{basketNumber}</span> */}
     </>
   );
 };

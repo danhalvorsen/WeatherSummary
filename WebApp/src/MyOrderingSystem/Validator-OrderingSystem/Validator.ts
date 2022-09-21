@@ -8,6 +8,9 @@ export const isValid = <T>(object: ValidationErrors<T>): boolean => {
 };
 
 export class UrlValidator extends Validator<ProductQuery> {
+  static validate(sampleUrl: ProductQuery) {
+      throw new Error("Method not implemented.");
+  }
   constructor() {
     super();
     this.ruleFor('parameter')

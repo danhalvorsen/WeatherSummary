@@ -15,7 +15,7 @@ import {
   isValid,
 } from '../Validator-OrderingSystem/Validator';
 
-const validator = new UrlValidator();
+const urlValidator = new UrlValidator();
 
 test('Load Navigation bar in front page', () => {
   render(
@@ -33,7 +33,7 @@ test('validate that the validator pass the parameter', () => {
     baseUrl: 'http://localhost',
     parameter: '/products',
   };
-  const result = validator.validate(sampleUrl);
+  const result = urlValidator.validate(sampleUrl);
   expect(result).toStrictEqual({});
 });
 
@@ -42,7 +42,7 @@ test('validate that the validator does not pass the empty parameter', () => {
     baseUrl: 'http://localhost',
     parameter: '',
   };
-  const result = validator.validate(sampleUrl);
+  const result = urlValidator.validate(sampleUrl);
   expect(result).not.toStrictEqual({});
 });
 
