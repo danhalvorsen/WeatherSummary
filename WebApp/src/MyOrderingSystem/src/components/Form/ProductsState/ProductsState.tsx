@@ -22,8 +22,9 @@ export default function ProductsState() {
   useEffect(() => {
     const Data = getAllProducts(productsQuery);
     const productValidate = new ProductValidator();
-
+  //needs to be improve
     Data.then((res) => {
+    
       const validatedProducts: Array<ProductType> = [
         {
           id: 1,
@@ -53,13 +54,12 @@ export default function ProductsState() {
     });
   }, []);
 
-//Style
+  //Style
   const styles = {
     border: {
       padding: '5px',
       margin: '2px',
       border: '1px solid black',
-      
     },
   };
   return (
@@ -70,6 +70,4 @@ export default function ProductsState() {
       </div>
     </>
   );
-
- 
 }

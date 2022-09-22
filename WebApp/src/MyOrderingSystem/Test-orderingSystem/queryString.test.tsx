@@ -1,32 +1,31 @@
 import { ProductQuery } from "../Data/CommunicationService";
-import { UrlValidator } from "../Validator-OrderingSystem/Validator";
+import { queryStringValidator } from "../Validator-OrderingSystem/Validator";
 
+const myQueryStringValidator = new queryStringValidator();
 
-const sut = new UrlValidator()
 test('validate that the validator pass the parameter', () => {
-    const sampleUrl: ProductQuery = {
+    const sut: ProductQuery = {
       baseUrl: 'http://localhost',
       parameter: '/products',
     };
-    const result = sut.validate(sampleUrl);
+    const result = myQueryStringValidator.validate(sut);
     expect(result).toStrictEqual({});
   });
-
+  
   test('validate that the validator does not pass the empty parameter', () => {
-    const sampleUrl: ProductQuery = {
+    const sut: ProductQuery = {
       baseUrl: 'http://localhost',
       parameter: '',
     };
-    const result = sut.validate(sampleUrl);
+    const result = myQueryStringValidator.validate(sut);
     expect(result).not.toStrictEqual({});
   });
-
-  test('Id types we got is valid', () => {
-    const productQuery: ProductQuery = {
+  
+  test('Id should not be equal or less than 0', () => {
+    const sut: ProductQuery = {
       baseUrl: 'http://localhost',
       parameter: '/products',
-      id: 5,
+      id: 0,
     };
-    const result = sut.validate(productQuery);
-    expect(result).toStrictEqual({});
+    expect(sut.id).not.toBeGreaterThanOrEqual(1);
   });

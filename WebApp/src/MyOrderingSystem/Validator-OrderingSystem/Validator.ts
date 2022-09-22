@@ -7,7 +7,7 @@ export const isValid = <T>(object: ValidationErrors<T>): boolean => {
   return Object.keys(object).length === 0 ? true : false;
 };
 
-export class UrlValidator extends Validator<ProductQuery> {
+export class queryStringValidator extends Validator<ProductQuery> {
   static validate(sampleUrl: ProductQuery) {
       throw new Error("Method not implemented.");
   }
