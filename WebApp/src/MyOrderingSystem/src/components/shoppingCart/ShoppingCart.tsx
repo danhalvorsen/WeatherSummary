@@ -2,15 +2,28 @@ import { useShoppingCart } from '../context/ShoppingCartContext';
 import { ItemInCart } from './ItemInCart';
 
 export const ShoppingCart = () => {
-  const stateFunctionality = useShoppingCart();
-  const items = stateFunctionality.myItems;
+  //   const stateFunctionality = useShoppingCart();
+  //   const items = stateFunctionality.myItems;
+  const { myItems: myCartItems, productList } = useShoppingCart();
+
+  let sum = 0;
+  myCartItems.forEach((item) => {
+    const itemQuantity = item.quantity;
+    const price = productList?.find((i) => i.id == item.id)?.price || 0;
+    sum += price * itemQuantity;
+  });
   return (
     <>
       <h1>My shopping list</h1>
 
-      {items.map((item) => {
+      {myCartItems.map((item) => {
         return <ItemInCart key={item.id} item={item} />;
       })}
+      <div>
+        {myCartItems.find((item) => item) !== undefined && (
+          <h2 style={{ marginLeft: '15%' }}>Total Price:{sum}</h2>
+        )}
+      </div>
     </>
   );
 };

@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useShoppingCart } from '../../../context/ShoppingCartContext';
 
 export default function Detail() {
-  const stateFunctionality = useShoppingCart()
+  const stateFunctionality = useShoppingCart();
   const dispatch = useDispatch();
   const [productDetail, setProductDetail] = useState<ProductType>();
   const params = useParams();
@@ -45,7 +45,13 @@ export default function Detail() {
             Price: {productDetail?.price}
           </strong>
           <br />
-          <button onClick={() => stateFunctionality.addItemToCart(id)}>+ Add to cart</button> <div>you have <strong>{quantity}</strong> item/items of this product in your cart</div>
+          <button onClick={() => stateFunctionality.increaseQuantity(id)}>
+            + Add to cart
+          </button>{' '}
+          <div>
+            you have <strong>{quantity}</strong> item/items of this product in
+            your cart
+          </div>
           {/* <button onClick={() => dispatch(Increment())}>+ Add to cart</button> */}
           {/* <Cart /> */}
         </div>
