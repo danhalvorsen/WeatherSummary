@@ -61,17 +61,19 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
 
     return;
   }
+  
+  //calculate sum of the quantity of each item in the basket to show in round rea badged
   let totalQuantity = 0;
   cartItems.forEach((item) => {
     totalQuantity += item.quantity;
   });
   const cartQuantity = totalQuantity;
 
-  const myItems = cartItems;
 
+  const myItems = cartItems;
   const productsList = products;
 
-  //needs to have json data here
+  //needs to have json data of products here
   const baseUrl = 'http://localhost:3002';
   const productsQuery = new ProductQuery();
   productsQuery.baseUrl = baseUrl;
