@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { ProductType } from '../../Form/productType';
 
 export interface CounterState {
@@ -7,7 +7,6 @@ export interface CounterState {
 }
 const initialState: CounterState = {
   value: 0,
-  // ,    cart: []
 };
 export const cartSlice = createSlice({
   name: 'counter',
@@ -19,9 +18,6 @@ export const cartSlice = createSlice({
     decrement: (state) => {
       state.value -= 1;
     },
-    // addToCart : (state, action: PayloadAction<ProductType>)=>{
-    //     state.cart = [action.payload]
-    // }
   },
 });
 

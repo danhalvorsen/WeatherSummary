@@ -1,5 +1,5 @@
 import { ProductType } from '../src/components/Form/productType';
-import { ProductValidator } from '../Validator-OrderingSystem/Validator';
+import { ProductValidator } from '../Validator/Validator';
 
 test('ProductValidator should not pass with price of 0', () => {
   const sut: ProductType = {

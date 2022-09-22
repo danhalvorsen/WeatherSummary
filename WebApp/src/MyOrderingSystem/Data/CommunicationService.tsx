@@ -2,7 +2,7 @@ import { ProductType } from '../src/components/Form/productType';
 import {
   queryStringValidator,
   isValid,
-} from '../Validator-OrderingSystem/Validator';
+} from '../Validator/Validator';
 export class ProductQuery {
   baseUrl: string;
   parameter: string;

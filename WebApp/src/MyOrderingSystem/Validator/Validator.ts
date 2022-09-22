@@ -1,4 +1,4 @@
-import { ProductType } from './../src/components/Form/productType';
+import { ProductType } from '../src/components/Form/productType';
 import { Validator } from 'fluentvalidation-ts';
 import { ValidationErrors } from 'fluentvalidation-ts/dist/ValidationErrors';
 import { ProductQuery } from '../Data/CommunicationService';

@@ -1,5 +1,5 @@
 import { ProductQuery } from "../Data/CommunicationService";
-import { queryStringValidator } from "../Validator-OrderingSystem/Validator";
+import { queryStringValidator } from "../Validator/Validator";
 
 const myQueryStringValidator = new queryStringValidator();
 

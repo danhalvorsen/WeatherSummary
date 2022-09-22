@@ -9,7 +9,7 @@ import {
 import {
   ProductValidator,
   isValid,
-} from '../../../../Validator-OrderingSystem/Validator';
+} from '../../../../Validator/Validator';
 
 export default function ProductsState() {
   const [products, setProducts] = useState<ProductType[]>();

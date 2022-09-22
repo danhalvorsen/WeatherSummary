@@ -5,14 +5,10 @@ import {
   ProductQuery,
   getProductById,
 } from '../../../../../Data/CommunicationService';
-import { Cart } from '../../../features/cart/Cart';
-import { Increment } from '../../../features/cart/CartSlice';
-import { useSelector, useDispatch } from 'react-redux';
 import { useShoppingCart } from '../../../context/ShoppingCartContext';
 
 export default function Detail() {
   const stateFunctionality = useShoppingCart();
-  const dispatch = useDispatch();
   const [productDetail, setProductDetail] = useState<ProductType>();
   const params = useParams();
   const id = Number(params.id);
@@ -36,7 +32,7 @@ export default function Detail() {
     <>
       <div key={productDetail?.id}>
         <div>
-          <img src={productDetail?.imageurl} width="40%" height="35%" />{' '}
+          <img src={productDetail?.imageurl} width="700px" height="600px%" />{' '}
         </div>
         <div style={{ width: '60%' }}>
           <h1>{productDetail?.title}</h1>
@@ -52,8 +48,6 @@ export default function Detail() {
             you have <strong>{quantity}</strong> item/items of this product in
             your cart
           </div>
-          {/* <button onClick={() => dispatch(Increment())}>+ Add to cart</button> */}
-          {/* <Cart /> */}
         </div>
       </div>
     </>

@@ -4,6 +4,7 @@ type ItemInCartProps = {
   item: CartItem;
 };
 let total : number
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 total = 0
 export const ItemInCart = ({ item }: ItemInCartProps) => {
   //const stateFunctionality = useShoppingCart();

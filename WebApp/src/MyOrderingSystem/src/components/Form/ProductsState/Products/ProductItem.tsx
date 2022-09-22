@@ -32,7 +32,7 @@ const styles = {
             to={'/detail/' + id}
             style={{ fontWeight: 700, backgroundColor: 'lightblue' }}
           >
-            <span data-testid="custom-element">Show More</span>
+            <span role="custom-element">Show More</span>
           </Link>
         </span>
       </div>
