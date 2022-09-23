@@ -6,10 +6,7 @@ import {
   ProductQuery,
   getAllProducts,
 } from '../../../../Data/CommunicationService';
-import {
-  ProductValidator,
-  isValid,
-} from '../../../../Validator/Validator';
+import { ProductValidator, isValid } from '../../../../Validator/Validator';
 
 export default function ProductsState() {
   const [products, setProducts] = useState<ProductType[]>();
@@ -22,9 +19,8 @@ export default function ProductsState() {
   useEffect(() => {
     const Data = getAllProducts(productsQuery);
     const productValidate = new ProductValidator();
-  //needs to be improve
+    //needs to be improve
     Data.then((res) => {
-    
       const validatedProducts: Array<ProductType> = [
         {
           id: 1,
@@ -37,7 +33,7 @@ export default function ProductsState() {
           stock: 18,
           brand: 'Microsoft',
           category: 'Laptops',
-          imageurl:
+          imageUrl:
             'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
           coupon: 50,
         },

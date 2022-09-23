@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ProductItem from '../../../src/components/Form/ProductsState/Products/ProductItem';
 import { ProductType } from '../../../src/components/Form/productType';
 import { BrowserRouter } from 'react-router-dom';
-import userEvent from '@testing-library/user-event'
-
-
+import userEvent from '@testing-library/user-event';
 
 test('"Show More" in this component should be a link ', () => {
   const sut: ProductType = {
@@ -18,7 +16,7 @@ test('"Show More" in this component should be a link ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -44,7 +42,7 @@ test('"Show More" in this component should be a link ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -79,7 +77,7 @@ function setup(jsx: any) {
 //     stock: 18,
 //     brand: 'Microsoft',
 //     category: 'Laptops',
-//     imageurl:
+//     imageUrl:
 //       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
 //     coupon: 50,
 //   };

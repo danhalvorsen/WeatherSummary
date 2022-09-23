@@ -8,7 +8,6 @@ function App() {
     <Form/>
         {/* <Navbar/>
         <Showcase/>
-
       <Form>
         <WeatherForcastSearchState />
       </Form> */}

@@ -9,7 +9,7 @@ export type ProductType = {
   stock: number;
   brand: string;
   category: string;
-  imageurl: string;
+  imageUrl: string;
   coupon: number;
   price: number;
 };

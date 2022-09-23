@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import NavigationBar from '../src/components/Form/NavigationBar';
 
 test('Load Navigation bar in front page', () => {
@@ -24,7 +24,7 @@ test('Load Navigation bar in front page', () => {
 //         stock: 0,
 //         brand: '',
 //         category: '',
-//         imageurl: '',
+//         imageUrl: '',
 //         coupon: 0,
 //         price: 0,
 //       }}
@@ -47,7 +47,7 @@ test('Load Navigation bar in front page', () => {
 //         stock: 0,
 //         brand: '',
 //         category: '',
-//         imageurl: '',
+//         imageUrl: '',
 //         coupon: 0,
 //         price: 0,
 //       }}

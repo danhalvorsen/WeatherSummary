@@ -14,7 +14,7 @@ export const CartButton = () => {
     },
   };
 
-  const basketNumber = stateFunctionality.cartQuantity || 0;
+  const basketNumber = stateFunctionality.cartItemsQuantity || 0;
   return (
     <>
       <Link to="/shoppingCart">

@@ -9,7 +9,7 @@ export const isValid = <T>(object: ValidationErrors<T>): boolean => {
 
 export class queryStringValidator extends Validator<ProductQuery> {
   static validate(sampleUrl: ProductQuery) {
-      throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   constructor() {
     super();
@@ -53,7 +53,7 @@ export class ProductValidator extends Validator<ProductType> {
     this.ruleFor('category')
       .notEmpty()
       .withMessage('category field should not be empty');
-    this.ruleFor('imageurl')
+    this.ruleFor('imageUrl')
       .notEmpty()
       .withMessage('image url field should not be empty');
   }

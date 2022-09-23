@@ -3,13 +3,13 @@ import { ItemInCart } from './ItemInCart';
 
 export const ShoppingCart = () => {
   //   const stateFunctionality = useShoppingCart();
-  //   const items = stateFunctionality.myItems;
-  const { myItems: myCartItems, productList } = useShoppingCart();
+  //   const items = stateFunctionality.cartItems;
+  const { cartItems: myCartItems, products } = useShoppingCart();
 
   let sum = 0;
   myCartItems.forEach((item) => {
     const itemQuantity = item.quantity;
-    const price = productList?.find((i) => i.id == item.id)?.price || 0;
+    const price = products?.find((i) => i.id == item.id)?.price || 0;
     sum += price * itemQuantity;
   });
   return (

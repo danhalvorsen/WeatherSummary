@@ -10,7 +10,7 @@
       "stock": 18,
       "brand": "Microsoft",
       "category": "Laptops",
-      "imageurl": "https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg",
+      "imageUrl": "https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg",
       "coupon": 50
     },
     {
@@ -21,7 +21,7 @@
       "stock": 25,
       "brand": "Apple",
       "category": "Phones",
-      "imageurl": "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-13-01.jpg",
+      "imageUrl": "https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-13-01.jpg",
       "coupon": 45
     },
     {
@@ -32,7 +32,7 @@
       "stock": 15,
       "brand": "JBL",
       "category": "Headphones",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61yjoRgptdL._AC_SX425_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61yjoRgptdL._AC_SX425_.jpg",
 
       "coupon": 10
     },
@@ -44,7 +44,7 @@
       "stock": 20,
       "brand": "Apple",
       "category": "Headphones",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71bhWgQK-cL._AC_SX466_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71bhWgQK-cL._AC_SX466_.jpg",
       "coupon": 10
     },
 
@@ -56,7 +56,7 @@
       "stock": 35,
       "brand": "Amazonbasics",
       "category": "Mouse&Keyboard",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61i0CV-tKpL._AC_SX425_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61i0CV-tKpL._AC_SX425_.jpg",
       "coupon": 5
     },
     {
@@ -67,7 +67,7 @@
       "stock": 28,
       "brand": "Lovaky",
       "category": "Mouse&Keyboard",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61fie1u7QAL._AC_SX679_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/61fie1u7QAL._AC_SX679_.jpg",
       "coupon": 10
     },
 
@@ -79,7 +79,7 @@
       "stock": 28,
       "brand": "Acer",
       "category": "Laptops",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/81bc8mA3nKL._AC_SX425_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/81bc8mA3nKL._AC_SX425_.jpg",
       "coupon": 60
     },
     {
@@ -90,7 +90,7 @@
       "stock": 8,
       "brand": "Acer",
       "category": "Laptops",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71RK6+rx-xL._AC_SX679_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71RK6+rx-xL._AC_SX679_.jpg",
       "coupon": 50
     },
     {
@@ -101,7 +101,7 @@
       "stock": 8,
       "brand": "Gigabyte",
       "category": "Laptops",
-      "imageurl": "https://d1rlzxa98cyc61.cloudfront.net/catalog/product/cache/1801c418208f9607a371e61f8d9184d9/1/8/182582_2022.jpg",
+      "imageUrl": "https://d1rlzxa98cyc61.cloudfront.net/catalog/product/cache/1801c418208f9607a371e61f8d9184d9/1/8/182582_2022.jpg",
       "coupon": 50
     },
     {
@@ -112,7 +112,7 @@
       "stock": 15,
       "brand": "HP",
       "category": "Printer",
-      "imageurl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71w39ba633L._AC_SX425_.jpg",
+      "imageUrl": "https://m.media-amazon.com/images/W/WEBP_402378-T1/images/I/71w39ba633L._AC_SX425_.jpg",
       "coupon": 20
     }
   ]

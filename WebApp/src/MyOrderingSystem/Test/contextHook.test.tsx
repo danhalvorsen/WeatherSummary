@@ -4,31 +4,27 @@
 // import { CartButton } from '../src/components/cart/CartButton';
 // import { ProductType } from '../src/components/Form/productType';
 
-
 // type ShoppingCartProviderProps = {
 //     children: ReactNode | JSX.Element;
 //   };
-  
+
 // type ShoppingCartContest = {
 //     getItemQuantity: (id: number) => number;
 //     addItemToCart: (id: number) => void;
-//     cartQuantity: number;
-//     myItems: CartItem[];
-//     productList: ProductType[] | undefined;
+//     cartItemsQuantity: number;
+//     cartItems: CartItem[];
+//     products: ProductType[] | undefined;
 //   };
-  
-  
 
 // const ShoppingContextProvider = ({ children } :ShoppingCartProviderProps) => (
 //     <ShoppingCartProvider.Provider  value={{
 //         getItemQuantity,
 //         addItemToCart,
-//         cartQuantity,
-//         myItems,
-//         productList: productsList,
+//         cartItemsQuantity,
+//         cartItems,
+//         products: productsList,
 //       }}
 //       >{children}</ShoppingCartProvider.Provider>
 //   );
-  
 
-export{}
+export {};

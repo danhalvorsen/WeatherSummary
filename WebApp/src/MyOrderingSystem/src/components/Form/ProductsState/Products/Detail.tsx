@@ -8,7 +8,7 @@ import {
 import { useShoppingCart } from '../../../context/ShoppingCartContext';
 
 export default function Detail() {
-  const stateFunctionality = useShoppingCart();
+  const { getItemQuantity, increaseQuantity } = useShoppingCart();
   const [productDetail, setProductDetail] = useState<ProductType>();
   const params = useParams();
   const id = Number(params.id);
@@ -19,7 +19,7 @@ export default function Detail() {
   productQuery.parameter = 'products/';
   productQuery.id = id;
 
-  const quantity = stateFunctionality.getItemQuantity(id);
+  const quantity = getItemQuantity(id);
 
   useEffect(() => {
     const Data = getProductById(productQuery);
@@ -32,7 +32,7 @@ export default function Detail() {
     <>
       <div key={productDetail?.id}>
         <div>
-          <img src={productDetail?.imageurl} width="700px" height="600px%" />{' '}
+          <img src={productDetail?.imageUrl} width="700px" height="600px%" />{' '}
         </div>
         <div style={{ width: '60%' }}>
           <h1>{productDetail?.title}</h1>
@@ -41,7 +41,7 @@ export default function Detail() {
             Price: {productDetail?.price}
           </strong>
           <br />
-          <button onClick={() => stateFunctionality.increaseQuantity(id)}>
+          <button onClick={() => increaseQuantity(id)}>
             + Add to cart
           </button>{' '}
           <div>

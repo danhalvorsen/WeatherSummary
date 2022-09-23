@@ -13,7 +13,7 @@ test('ProductValidator should not pass with price of 0', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -34,7 +34,7 @@ test('ProductValidator should accept id that be greater than 0 ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -54,7 +54,7 @@ test('ProductValidator should not pass with short description ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -75,7 +75,7 @@ test('ProductValidator should not pass with empty brand ', () => {
     stock: 18,
     brand: '',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -96,7 +96,7 @@ test('ProductValidator should not pass with empty title ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -117,7 +117,7 @@ test('ProductValidator should not pass with empty category', () => {
     stock: 18,
     brand: 'Microsoft',
     category: '',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
@@ -138,7 +138,7 @@ test('ProductValidator should not pass with empty Image', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl: '',
+    imageUrl: '',
     coupon: 50,
   };
   const productValidator = new ProductValidator();
@@ -158,7 +158,7 @@ test('ProductValidator should accept received data ', () => {
     stock: 18,
     brand: 'Microsoft',
     category: 'Laptops',
-    imageurl:
+    imageUrl:
       'https://fdn.gsmarena.com/imgroot/news/21/09/surface-laptops/-1200/gsmarena_001.jpg',
     coupon: 50,
   };
