@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
 type SearchBarProps = {
   setSearchFilter: React.Dispatch<React.SetStateAction<string>>;
 };
-export default function SearchBar(props: SearchBarProps) {
+
+export default function SearchBar({ setSearchFilter }: SearchBarProps) {
   //Style
   const styles = {
     border: {
@@ -13,23 +14,19 @@ export default function SearchBar(props: SearchBarProps) {
     },
   };
 
-  // useEffect(()=>{
-  //     props.setFilter('?q=laptop');
-
-  // },[])
-
   return (
-    <form>
-      <div style={styles.border}>
-        <label>Search:</label>{' '}
-        <input
-          type="search"
-          placeholder="Insert product Name"
-          onChange={(e) => {
-            props.setSearchFilter(e.target.value);
-          }}
-        />
-      </div>
-    </form>
+    <div style={styles.border}>
+      <label>Search:</label>{' '}
+      <input
+        type="search"
+        placeholder="Insert product Name"
+        onChange={(e) => {
+          e.preventDefault();
+          setTimeout(() => {
+            setSearchFilter(e.target.value);
+          }, 1500);
+        }}
+      />
+    </div>
   );
 }
