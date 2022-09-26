@@ -20,9 +20,9 @@ export const ShoppingCart = () => {
         return <ItemInCart key={item.id} item={item} />;
       })}
       <div>
-        {myCartItems.find((item) => item) !== undefined && (
+        {(myCartItems.find((item) => item) !== undefined && (
           <h2 style={{ marginLeft: '15%' }}>Total Price:{sum}</h2>
-        )}
+        )) || <h2 style={{ padding: '250px' }}>the Shopping Cart is Empty</h2>}
       </div>
     </>
   );

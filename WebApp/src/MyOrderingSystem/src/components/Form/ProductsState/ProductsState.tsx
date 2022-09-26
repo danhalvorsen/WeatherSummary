@@ -10,13 +10,19 @@ import { ProductValidator, isValid } from '../../../../Validator/Validator';
 
 export default function ProductsState() {
   const [products, setProducts] = useState<ProductType[]>();
-  const baseUrl = 'http://localhost:3002';
+  const [searchFilter , setSearchFilter] = useState('');
+  console.log(searchFilter)
+  
 
-  const productsQuery = new ProductQuery();
-  productsQuery.baseUrl = baseUrl;
-  productsQuery.parameter = '/products';
 
   useEffect(() => {
+  const baseUrl = 'http://localhost:3002/products/';
+  const productsQuery = new ProductQuery();
+  productsQuery.baseUrl = baseUrl;
+  productsQuery.parameter = '?q=' + searchFilter;
+  console.log(productsQuery.parameter)
+
+
     const Data = getAllProducts(productsQuery);
     const productValidate = new ProductValidator();
     //needs to be improve
@@ -48,7 +54,7 @@ export default function ProductsState() {
       });
       setProducts(validatedProducts);
     });
-  }, []);
+  }, [searchFilter]);
 
   //Style
   const styles = {
@@ -60,7 +66,7 @@ export default function ProductsState() {
   };
   return (
     <>
-      <SearchBar />
+      <SearchBar setSearchFilter={setSearchFilter} />
       <div style={styles.border}>
         <Products products={products} />
       </div>
