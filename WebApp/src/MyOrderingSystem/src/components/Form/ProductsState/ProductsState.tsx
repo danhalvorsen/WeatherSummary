@@ -1,5 +1,5 @@
 import Products from './Products/Products';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ProductType } from '../productType';
 import SearchBar from './SearchBar';
 import {
@@ -10,18 +10,13 @@ import { ProductValidator, isValid } from '../../../../Validator/Validator';
 
 export default function ProductsState() {
   const [products, setProducts] = useState<ProductType[]>();
-  const [searchFilter , setSearchFilter] = useState('');
-  console.log(searchFilter)
-  
-
+  const [searchFilter, setSearchFilter] = useState('');
 
   useEffect(() => {
-  const baseUrl = 'http://localhost:3002/products/';
-  const productsQuery = new ProductQuery();
-  productsQuery.baseUrl = baseUrl;
-  productsQuery.parameter = '?q=' + searchFilter;
-  console.log(productsQuery.parameter)
-
+    const baseUrl = 'http://localhost:3002/products/';
+    const productsQuery = new ProductQuery();
+    productsQuery.baseUrl = baseUrl;
+    productsQuery.parameter = '?q=' + searchFilter;
 
     const Data = getAllProducts(productsQuery);
     const productValidate = new ProductValidator();

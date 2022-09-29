@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import Product from './Product';
 import { ProductType } from '../../productType';
 

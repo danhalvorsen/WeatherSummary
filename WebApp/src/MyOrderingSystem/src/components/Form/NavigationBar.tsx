@@ -5,7 +5,7 @@ function NavigationBar() {
   return (
     <>
       <div className=" border border-primary p-3">
-        <Link to="/">Home</Link> || <Link to="#">Link1</Link> | <Link to="#">Link2</Link> | <Link to="#">Link3</Link>
+        <Link to="/">Home</Link> || <Link to="signIn">Sign In</Link>
         <div style={styles.leftButton}>
           <CartButton/>
         </div>

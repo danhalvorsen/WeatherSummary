@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+
 
 type SearchBarProps = {
   setSearchFilter: React.Dispatch<React.SetStateAction<string>>;
@@ -14,12 +16,12 @@ export default function SearchBar({ setSearchFilter }: SearchBarProps) {
     },
   };
 
+
   return (
     <div style={styles.border}>
       <label>Search:</label>{' '}
       <input
         type="search"
-        placeholder="Insert product Name"
         onChange={(e) => {
           e.preventDefault();
           setTimeout(() => {

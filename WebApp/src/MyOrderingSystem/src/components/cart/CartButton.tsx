@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useShoppingCart } from '../context/ShoppingCartContext';
 
 export const CartButton = () => {
-  const stateFunctionality = useShoppingCart();
+  const { cartItemsQuantity, loginRole } = useShoppingCart();
 
   const styles = {
     borderRound: {
@@ -14,11 +14,19 @@ export const CartButton = () => {
     },
   };
 
-  const basketNumber = stateFunctionality.cartItemsQuantity || 0;
+  const basketNumber = cartItemsQuantity || 0;
+
+  const user = () => {
+    if (loginRole !== '') {
+      return <span>Hello, {loginRole}</span>;
+    }
+  };
+
   return (
     <>
+      {user()}
       <Link to="/shoppingCart">
-        <button>Cart</button>
+        <button role="Cart">Cart</button>
       </Link>
       <span style={styles.borderRound}>{basketNumber}</span>
     </>

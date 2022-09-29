@@ -22,6 +22,8 @@ export type ShoppingCartContext = {
   cartItemsQuantity: number;
   cartItems: CartItem[];
   products: ProductType[] | undefined;
+  loginRole: string;
+  changeLoginRole: (role: string) => void;
 };
 export type CartItem = {
   id: number;
@@ -37,6 +39,7 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [products, setProducts] = useState<ProductType[]>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [loginRole , setLoginRole] = useState('');
 
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id == id)?.quantity || 0;
@@ -103,6 +106,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   }, []);
 
+  function changeLoginRole(role: string){
+    setLoginRole(role);
+  }
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -113,6 +119,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         cartItemsQuantity,
         cartItems,
         products: products,
+        loginRole,
+        changeLoginRole
       }}
     >
       {children}
