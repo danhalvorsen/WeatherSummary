@@ -4,8 +4,8 @@ export type ProductType = {
   id: number;
   title: string;
   description: string;
-  customerprice: number;
-  boughtprice: number;
+  customerprice?: number;
+  boughtprice?: number;
   stock: number;
   brand: string;
   category: string;

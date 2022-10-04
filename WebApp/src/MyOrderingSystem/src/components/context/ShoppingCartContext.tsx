@@ -39,7 +39,7 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [products, setProducts] = useState<ProductType[]>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loginRole , setLoginRole] = useState('');
+  const [loginRole, setLoginRole] = useState('');
 
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id == id)?.quantity || 0;
@@ -106,7 +106,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     });
   }, []);
 
-  function changeLoginRole(role: string){
+  function changeLoginRole(role: string) {
     setLoginRole(role);
   }
   return (
@@ -118,9 +118,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         removeFromCart,
         cartItemsQuantity,
         cartItems,
-        products: products,
+        products,
         loginRole,
-        changeLoginRole
+        changeLoginRole,
       }}
     >
       {children}

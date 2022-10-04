@@ -15,7 +15,7 @@ export default function SignIn() {
     <div>
       <div><button onClick={()=>{loginHeader('Admin')}}>Login as Admin</button></div>
       <br/>
-      <div><button>Login as Customer</button></div>
+      <div><button onClick={()=>{loginHeader('Customer')}}>Login as Customer</button></div>
     </div>
   )
 }

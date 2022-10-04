@@ -6,6 +6,7 @@ import Detail from './ProductsState/Products/Detail';
 import { ShoppingCartProvider } from '../context/ShoppingCartContext';
 import { ShoppingCart } from '../shoppingCart/ShoppingCart';
 import SignIn from './signIn/signIn';
+import AddProducts from './ProductsState/Products/addProducts';
 
 
 function Form() {
@@ -17,6 +18,7 @@ function Form() {
         <Routes>
           <Route path="/" element={<ProductsState />} />
           <Route path="signIn" element={<SignIn />} />
+          <Route path="AddProducts" element={<AddProducts />} />
           <Route path="/home" element={<Navigate replace to="/" />} />
           <Route path="/detail/:id" element={<Detail />} />
           <Route path="/shoppingCart" element={<ShoppingCart />} />
