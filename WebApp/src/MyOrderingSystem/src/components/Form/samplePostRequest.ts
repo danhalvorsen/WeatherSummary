@@ -3,7 +3,7 @@ import { ProductType } from './productType';
 
 ////////////// test for inserting data to json-server //////////////////
 const newIphone: ProductType = {
-  id: 11,
+  id: 12,
   title: 'Iphone 14',
   description: 'this is a new Iphone which released in September 2022',
   price: 18000,

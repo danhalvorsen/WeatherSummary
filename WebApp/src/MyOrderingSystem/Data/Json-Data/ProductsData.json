@@ -124,6 +124,32 @@
       "category": "Phone",
       "imageUrl": "https://img.gfx.no/2739/2739387/iphone-14-pro.1000x563.jpg",
       "coupon": 100
+    },
+    {
+      "id": 178,
+      "title": "Galaxy flip Z",
+      "description": "this is a very good phone that you can buy",
+      "price": 0,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 20,
+      "brand": "Samsung",
+      "category": "Phone",
+      "imageUrl": "https://img.prisguiden.no/3271/3271352/samsung-galaxy-z-flip3-256gb-5g-black%281019514%29_455709_1_Normal_Extra.404x600!m.jpg",
+      "coupon": 20
+    },
+    {
+      "id": 311,
+      "title": "galaxy ultra 22",
+      "description": "very nice phone 2022",
+      "price": 16000,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 30,
+      "brand": "Samsung",
+      "category": "Phone",
+      "imageUrl": "https://img.prisguiden.no/3271/3271352/samsung-galaxy-z-flip3-256gb-5g-black%281019514%29_455709_1_Normal_Extra.404x600!m.jpg",
+      "coupon": 20
     }
   ]
 }

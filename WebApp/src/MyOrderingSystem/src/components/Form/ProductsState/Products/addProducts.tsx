@@ -1,4 +1,3 @@
-import produce from 'immer';
 import React, { useEffect, useState } from 'react';
 import { ProductType } from '../../productType';
 
@@ -18,75 +17,137 @@ export default function AddProducts() {
   };
 
   const [newProduct, setNewProduct] = useState<ProductType>(oneProduct);
-  const temporaryIdProductor = Math.floor(Math.random() * 900);
+  const temporaryIdProducer = Math.floor(Math.random() * 900);
 
-  const changeState = (e: string) => {
-    setNewProduct({ ...newProduct, title: e });
+
+  const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case 'Title':
+        setNewProduct({ ...newProduct, title: e.target.value });
+        break;
+      case 'description':
+        setNewProduct({ ...newProduct, description: e.target.value });
+        break;
+      case 'Stock':
+        setNewProduct({ ...newProduct, stock: +e.target.value });
+        break;
+      case 'Brand':
+        setNewProduct({ ...newProduct, brand: e.target.value });
+        break;
+      case 'Category':
+        setNewProduct({ ...newProduct, category: e.target.value });
+        break;
+      case 'ImageUrl':
+        setNewProduct({ ...newProduct, imageUrl: e.target.value });
+        break;
+      case 'Coupon':
+        setNewProduct({ ...newProduct, coupon: +e.target.value });
+        break;
+        case 'price':
+        setNewProduct({ ...newProduct, price: +e.target.value });
+          
+
+        break;
+     
+    }
   };
 
-  const handleSubmit = () => {
-    console.log(newProduct);
+  const baseUrl= 'http://localhost:3002/products';
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log(newProduct)
+
+    postNewProduct(baseUrl,newProduct)
   };
+
 
   useEffect(() => {
-    console.log(newProduct);
+    setNewProduct({ ...newProduct, id: temporaryIdProducer });
+   // postNewProduct(baseUrl , newProduct)
   }, []);
+
+  const postNewProduct = async (baseUrl: string,newProduct: ProductType)=>{
+
+    const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+      });
+      return response.json();
+  }
 
   return (
     <>
       <div>You can add products here...</div>
       <div>
         <form
-          onSubmit={() => {
-            handleSubmit;
-          }}
+          onSubmit={(e) => handleSubmit(e) }
         >
           <label>Title:</label>
           <input
             type="text"
-            name="title"
+            name="Title"
             placeholder="title of product"
-            onChange={(e) => changeState}
+            onChange={(e) => changeState(e)}
           />{' '}
           <br />
           <label>Description:</label>
           <input
             type="text"
-            name="title"
+            name="description"
             placeholder="Description of product"
-            onChange={(e) => changeState}
+            onChange={(e) => changeState(e)}
           />{' '}
           <br />
           <label>Stock:</label>
           <input
             type="text"
-            name="title"
+            name="Stock"
             placeholder="quantity of product"
-            onChange={(e) => changeState}
+            onChange={(e) => changeState(e)}
           />{' '}
           <br />
           <label>Brand:</label>
-          <input type="text" name="title" onChange={(e) => changeState} />{' '}
+          <input
+            type="text"
+            name="Brand"
+            onChange={(e) => changeState(e)}
+          />{' '}
           <br />
           <label>Category:</label>
-          <input type="text" name="title" onChange={(e) => changeState} />{' '}
+          <input
+            type="text"
+            name="Category"
+            onChange={(e) => changeState(e)}
+          />{' '}
           <br />
           <label>Image Url:</label>
           <input
             type="text"
-            name="title"
+            name="ImageUrl"
             placeholder="place your image URL"
-            onChange={(e) => changeState}
+            onChange={(e) => changeState(e)}
           />{' '}
           <br />
           <label>Coupon:</label>
-          <input type="text" name="title" onChange={(e) => changeState} />{' '}
+          <input
+            type="text"
+            name="Coupon"
+            onChange={(e) => changeState(e)}
+          />{' '}
           <br />
           <label>Price:</label>
-          <input type="text" name="title" onChange={(e) => changeState} />{' '}
+          <input
+            type="text"
+            name="price"
+            onChange={(e) => changeState(e)}
+          />{' '}
           <br />
-          <br />
-          <button onClick={()=>handleSubmit}>Add Product</button>
+             <br />
+          <button onClick={()=> handleSubmit}>Add Product</button>
         </form>
       </div>
     </>
