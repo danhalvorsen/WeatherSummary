@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ProductType } from '../../productType';
+import {
+  addNewProduct,
+  addProductType,
+} from '../../../../../Data/CommunicationService';
 
 export default function AddProducts() {
   const oneProduct: ProductType = {
@@ -15,10 +19,8 @@ export default function AddProducts() {
     imageUrl: '',
     coupon: 0,
   };
-
   const [newProduct, setNewProduct] = useState<ProductType>(oneProduct);
   const temporaryIdProducer = Math.floor(Math.random() * 900);
-
 
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -43,49 +45,30 @@ export default function AddProducts() {
       case 'Coupon':
         setNewProduct({ ...newProduct, coupon: +e.target.value });
         break;
-        case 'price':
+      case 'price':
         setNewProduct({ ...newProduct, price: +e.target.value });
-          
-
         break;
-     
     }
   };
 
-  const baseUrl= 'http://localhost:3002/products';
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log(newProduct)
-
-    postNewProduct(baseUrl,newProduct)
-  };
-
-
   useEffect(() => {
     setNewProduct({ ...newProduct, id: temporaryIdProducer });
-   // postNewProduct(baseUrl , newProduct)
   }, []);
 
-  const postNewProduct = async (baseUrl: string,newProduct: ProductType)=>{
+  const addQueryTypes = new addProductType();
+  addQueryTypes.baseUrl = 'http://localhost:3002/products';
+  addQueryTypes.newProduct = newProduct;
 
-    const response = await fetch(baseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newProduct),
-      });
-      return response.json();
-  }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addNewProduct(addQueryTypes);
+  };
 
   return (
     <>
       <div>You can add products here...</div>
       <div>
-        <form
-          onSubmit={(e) => handleSubmit(e) }
-        >
+        <form onSubmit={(e) => handleSubmit(e)}>
           <label>Title:</label>
           <input
             type="text"
@@ -146,8 +129,8 @@ export default function AddProducts() {
             onChange={(e) => changeState(e)}
           />{' '}
           <br />
-             <br />
-          <button onClick={()=> handleSubmit}>Add Product</button>
+          <br />
+          <button onClick={() => handleSubmit}>Add Product</button>
         </form>
       </div>
     </>

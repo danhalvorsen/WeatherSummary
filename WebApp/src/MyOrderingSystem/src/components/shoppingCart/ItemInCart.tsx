@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { CartItem, useShoppingCart } from '../context/ShoppingCartContext';
 
 export type ItemInCartProps = {
@@ -7,8 +8,12 @@ let total: number;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 total = 0;
 export const ItemInCart = ({ item }: ItemInCartProps) => {
-  const { increaseQuantity, decreaseQuantity, removeFromCart, products } =
+  const { increaseQuantity, decreaseQuantity, removeFromCart, products , loadProducts } =
     useShoppingCart();
+
+    useEffect(()=>{
+      loadProducts();
+    },[])
 
   const myItem = products?.find((product) => product.id == item.id);
 

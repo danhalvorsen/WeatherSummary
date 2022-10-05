@@ -24,6 +24,7 @@ export type ShoppingCartContext = {
   products: ProductType[] | undefined;
   loginRole: string;
   changeLoginRole: (role: string) => void;
+  loadProducts: () => void;
 };
 export type CartItem = {
   id: number;
@@ -99,11 +100,16 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const productsQuery = new ProductQuery();
   productsQuery.baseUrl = baseUrl;
   productsQuery.parameter = '/products';
-  useEffect(() => {
+
+  const loadProducts = () => {
     const Data = getAllProducts(productsQuery);
     Data.then((result) => {
       setProducts(result);
     });
+  };
+
+  useEffect(() => {
+    loadProducts();
   }, []);
 
   function changeLoginRole(role: string) {
@@ -121,6 +127,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         products,
         loginRole,
         changeLoginRole,
+        loadProducts,
       }}
     >
       {children}

@@ -126,19 +126,6 @@
       "coupon": 100
     },
     {
-      "id": 178,
-      "title": "Galaxy flip Z",
-      "description": "this is a very good phone that you can buy",
-      "price": 0,
-      "customerprice": 0,
-      "boughtprice": 0,
-      "stock": 20,
-      "brand": "Samsung",
-      "category": "Phone",
-      "imageUrl": "https://img.prisguiden.no/3271/3271352/samsung-galaxy-z-flip3-256gb-5g-black%281019514%29_455709_1_Normal_Extra.404x600!m.jpg",
-      "coupon": 20
-    },
-    {
       "id": 311,
       "title": "galaxy ultra 22",
       "description": "very nice phone 2022",
@@ -150,6 +137,97 @@
       "category": "Phone",
       "imageUrl": "https://img.prisguiden.no/3271/3271352/samsung-galaxy-z-flip3-256gb-5g-black%281019514%29_455709_1_Normal_Extra.404x600!m.jpg",
       "coupon": 20
+    },
+    {
+      "id": 400,
+      "title": "Multicom NH58ER laptop gaming",
+      "description": "Fantastisk spillopplevelse på en kraftig gaming laptop med åttekjerners AMD Ryzen 9 5900HX prosessor, GeForce RTX 3070",
+      "price": 18000,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 20,
+      "brand": "Multicom",
+      "category": "laptop",
+      "imageUrl": "https://asset1-327a.kxcdn.com/w863986/DataImage.ashx/d183fb86-11324366",
+      "coupon": 50
+    },
+    {
+      "id": 490,
+      "title": "Headset Sony",
+      "description": "very nice headset in 2022",
+      "price": 2500,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 10,
+      "brand": "Sony",
+      "category": "headphone",
+      "imageUrl": "https://m.media-amazon.com/images/I/519EahgX90L._AC_SX466_.jpg",
+      "coupon": 10
+    },
+    {
+      "id": 551,
+      "title": "Pen MB Monte Black",
+      "description": "Luxury Pen MB Monte Black Resin Gold and Silver Meisterstuck 145 Roller Ball Blance Signature Fountain Pen Office Supplies Gift",
+      "price": 250,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 50,
+      "brand": "Luxury ",
+      "category": "Pen",
+      "imageUrl": "https://ae01.alicdn.com/kf/Ha07ef3321a0a497faf49634ae25f7f5bP/Luxury-Pen-MB-Monte-Black-Resin-Gold-and-Silver-Meisterstuck-145-Roller-Ball-Blance-Signature-Fountain.jpg_Q90.jpg_.webp",
+      "coupon": 5
+    },
+    {
+      "id": 324,
+      "title": "rrrr",
+      "description": "dsfadsfdsfd",
+      "price": 20000000,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 4,
+      "brand": "affadsfd",
+      "category": "df",
+      "imageUrl": "https://img.prisguiden.no/3271/3271352/samsung-galaxy-z-flip3-256gb-5g-black%281019514%29_455709_1_Normal_Extra.404x600!m.jpg",
+      "coupon": 3
+    },
+    {
+      "id": 647,
+      "title": "5555555",
+      "description": "555555555",
+      "price": 555555555555,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 55555,
+      "brand": "5555",
+      "category": "5555",
+      "imageUrl": "https://ae01.alicdn.com/kf/Ha07ef3321a0a497faf49634ae25f7f5bP/Luxury-Pen-MB-Monte-Black-Resin-Gold-and-Silver-Meisterstuck-145-Roller-Ball-Blance-Signature-Fountain.jpg_Q90.jpg_.webp",
+      "coupon": 555
+    },
+    {
+      "id": 680,
+      "title": "66666666",
+      "description": "666666666666666",
+      "price": 666666,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 66,
+      "brand": "6",
+      "category": "6666",
+      "imageUrl": "https://m.media-amazon.com/images/I/519EahgX90L._AC_SX466_.jpg",
+      "coupon": 66
+    },
+    {
+      "id": 594,
+      "title": "7777",
+      "description": "77777777777777777777777",
+      "price": 777777,
+      "customerprice": 0,
+      "boughtprice": 0,
+      "stock": 77,
+      "brand": "77",
+      "category": "77",
+      "imageUrl": "https://asset1-327a.kxcdn.com/w863986/DataImage.ashx/d183fb86-11324366",
+      "coupon": 777
     }
   ]
 }

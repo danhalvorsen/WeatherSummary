@@ -8,6 +8,11 @@ export class ProductQuery {
   parameter: string;
   id?: number;
 }
+export class addProductType {
+  baseUrl: string;
+  newProduct: ProductType
+}
+
 export class ProductTypeQueryValidator {}
 
 export const getAllProducts = async (
@@ -37,6 +42,17 @@ export const getProductById = (query: ProductQuery): Promise<ProductType> => {
       console.log(error);
     });
 };
+
+export const addNewProduct = async (query: addProductType)=>{
+const response = await fetch(query.baseUrl , {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(query.newProduct)
+});
+return response.json();
+}
 
 /////////////////////////////
 export const productService = {
