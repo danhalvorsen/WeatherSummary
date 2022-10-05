@@ -24,10 +24,10 @@ export default function AddProducts() {
   };
   const [newProduct, setNewProduct] = useState<ProductType>(oneProduct);
   //const temporaryIdProducer = Math.floor(Math.random() * 900);
-  const {lastProductId} = useShoppingCart()
-    const newId= (lastProductId + 1)
-//   const uuid = uuidv4()
-//   console.log(uuid)
+  const { lastProductId } = useShoppingCart();
+  const newId = lastProductId + 1;
+  //   const uuid = uuidv4()
+  //   console.log(uuid)
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'Title':
