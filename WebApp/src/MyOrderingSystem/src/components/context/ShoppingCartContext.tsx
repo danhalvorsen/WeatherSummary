@@ -5,6 +5,7 @@ import {
   useState,
   useEffect,
 } from 'react';
+import { ResultBox } from '../../../../components/newComponents/resultBox/ResultBox';
 import {
   getAllProducts,
   ProductQuery,
@@ -25,6 +26,7 @@ export type ShoppingCartContext = {
   loginRole: string;
   changeLoginRole: (role: string) => void;
   loadProducts: () => void;
+  lastProductId: number
 };
 export type CartItem = {
   id: number;
@@ -41,6 +43,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [products, setProducts] = useState<ProductType[]>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loginRole, setLoginRole] = useState('');
+  const [lastProductId , setLastProductId] = useState<number>(0);
 
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id == id)?.quantity || 0;
@@ -105,11 +108,18 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     const Data = getAllProducts(productsQuery);
     Data.then((result) => {
       setProducts(result);
+  
+      const lastId = result.length;
     });
+    
   };
+
 
   useEffect(() => {
     loadProducts();
+    setLastProductId(300);
+    console.log(lastProductId)
+ 
   }, []);
 
   function changeLoginRole(role: string) {
@@ -128,6 +138,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         loginRole,
         changeLoginRole,
         loadProducts,
+        lastProductId
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import {
   addNewProduct,
   addProductType,
 } from '../../../../../Data/CommunicationService';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AddProducts() {
   const oneProduct: ProductType = {
@@ -21,7 +22,8 @@ export default function AddProducts() {
   };
   const [newProduct, setNewProduct] = useState<ProductType>(oneProduct);
   const temporaryIdProducer = Math.floor(Math.random() * 900);
-
+  const uuid = uuidv4()
+  console.log(uuid)
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'Title':
