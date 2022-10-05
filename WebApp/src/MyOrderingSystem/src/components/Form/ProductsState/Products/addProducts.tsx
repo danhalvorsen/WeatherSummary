@@ -4,7 +4,9 @@ import {
   addNewProduct,
   addProductType,
 } from '../../../../../Data/CommunicationService';
-import { v4 as uuidv4 } from 'uuid';
+import { ShoppingCart } from '../../../shoppingCart/ShoppingCart';
+import { useShoppingCart } from '../../../context/ShoppingCartContext';
+//import { v4 as uuidv4 } from 'uuid';
 
 export default function AddProducts() {
   const oneProduct: ProductType = {
@@ -21,9 +23,11 @@ export default function AddProducts() {
     coupon: 0,
   };
   const [newProduct, setNewProduct] = useState<ProductType>(oneProduct);
-  const temporaryIdProducer = Math.floor(Math.random() * 900);
-  const uuid = uuidv4()
-  console.log(uuid)
+  //const temporaryIdProducer = Math.floor(Math.random() * 900);
+  const {lastProductId} = useShoppingCart()
+    const newId= (lastProductId + 1)
+//   const uuid = uuidv4()
+//   console.log(uuid)
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'Title':
@@ -54,7 +58,7 @@ export default function AddProducts() {
   };
 
   useEffect(() => {
-    setNewProduct({ ...newProduct, id: temporaryIdProducer });
+    setNewProduct({ ...newProduct, id: newId });
   }, []);
 
   const addQueryTypes = new addProductType();

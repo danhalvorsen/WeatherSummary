@@ -109,7 +109,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     Data.then((result) => {
       setProducts(result);
   
-      const lastId = result.length;
+      setLastProductId(result.length);
     });
     
   };
@@ -117,7 +117,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
 
   useEffect(() => {
     loadProducts();
-    setLastProductId(300);
+    setLastProductId(lastProductId);
     console.log(lastProductId)
  
   }, []);
