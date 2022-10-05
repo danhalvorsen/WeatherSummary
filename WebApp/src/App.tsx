@@ -1,19 +1,16 @@
 
-import './App.css';
-import Navbar from './components/jsx-components/Navbar';
-import Showcase from './components/jsx-components/Showcase';
-import { Form } from './components/newComponents/Form/Form';
-import { WeatherForcastSearchState } from './components/newComponents/Form/WeatherForcastSearchState/WeatherForcastSearchState';
+import Form from './MyOrderingSystem/src/components/Form/Form'
 
 function App() {
   return (
     <>
-        <Navbar/>
-        <Showcase/>
 
+    <Form/>
+        {/* <Navbar/>
+        <Showcase/>
       <Form>
         <WeatherForcastSearchState />
-      </Form>
+      </Form> */}
     </>
   );
 }
