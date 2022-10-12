@@ -25,6 +25,7 @@ export type ShoppingCartContext = {
   loginRole: string;
   changeLoginRole: (role: string) => void;
   loadProducts: () => void;
+  lastProductId: number;
 };
 export type CartItem = {
   id: number;
@@ -41,6 +42,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [products, setProducts] = useState<ProductType[]>();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loginRole, setLoginRole] = useState('');
+  const [lastProductId, setLastProductId] = useState<number>(0);
 
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id == id)?.quantity || 0;
@@ -105,6 +107,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     const Data = getAllProducts(productsQuery);
     Data.then((result) => {
       setProducts(result);
+      const lastProductId = result[result.length - 1].id;
+      setLastProductId(lastProductId);
     });
   };
 
@@ -128,6 +132,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         loginRole,
         changeLoginRole,
         loadProducts,
+        lastProductId,
       }}
     >
       {children}
