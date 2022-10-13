@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   db:
@@ -6,18 +6,19 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     user: root
     ports:
-        - "1433:1433"
+      - "1433:1433"
     volumes:
-        - Sql-server-storage:/var/opt/mssql
+      - Sql-server-storage:/var/opt/mssql
     environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=123456a@
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=123456a@
     networks:
-        - weather
+      - weather
+    restart: unless-stopped
 
 networks:
-    weather:
-      external: true
+  weather:
+    external: true
 
 volumes:
   Sql-server-storage:

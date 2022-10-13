@@ -13,7 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register extension methods
-
 builder.Services.RegisterValidators();
 builder.Services.RegisterHttpClients();
 builder.Services.RegisterConfigurations();

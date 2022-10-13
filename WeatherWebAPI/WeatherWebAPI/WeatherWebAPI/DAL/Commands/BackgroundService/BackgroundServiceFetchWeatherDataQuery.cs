@@ -1,8 +1,6 @@
 ﻿using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory;
-using WeatherWebAPI.Factory.Strategy.OpenWeather;
-using WeatherWebAPI.Factory.Strategy.YR;
 using WeatherWebAPI.Query;
 
 namespace WeatherWebAPI.DAL
