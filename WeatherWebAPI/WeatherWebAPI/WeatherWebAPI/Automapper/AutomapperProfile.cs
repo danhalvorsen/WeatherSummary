@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WeatherWebAPI.Contracts;
 using WeatherWebAPI.Contracts.BaseContract;
 using WeatherWebAPI.Controllers;
 using WeatherWebAPI.Factory.Strategy.OpenWeather;
@@ -13,7 +14,7 @@ namespace WeatherWebAPI.Automapper
     {
         public AutomapperProfile()
         {
-            CreateMap<WeatherForecast.WeatherData, WeatherForecast>();
+            CreateMap<WeatherForecast.WeatherData, WeatherForecastDto>();
             CreateMap<ApplicationYr, WeatherForecast>();
             CreateMap<ApplicationOpenWeather, WeatherForecast>();
             CreateMap<ApplicationOpenWeather, CityDto>();
