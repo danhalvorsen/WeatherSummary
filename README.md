@@ -89,13 +89,21 @@ docker compose up -d
 
 Stop this container inside Docker Desktop or using the terminal commands:
 
-```powershell
-docker ps #lists the containers running
-docker stop containerId #or by name -> docker stop WeatherForecast_dev
-docker rm containerId #or by name -> docker rm WeatherForecast_dev
+List all containers running
 
-# You could try to run the remove one straight away, but it could cause issues. Therefore I've given you all the commands you need to safely remove a container.
+```powershell
+docker ps
 ```
+
+```powershell
+docker stop containerId #or by name -> docker stop WeatherForecast_dev
+```
+
+```powershell
+docker rm containerId #or by name -> docker rm WeatherForecast_dev
+```
+
+You could try to run the remove one straight away, but it could cause issues. Therefore we've given you all the commands you need to safely remove a container.
 
 **10.** Now allocate the **_WeatherForecast-compose_**-folder and run the terminal command once more:
 
@@ -103,7 +111,7 @@ docker rm containerId #or by name -> docker rm WeatherForecast_dev
 docker compose up -d
 ```
 
-**11.** The backend should now be working fine. If you want to continue development on a different dev-database. Create one as shown above and run the same script. Now you do the rest from Microsoft Visual Studio. Change the connection string and compile it inside Visual Studio. Visual Studio will create a new image for you and run everything on the dev spesificiations.
+**11.** The backend should now be working fine. If you want to continue development on a different dev-database. Create one as shown above and run the same script. Now you do the rest from Microsoft Visual Studio. Change the connection string and compile it inside Visual Studio. Visual Studio will create a new image for you and run everything on the dev specifications.
 
 # Get the database up and running
 
